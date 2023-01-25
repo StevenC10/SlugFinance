@@ -1,0 +1,62 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "description": "SlugFinanceAPI",
+      "version": "1.0.0",
+      "title": "SlugFinance",
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "paths": {
+        "/ticker": {
+          "get": {
+            "tags": [
+              "Stock"
+            ],
+            "summary": "Returns stock price",
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "$ref": "#/components/schemas/stock"
+                }
+              }
+            }
+          }
+        }
+    },
+    "components": {
+        "schemas": {
+            "id": {
+                "properties": {
+                    "uuid": {
+                        "type" : "string"
+                    }
+                }
+            },
+        "stock": {
+            "type": "object",
+            "properties": {
+              "symbol": {
+                "type": "string",
+                "format": "string"
+              },
+              "price": {
+                "type": "string",
+                "format": "string"
+              },
+              "change": {
+                "type": "string",
+                "format": "number"
+              },
+              "dailyChange": {
+                "type": "string",
+                "format": "number"
+              }
+            }
+        }
+    }
+  }
+}
