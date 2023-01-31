@@ -55,11 +55,23 @@ function App() {
     />
     <button type = "submit"> Submit</button>
     </form>
+
+    <table>
+      <tr>
+        <th>Ticker Name</th>
+        <th>Change</th>
+        <th>Daily Change</th>
+        <th>Current Price</th>
+      </tr>
+      <tr>
+        <td>{ticker}</td>
+        <td>{change}</td>
+        <td>{dailyChange}</td>
+        <td>{price}</td>
+      </tr>
+    </table>
     <ol type = "1">
-      <li>{ticker}</li>
-      <li>{change}</li>
-      <li>{dailyChange}</li>
-      <li>{price}</li>
+      
     </ol>
     </div>
   );
