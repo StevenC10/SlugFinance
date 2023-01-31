@@ -6,10 +6,10 @@ info:
 servers:
   - url: '/'
 paths:
-  '/v0/ticker/{id}':
+  '/v0/ticker':
     parameters:
       - name: id
-        in: path
+        in: query
         description: Stock Ticker
         required: true
         schema:
@@ -22,7 +22,7 @@ paths:
           description: Email found
           content:
             application/json:
-              schema:
+              schema: 
                 type: object
                 items:
                   $ref: '#/components/schemas/Stock'
