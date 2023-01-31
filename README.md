@@ -1,10 +1,10 @@
 # SlugFinance
-<<<<<<< HEAD
 use python3 -m flask run to run flask
 =======
 
 to use app:
 python3 -m pip install -U flask-cors
+
 
 python3 -m pip install Flask
 
@@ -15,7 +15,6 @@ cd backend
 python3 -m flaskrun
 
 open a second terminal:
+cd frontend
 npm start
 
-
->>>>>>> 53b4e915dd5a4642e2db9cdd2e4d4682c193a932
