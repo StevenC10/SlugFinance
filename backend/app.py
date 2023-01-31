@@ -42,4 +42,4 @@ SWAGGER_BLUEPRINT = get_swaggerui_blueprint (
         'app_name' : "SlugFinance API"
     }
 )
-app.register_blueprint(SWAGGER_BLUEPRINT, url_prefix = SWAGGER_URL)
+app.register_blueprint(SWAGGER_BLUEPRINT, url_prefix = SWAGGER_URL)v
