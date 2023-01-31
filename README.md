@@ -1,4 +1,8 @@
 # SlugFinance
+
+py -m pip install BeautifulSoup4
+py -m pip install requests
+
 use python3 -m flask run to run flask
 =======
 
