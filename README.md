@@ -16,7 +16,7 @@ python3 -m pip install flask-swagger-ui
 
 open a terminal:
 cd backend
-python3 -m flaskrun
+python3 -m flask run
 
 open a second terminal:
 cd frontend
