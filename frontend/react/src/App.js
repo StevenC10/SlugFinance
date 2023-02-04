@@ -1,6 +1,8 @@
 
 import './App.css';
 import React, {useState,useEffect } from 'react';
+import Navbar from './components/Navbar';
+
 const getStock = (symbol, setStockData) => {
   //how to stop firing on intial render 
   //https://stackoverflow.com/questions/72146986/useeffect-firing-on-initial-render
@@ -46,15 +48,9 @@ function App() {
   }
   return (
     <div>
-    <form onSubmit = {handleSubmit}>
-    <input 
-    type = "text" 
-    name = "name"
-    onChange= {(event) =>
-      setStock(event.target.value)}
-    />
-    <button type = "submit"> Submit</button>
-    </form>
+    <Navbar/>
+
+    
 
     <table>
       <tr>
