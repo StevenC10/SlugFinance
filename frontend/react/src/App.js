@@ -48,9 +48,18 @@ function App() {
   }
   return (
     <div>
-    <Navbar/>
-
-    
+    <Navbar>
+      
+    </Navbar>
+    <form onSubmit = {handleSubmit}>
+      <input 
+      type = "text" 
+      name = "name"
+      onChange= {(event) =>
+        setStock(event.target.value)}
+      />
+      <button type = "submit"> Submit</button>
+      </form>
 
     <table>
       <tr>
