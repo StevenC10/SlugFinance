@@ -4,7 +4,7 @@ info:
   version: 0.1.0
   title: Finance API
 servers:
-  - url: '/'
+  - url: /
 paths:
   '/v0/ticker/{id}':
     parameters:
@@ -22,7 +22,7 @@ paths:
           description: Email found
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 items:
                   $ref: '#/components/schemas/Stock'
@@ -34,6 +34,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  '/v0/login':
+    post:
+      description: Login
+      requestBody:
+        description: Request Body
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credentials'
+      responses:
+        '200':
+          description: book response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  '/v0/create':
+    post:
+      description: Create
+      requestBody:
+        description: Request Body
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credentials'
+      responses:
+        '201':
+          description: server response saying its created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
 components:
   schemas:
     Error:
@@ -63,3 +97,23 @@ components:
           type: string
         dailyChange:
           type: string
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+        accessToken:
+          type: string
+      required:
+        - name
+        - accessToken      
+    Credentials:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
