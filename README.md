@@ -1,4 +1,4 @@
-## SlugFinance
+```## SlugFinance
 Install docker : https://docs.docker.com/get-docker/
 After installing docker
 open a terminal:
@@ -35,4 +35,4 @@ open a second terminal:
 cd frontend
 cd react
 npm start
-
+```
