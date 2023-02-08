@@ -1,4 +1,5 @@
 import React from 'react'
+import {FaFacebookSquare,FaSistrix} from "react-icons/fa"
 
 export default function Navbar({ fixed }) {
     const [navbarOpen, setNavbarOpen] = React.useState(false);
@@ -13,6 +14,7 @@ export default function Navbar({ fixed }) {
               >
                 pink Tailwind Starter Kit
               </a>
+              
               <button
                 className="text-white cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
                 type="button"
@@ -20,8 +22,17 @@ export default function Navbar({ fixed }) {
               >
                 <i className="fas fa-bars"></i>
               </button>
-            </div>
 
+              
+            </div>
+            <div>
+            <form background-color="white">
+              <input placeholder="TSLA, AAPL, NVDA..."/>
+              <button type="submit" color="white" margin="4px">
+                <FaSistrix/>
+              </button>
+            </form>
+            </div>
             
 
             <div
@@ -37,7 +48,8 @@ export default function Navbar({ fixed }) {
                     className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
                     href="#pablo"
                   >
-                    <i className="fab fa-facebook-square text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Share</span>
+                    <FaFacebookSquare/>
+                    <i className="fab text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Share</span>
                   </a>
                 </li>
                 <li className="nav-item">
