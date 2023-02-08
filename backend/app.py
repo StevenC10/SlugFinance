@@ -14,14 +14,8 @@ app = Flask(__name__)
 CORS(app)
 
 
-# @app.route('/profile')
-# def my_profile() :
-#     response_body = {
-#         'name' : 'Steven'
-#     }
-#     return stockArr
-
-@app.route('/v0/ticker', methods = ['GET'])
+#Route/Function to get the stock data of a specific ticker.
+@app.route('/v0/ticker/', methods = ['GET'])
 def getStock():
     args = request.args
     id = args.get("id")
@@ -38,6 +32,9 @@ def getStock():
     }
     return jsonify(stock,200)
 
+
+
+#Function to get connected to postgres database
 def getConnection():
     conn = psycopg2.connect(
         host = 'localhost',
@@ -48,6 +45,8 @@ def getConnection():
     )
     return conn
 
+
+#Route/Function to check login of user
 @app.route('/v0/login', methods = ['POST'])
 def submitLogin():
     args = request.json
@@ -56,18 +55,19 @@ def submitLogin():
     conn = getConnection()
     cursor = conn.cursor()
     # https://stackoverflow.com/questions/45128902/psycopg2-and-sql-injection-security how to do parameterized queries.
-    # selectQuery = 'SELECT * FROM emailtable'
     selectQuery = 'SELECT personemail, personpassword FROM emailtable WHERE %s = personemail AND %s = personpassword'
     cursor.execute(selectQuery, (email, password,))
     account = cursor.fetchall()
     if account:
         queryEmail = account[0][0]
         queryPassword = account[0][1]
-        if(email == queryEmail and password == queryPassword and account):
+        if(email == queryEmail and password == queryPassword):
             return jsonify(account, 200)
     else:
         abort(404)
 
+
+#Route/Function to create a new user account.
 @app.route('/v0/create', methods = ['POST'])
 def createUser():
     args = request.json
@@ -88,6 +88,34 @@ def createUser():
         return 'Account Created', 201
     else:
         abort(400)
+
+#Route/Function to add stock to database.
+@app.route('/v0/add', methods = ['POST'])
+def add():
+    args = request.json
+    ticker = args.get('ticker', '')
+    conn = getConnection()
+    cursor = conn.cursor()
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'}
+    url = f'https://finance.yahoo.com/quote/{ticker}'
+    r = requests.get(url, headers = headers)
+    soup = BeautifulSoup(r.text, 'html.parser')
+    soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('fin-streamer')[0].text
+    stock = {
+        'symbol' : ticker,
+        'price' : soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('fin-streamer')[0].text,
+        'change' : soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('fin-streamer')[1].text,
+        'dailyChange' : soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('fin-streamer')[2].text
+    }
+    stockPrice = stock['price']
+    stockSymbol = ticker
+    stockChange = stock['change']
+    stockPercentChange = stock['dailyChange']
+    insertQuery = 'INSERT INTO stockTable (personemail, ticker, price, change, percentChange) VALUES (%s, %s, %s, %s, %s)'
+    defaultUser = 'ben@ucsc.edu'
+    cursor.execute(insertQuery, (defaultUser, stockSymbol, stockPrice, stockChange, stockPercentChange,))
+    conn.commit()
+    return jsonify(stock,200)
 
 
 SWAGGER_URL = '/swagger'

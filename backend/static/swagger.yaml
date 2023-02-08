@@ -6,7 +6,7 @@ info:
 servers:
   - url: /
 paths:
-  '/v0/ticker/{id}':
+  '/v0/ticker/':
     parameters:
       - name: id
         in: query
@@ -68,6 +68,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+  '/v0/add':
+    post:
+      description: Add Stock to Database
+      requestBody:
+        description: Request Body
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ticker'
+      responses:
+        '201':
+          description: added to database
+          content:
+            application/json:
+              schema:
+                $ref: '#/compoments/schemas/Stock'
 components:
   schemas:
     Error:
@@ -117,3 +134,8 @@ components:
       required:
         - email
         - password
+    Ticker:
+      type: object
+      properties:
+        ticker:
+          type: string
