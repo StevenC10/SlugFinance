@@ -54,6 +54,7 @@ function App() {
       <form onSubmit = {handleSubmit}>
         <input 
         type = "text" 
+        name = "name"
         onChange= {(event) =>
           setStock(event.target.value)}
         />

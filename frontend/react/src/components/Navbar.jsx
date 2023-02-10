@@ -1,18 +1,19 @@
 import React from 'react'
-import {FaFacebookSquare,FaSistrix} from "react-icons/fa"
-
+import {FaFacebookSquare,FaSistrix, FaBars, FaTwitterSquare,FaPinterestSquare} from "react-icons/fa"
+import { ReactComponent as Logo} from '../logo.svg'
 export default function Navbar({ fixed }) {
     const [navbarOpen, setNavbarOpen] = React.useState(false);
     return (
       <>
         <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 bg-[#27a5f8] mb-3">
           <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
+            <Logo width="40" height="40"/>
             <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
               <a
                 className="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white"
                 href="#pablo"
               >
-                pink Tailwind Starter Kit
+                SLUG FINANCE 
               </a>
               
               <button
@@ -20,10 +21,8 @@ export default function Navbar({ fixed }) {
                 type="button"
                 onClick={() => setNavbarOpen(!navbarOpen)}
               >
-                <i className="fas fa-bars"></i>
+                <i><FaBars/></i>
               </button>
-
-              
             </div>
             <div>
             <form background-color="white">
@@ -57,7 +56,7 @@ export default function Navbar({ fixed }) {
                     className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
                     href="#pablo"
                   >
-                    <i className="fab fa-twitter text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Tweet</span>
+                    <i className="text-lg leading-lg text-white opacity-75"><FaTwitterSquare/></i><span className="ml-2">Tweet</span>
                   </a>
                 </li>
                 <li className="nav-item">
@@ -65,7 +64,7 @@ export default function Navbar({ fixed }) {
                     className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
                     href="#pablo"
                   >
-                    <i className="fab fa-pinterest text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Pin</span>
+                    <i className="text-lg leading-lg text-white opacity-75"><FaPinterestSquare/></i><span className="ml-2">Pin</span>
                   </a>
                 </li>
               </ul>
