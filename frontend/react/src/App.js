@@ -23,6 +23,7 @@ const getStock = (symbol, setStockData) => {
     setStockData(json)
   })
 }
+
 function App() {
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -47,9 +48,11 @@ function App() {
     ticker = stonks.symbol;
     dailyChange = stonks.dailyChange;
   }
+  
+
   return (
     <div>
-    <Navbar/>
+    <Navbar setSymbol={setSymbol} setStock={setStock}/>
     <div margin-left="4px">
       <form onSubmit = {handleSubmit}>
         <input 

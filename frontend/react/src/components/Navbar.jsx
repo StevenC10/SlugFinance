@@ -1,8 +1,9 @@
 import React from 'react'
 import {FaFacebookSquare,FaSistrix, FaBars, FaTwitterSquare,FaPinterestSquare} from "react-icons/fa"
 import { ReactComponent as Logo} from '../logo.svg'
-export default function Navbar({ fixed }) {
+export default function Navbar({setSymbol,setStock}) {
     const [navbarOpen, setNavbarOpen] = React.useState(false);
+    //const handleInput=()=>
     return (
       <>
         <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 bg-[#27a5f8] mb-3">
@@ -25,9 +26,9 @@ export default function Navbar({ fixed }) {
               </button>
             </div>
             <div>
-            <form background-color="white">
+            <form style={{background:'white', margin:'2px'}} >
               <input placeholder="TSLA, AAPL, NVDA..."/>
-              <button type="submit" color="white" margin="4px">
+              <button type="submit" >
                 <FaSistrix/>
               </button>
             </form>
