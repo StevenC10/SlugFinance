@@ -1,5 +1,6 @@
 import '../App.css';
 import React, {useState,useEffect} from 'react';
+import Navbar from './Navbar';
 
 const getStock = (symbol, setStockData) => {
   //how to stop firing on intial render 
@@ -46,6 +47,8 @@ const Home = () => {
 
   return (
     <div>
+      <Navbar/>
+
     <form onSubmit = {handleSubmit}>
     <input 
     type = "text" 
