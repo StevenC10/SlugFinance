@@ -38,12 +38,11 @@ const Home = () => {
     getStock(symbol, setStockData);
   }, [symbol]);
   if(stonks !== undefined) {
-    price = stonks.price;
-    change = stonks.change;
-    ticker = stonks.symbol;
-    dailyChange = stonks.dailyChange;
+    price = stonks[0][1];
+    change = stonks[0][2];
+    ticker = stonks[0][0];
+    dailyChange = stonks[0][3];
   }
-
   return (
     <div>
     <form onSubmit = {handleSubmit}>
