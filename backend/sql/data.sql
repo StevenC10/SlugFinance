@@ -4,3 +4,5 @@ INSERT INTO emailtable(personemail, personpassword) VALUES ('lanceweenie@ucsc.ed
 INSERT INTO emailtable(personemail, personpassword) VALUES ('edwin@ucsc.edu', 'edwin');
 INSERT INTO emailtable(personemail, personpassword) VALUES ('ben@ucsc.edu', 'ben');
 INSERT INTO emailtable(personemail, personpassword) VALUES ('steven@ucsc.edu', 'steven');
+
+INSERT INTO stockTable(personemail, ticker,price, change, percentChange) VALUES ('ben@ucsc.edu', 'TSLA', 84.69,'-1.22', '(-1.42%)');

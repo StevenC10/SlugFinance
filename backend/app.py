@@ -19,20 +19,28 @@ CORS(app)
 def getStock():
     args = request.args
     id = args.get("id")
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'}
-    url = f'https://finance.yahoo.com/quote/{id}'
-    r = requests.get(url, headers = headers)
-    soup = BeautifulSoup(r.text, 'html.parser')
-    soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('fin-streamer')[0].text
-    stock = {
-        'symbol' : id,
-        'price' : soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('fin-streamer')[0].text,
-        'change' : soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('fin-streamer')[1].text,
-        'dailyChange' : soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('fin-streamer')[2].text
-    }
-    return jsonify(stock,200)
+    conn = getConnection()
+    cursor = conn.cursor()
+    selectQuery = 'SELECT ticker,price,change,percentChange FROM stockTable WHERE %s = ticker'
+    cursor.execute(selectQuery, (id,))
+    stock = cursor.fetchall()
+    if  stock:
+        return jsonify(stock,200)
+    else:
+        abort(404)
 
 
+@app.route('/v0/view', methods = ['GET'])
+def viewStock():
+    conn = getConnection()
+    cursor = conn.cursor()
+    selectQuery = 'SELECT * FROM stockTable'
+    cursor.execute(selectQuery)
+    stock = cursor.fetchall()
+    if stock:
+        return jsonify(stock,200)
+    else:
+        abort(404)
 
 #Function to get connected to postgres database
 def getConnection():
@@ -111,12 +119,18 @@ def add():
     stockSymbol = ticker
     stockChange = stock['change']
     stockPercentChange = stock['dailyChange']
-    insertQuery = 'INSERT INTO stockTable (personemail, ticker, price, change, percentChange) VALUES (%s, %s, %s, %s, %s)'
-    defaultUser = 'ben@ucsc.edu'
-    cursor.execute(insertQuery, (defaultUser, stockSymbol, stockPrice, stockChange, stockPercentChange,))
-    conn.commit()
-    return jsonify(stock,200)
-
+    selectQuery = 'SELECT ticker,price,change,percentChange FROM stockTable WHERE %s = ticker'
+    cursor.execute(selectQuery, (stockSymbol,))
+    stock = cursor.fetchall()
+    if(len(stock) >  0):
+        updateQuery = 'UPDATE stockTable SET price = %s, change = %s, percentChange = %s WHERE ticker = %s'
+        cursor.execute(updateQuery, (stockPrice, stockChange, stockPercentChange, stockSymbol,))
+        conn.commit()
+    else:
+        insertQuery = 'INSERT INTO stockTable (ticker, price, change, percentChange) VALUES (%s, %s, %s, %s)'
+        cursor.execute(insertQuery, (stockSymbol, stockPrice, stockChange, stockPercentChange,))
+        conn.commit()
+    return 'Stock Added!', 201
 
 SWAGGER_URL = '/swagger'
 API_URL = '/static/swagger.yaml'

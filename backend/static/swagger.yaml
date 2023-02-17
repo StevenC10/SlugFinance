@@ -84,7 +84,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/compoments/schemas/Stock'
+                $ref: '#/components/schemas/Stock'
+  '/v0/view':
+    get:
+      description:
+      responses:
+        '200':
+          description: Stock table found
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Stock'
+
 components:
   schemas:
     Error:
