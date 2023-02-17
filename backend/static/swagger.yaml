@@ -1,0 +1,221 @@
+<<<<<<< Updated upstream
+openapi: 3.0.3
+info:
+  description: Slug Finance API
+  version: 0.1.0
+  title: Finance API
+servers:
+  - url: '/'
+paths:
+  '/v0/ticker':
+    parameters:
+      - name: id
+        in: query
+        description: Stock Ticker
+        required: true
+        schema:
+          type: string
+          format: string
+    get:
+      description: Returns the email identified by the id
+      responses:
+        '200':
+          description: Email found
+          content:
+            application/json:
+              schema: 
+                type: object
+                items:
+                  $ref: '#/components/schemas/Stock'
+        '404':
+          description: Stock ticker not found
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    Stock:
+      type: object
+      additionalProperties: false
+      required:
+        - symbol
+        - price
+        - change
+        - dailyChange
+      properties:
+        symbol:
+          type: string
+        price:
+          type: string
+        change:
+          type: string
+        dailyChange:
+=======
+openapi: 3.0.3
+info:
+  description: Slug Finance API
+  version: 0.1.0
+  title: Finance API
+servers:
+  - url: /
+paths:
+  '/v0/ticker/':
+    parameters:
+      - name: id
+        in: query
+        description: Stock Ticker
+        required: true
+        schema:
+          type: string
+          format: string
+    get:
+      description: Returns the email identified by the id
+      responses:
+        '200':
+          description: Email found
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Stock'
+        '404':
+          description: Stock ticker not found
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/v0/login':
+    post:
+      description: Login
+      requestBody:
+        description: Request Body
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credentials'
+      responses:
+        '200':
+          description: book response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  '/v0/create':
+    post:
+      description: Create
+      requestBody:
+        description: Request Body
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credentials'
+      responses:
+        '201':
+          description: server response saying its created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  '/v0/add':
+    post:
+      description: Add Stock to Database
+      requestBody:
+        description: Request Body
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ticker'
+      responses:
+        '201':
+          description: added to database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stock'
+  '/v0/view':
+    get:
+      description:
+      responses:
+        '200':
+          description: Stock table found
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Stock'
+
+components:
+  schemas:
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    Stock:
+      type: object
+      additionalProperties: false
+      required:
+        - symbol
+        - price
+        - change
+        - dailyChange
+      properties:
+        symbol:
+          type: string
+        price:
+          type: string
+        change:
+          type: string
+        dailyChange:
+          type: string
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+        accessToken:
+          type: string
+      required:
+        - name
+        - accessToken      
+    Credentials:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+    Ticker:
+      type: object
+      properties:
+        ticker:
+>>>>>>> Stashed changes
+          type: string
