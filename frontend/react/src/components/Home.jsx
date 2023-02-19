@@ -1,5 +1,7 @@
 // import '../App.css';
 import React, {useState,useEffect} from 'react';
+import {FaFacebookSquare,FaSistrix, FaBars, FaTwitterSquare,FaPinterestSquare} from "react-icons/fa"
+import Logo from '../images/test2.png'
 
 const getStock = (symbol, setStockData) => {
   //how to stop firing on intial render 
@@ -29,6 +31,7 @@ const Home = () => {
   const [symbol, setSymbol] = useState();
   const [stock, setStock] = useState();
   const [stockData, setStockData] = useState([]);
+  const [navbarOpen, setNavbarOpen] = React.useState(false);
   const stonks = stockData[0];
   let price = undefined;
   let change = undefined; 
@@ -45,33 +48,109 @@ const Home = () => {
   }
   return (
     <div>
-    <form onSubmit = {handleSubmit}>
-    <input 
-    type = "text" 
-    name = "name"
-    onChange= {(event) =>
-      setStock(event.target.value)}
-    />
-    <button type = "submit"> Submit</button>
-    </form>
-    
-    <table>
-      <tr>
-        <th>Ticker Name</th>
-        <th>Change</th>
-        <th>Daily Change</th>
-        <th>Current Price</th>
-      </tr>
-      <tr>
-        <td>{ticker}</td>
-        <td>{change}</td>
-        <td>{dailyChange}</td>
-        <td>{price}</td>
-      </tr>
-    </table>
-    <ol type = "1">
+      <nav className="relative flex items-center justify-between px-2 py-3 bg-[#27a5f8] sticky top-0">
+        <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
+          <img className="flex inline-block" src={Logo} width='40' height='40' alt=''/>
+          <div className="inline-block w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
+            <a
+              className="text-sm flex flex-col font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white"
+              href="#SLUGFINANCE"
+            >
+              SLUG FINANCE 
+            </a>
+            
+            <button
+              className="text-white cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
+              type="button"
+              onClick={() => setNavbarOpen(!navbarOpen)}
+            >
+              <i><FaBars/></i>
+            </button>
+          </div>
+          <div className="flex flex-grow inline-block">
+            <form className="flex flex-grow"onSubmit = {handleSubmit} style={{background:'white', margin:'2px'}} >
+              <input className="flex flex-grow" placeholder="TSLA, AAPL, NVDA..."
+              type = "text" 
+              name = "name"
+              onChange= {(event) =>
+                setStock(event.target.value)}/>
+              <button className="flex-end" type="submit" > <FaSistrix/></button>
+            </form>
+          </div>
+          
+
+          <div
+            className={
+              "lg:flex flex-grow inline-block items-center" +
+              (navbarOpen ? " flex" : " hidden")
+            }
+            id="example-navbar-danger"
+          >
+            <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
+              <li className="nav-item">
+                <a
+                  className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
+                  href="#pablo"
+                >
+                  <FaFacebookSquare/>
+                  <i className="fab text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Share</span>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a
+                  className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
+                  href="#pablo"
+                >
+                  <i className="text-lg leading-lg text-white opacity-75"><FaTwitterSquare/></i><span className="ml-2">Tweet</span>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a
+                  className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
+                  href="#pablo"
+                >
+                  <i className="text-lg leading-lg text-white opacity-75"><FaPinterestSquare/></i><span className="ml-2">Pin</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
       
-    </ol>
+      <div class="flex box-border font-mono font-bold text-6xl items-center text-center h-screen "
+        style={{backgroundImage: 'url(https://knowledge.wharton.upenn.edu/wp-content/uploads/2020/11/Stock-Market-900x387.jpg)',
+                    backgroundRepeat: "no=repeat",
+                    backgroundSize: "cover",
+                    align: "center"
+                    }}>
+        
+        <div class="flex-grow ">
+          Such an inspirational quote
+        </div>
+       
+        
+      </div>
+      
+      
+      
+      
+      <table>
+        <tr>
+          <th>Ticker Name</th>
+          <th>Change</th>
+          <th>Daily Change</th>
+          <th>Current Price</th>
+        </tr>
+        <tr>
+          <td>{ticker}</td>
+          <td>{change}</td>
+          <td>{dailyChange}</td>
+          <td>{price}</td>
+        </tr>
+      </table>
+      <ol type = "1">
+        
+      </ol>
     </div>
   );
 };
