@@ -96,7 +96,27 @@ paths:
               schema:
                 type: object
                 items:
-                  $ref: '#/components/schemas/Stock'
+                  $ref: '#/components/schemas/Stock'     
+  '/v0/getHistory':
+    post:
+      description:
+      requestBody:
+        description: Request Body
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ticker'
+      responses:
+        '201':
+          description: Historical Data found
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#components/schemas/Data'
+
 
 components:
   schemas:
@@ -152,3 +172,10 @@ components:
       properties:
         ticker:
           type: string
+    Data:
+      type: object
+      properties:
+        ticker:
+          type: string
+        data:
+          type: object

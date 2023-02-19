@@ -34,7 +34,8 @@ def getStock():
 def viewStock():
     conn = getConnection()
     cursor = conn.cursor()
-    selectQuery = 'SELECT * FROM stockTable'
+    # selectQuery = 'SELECT * FROM stockTable'
+    selectQuery = 'SELECT * FROM historicalStockTable'
     cursor.execute(selectQuery)
     stock = cursor.fetchall()
     if stock:
@@ -132,6 +133,36 @@ def add():
         conn.commit()
     return 'Stock Added!', 201
 
+
+@app.route('/v0/getHistory', methods = ['POST'])
+def getHistoricalData():
+    args = request.json
+    id = args.get('ticker', '')
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'}
+    url = f'https://finance.yahoo.com/quote/{id}/history?p={id}'
+    r = requests.get(url, headers = headers)
+    soup = BeautifulSoup(r.text, 'html.parser')
+    stockArr = []
+    stockData = soup.find_all('table')
+    for table in stockData:
+        trs = table.find_all('tr')
+        for tr in trs:
+            tds = tr.find_all('td')
+            if len(tds) > 6:
+                data = {
+                    'day' : tds[0].get_text(),
+                    'open' : tds[1].get_text(),
+                    'close' : tds[2].get_text()
+                }
+                stockArr.append(data)
+    res = json.dumps(stockArr)
+    conn = getConnection()
+    cursor = conn.cursor()
+    insertQuery = 'INSERT INTO historicalStockTable(ticker, stockData) VALUES (%s, %s)'
+    cursor.execute(insertQuery, (id, res, ))
+    conn.commit()
+    return 'success', 200
+    
 SWAGGER_URL = '/swagger'
 API_URL = '/static/swagger.yaml'
 SWAGGER_BLUEPRINT = get_swaggerui_blueprint (
