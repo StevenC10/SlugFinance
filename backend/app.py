@@ -94,7 +94,7 @@ def createUser():
     cursor.close()
     conn.close()
     if(account):
-        return 'Account Created', 201
+        return jsonify('account created'), 201
     else:
         abort(400)
 
@@ -131,7 +131,7 @@ def add():
         insertQuery = 'INSERT INTO stockTable (ticker, price, change, percentChange) VALUES (%s, %s, %s, %s)'
         cursor.execute(insertQuery, (stockSymbol, stockPrice, stockChange, stockPercentChange,))
         conn.commit()
-    return 'Stock Added!', 201
+    return jsonify('Stock Added!'), 201
 
 
 @app.route('/v0/getHistory', methods = ['POST'])

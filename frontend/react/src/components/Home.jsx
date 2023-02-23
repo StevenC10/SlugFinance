@@ -1,7 +1,8 @@
 // import '../App.css';
 import React, {useState,useEffect} from 'react';
-import {FaFacebookSquare,FaSistrix, FaBars, FaTwitterSquare,FaPinterestSquare} from "react-icons/fa"
+import {FaSistrix, FaBars} from "react-icons/fa"
 import Logo from '../images/test2.png'
+// import {useNavigate} from 'react-router-dom';
 
 const getStock = (symbol, setStockData) => {
   //how to stop firing on intial render 
@@ -69,7 +70,7 @@ const Home = () => {
           </div>
           <div className="flex flex-grow inline-block">
             <form className="flex flex-grow"onSubmit = {handleSubmit} style={{background:'white', margin:'2px'}} >
-              <input className="flex flex-grow" placeholder="TSLA, AAPL, NVDA..."
+              <input className="flex flex-grow focus:outline-none" placeholder="TSLA, AAPL, NVDA..."
               type = "text" 
               name = "name"
               onChange= {(event) =>
@@ -87,7 +88,7 @@ const Home = () => {
             id="example-navbar-danger"
           >
             <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <a
                   className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
                   href="#pablo"
@@ -95,21 +96,21 @@ const Home = () => {
                   <FaFacebookSquare/>
                   <i className="fab text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Share</span>
                 </a>
-              </li>
+              </li> */}
               <li className="nav-item">
                 <a
                   className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
-                  href="#pablo"
+                  href="signup"
                 >
-                  <i className="text-lg leading-lg text-white opacity-75"><FaTwitterSquare/></i><span className="ml-2">Tweet</span>
+                  <i className="text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Sign Up</span>
                 </a>
               </li>
               <li className="nav-item">
                 <a
                   className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
-                  href="#pablo"
+                  href="login"
                 >
-                  <i className="text-lg leading-lg text-white opacity-75"><FaPinterestSquare/></i><span className="ml-2">Pin</span>
+                  <i className="text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Log In</span>
                 </a>
               </li>
             </ul>
@@ -127,12 +128,8 @@ const Home = () => {
         <div class="flex-grow ">
           Such an inspirational quote
         </div>
-       
         
       </div>
-      
-      
-      
       
       <table>
         <tr>
