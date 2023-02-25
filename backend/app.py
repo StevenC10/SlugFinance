@@ -141,7 +141,7 @@ def getHistoricalData():
     id = args.get('ticker', '')
     conn = getConnection()
     cursor = conn.cursor()
-    selectQuery = 'SELECT ticker FROM stockTable WHERE %s ILIKE ticker'
+    selectQuery = 'SELECT ticker FROM historicalStockTable WHERE %s ILIKE ticker '
     cursor.execute(selectQuery, (id, ))
     account = cursor.fetchall()
     if(account):
