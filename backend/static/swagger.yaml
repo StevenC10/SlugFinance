@@ -86,6 +86,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Stock'
   '/v0/view':
+    parameters:
+      - name: id
+        in: query
+        description: Stock Ticker
+        required: true
+        schema:
+          type: string
+          format: string
     get:
       description:
       responses:

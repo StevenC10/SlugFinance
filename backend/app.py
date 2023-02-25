@@ -21,7 +21,7 @@ def getStock():
     id = args.get("id")
     conn = getConnection()
     cursor = conn.cursor()
-    selectQuery = 'SELECT ticker,price,change,percentChange FROM stockTable WHERE %s = ticker'
+    selectQuery = 'SELECT ticker,price,change,percentChange FROM stockTable WHERE %s ILIKE ticker'
     cursor.execute(selectQuery, (id,))
     stock = cursor.fetchall()
     if  stock:
@@ -32,11 +32,12 @@ def getStock():
 
 @app.route('/v0/view', methods = ['GET'])
 def viewStock():
+    args = request.args
+    id = args.get("id")
     conn = getConnection()
     cursor = conn.cursor()
-    # selectQuery = 'SELECT * FROM stockTable'
-    selectQuery = 'SELECT * FROM historicalStockTable'
-    cursor.execute(selectQuery)
+    selectQuery = 'SELECT ticker,stockData FROM historicalStockTable WHERE %s ILIKE ticker '
+    cursor.execute(selectQuery, (id, ))
     stock = cursor.fetchall()
     if stock:
         return jsonify(stock,200)
@@ -138,30 +139,38 @@ def add():
 def getHistoricalData():
     args = request.json
     id = args.get('ticker', '')
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'}
-    url = f'https://finance.yahoo.com/quote/{id}/history?p={id}'
-    r = requests.get(url, headers = headers)
-    soup = BeautifulSoup(r.text, 'html.parser')
-    stockArr = []
-    stockData = soup.find_all('table')
-    for table in stockData:
-        trs = table.find_all('tr')
-        for tr in trs:
-            tds = tr.find_all('td')
-            if len(tds) > 6:
-                data = {
-                    'day' : tds[0].get_text(),
-                    'open' : tds[1].get_text(),
-                    'close' : tds[2].get_text()
-                }
-                stockArr.append(data)
-    res = json.dumps(stockArr)
     conn = getConnection()
     cursor = conn.cursor()
-    insertQuery = 'INSERT INTO historicalStockTable(ticker, stockData) VALUES (%s, %s)'
-    cursor.execute(insertQuery, (id, res, ))
-    conn.commit()
-    return 'success', 200
+    selectQuery = 'SELECT ticker FROM stockTable WHERE %s ILIKE ticker'
+    cursor.execute(selectQuery, (id, ))
+    account = cursor.fetchall()
+    if(account):
+        abort(400)
+    else:
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'}
+        url = f'https://finance.yahoo.com/quote/{id}/history?p={id}'
+        r = requests.get(url, headers = headers)
+        soup = BeautifulSoup(r.text, 'html.parser')
+        stockArr = []
+        stockData = soup.find_all('table')
+        for table in stockData:
+            trs = table.find_all('tr')
+            for tr in trs:
+                tds = tr.find_all('td')
+                if len(tds) > 6:
+                    data = {
+                        'day' : tds[0].get_text(),
+                        'open' : tds[1].get_text(),
+                        'high' : tds[2].get_text(),
+                        'low' : tds[3].get_text(),
+                        'close': tds[4].get_text()
+                    }
+                    stockArr.append(data)
+        res = json.dumps(stockArr)
+        insertQuery = 'INSERT INTO historicalStockTable(ticker, stockData) VALUES (%s, %s)'
+        cursor.execute(insertQuery, (id, res, ))
+        conn.commit()
+        return jsonify('success', 201)
     
 SWAGGER_URL = '/swagger'
 API_URL = '/static/swagger.yaml'
