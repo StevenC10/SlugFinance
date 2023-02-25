@@ -33,6 +33,7 @@ const Home = () => {
   const [stock, setStock] = useState();
   const [stockData, setStockData] = useState([]);
   const [navbarOpen, setNavbarOpen] = React.useState(false);
+  const [c1Data, setC1Data] = useState([]);
   const stonks = stockData[0];
   let price = undefined;
   let change = undefined; 
@@ -47,6 +48,68 @@ const Home = () => {
     ticker = stonks[0][0];
     dailyChange = stonks[0][3];
   }
+
+  useEffect(()=> {
+    ( async()=>{
+        let loadc1 = await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+          method: 'POST',
+          body: `{"ticker": "TSLA"}`,
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            })
+        })
+
+        let c1d = await fetch(`http://127.0.0.1:5000/v0/view`, {
+          method: 'GET',
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            })
+          }).then((response) => {
+            if(!response.ok) {
+              throw response;
+            }
+            return response.json();
+          })
+          setC1Data(c1d);
+    }) ();
+    return() =>{
+      
+    };
+  },[]);
+
+/*
+ for (let i=0; i<1; i++){
+  fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+    method: 'POST',
+    body: `{"ticker": "TSLA"}`,
+    headers: new Headers({
+      'Content-Type': 'application/json',
+      })
+    }).then((response) => {
+      if(!response.ok) {
+        throw response;
+      }
+      return response.json();
+    })
+ }
+
+ for (let i=0;i<1;i++){
+  fetch(`http://127.0.0.1:5000/v0/view`, {
+      method: 'GET',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        })
+      }).then((response) => {
+        if(!response.ok) {
+          throw response;
+        }
+        return response.json();
+      }).then((c1Json) => {
+        setC1Data(c1Json)
+      })
+ }
+*/
+
   return (
     <div>
       <nav className="relative flex items-center justify-between px-2 py-3 bg-[#27a5f8] sticky top-0">
@@ -59,7 +122,6 @@ const Home = () => {
             >
               SLUG FINANCE 
             </a>
-            
             <button
               className="text-white cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
               type="button"
@@ -78,8 +140,6 @@ const Home = () => {
               <button className="flex-end" type="submit" > <FaSistrix/></button>
             </form>
           </div>
-          
-
           <div
             className={
               "lg:flex flex-grow inline-block items-center" +
@@ -91,7 +151,7 @@ const Home = () => {
               {/* <li className="nav-item">
                 <a
                   className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
-                  href="#pablo"
+                  href="#SLUGFINANCE"
                 >
                   <FaFacebookSquare/>
                   <i className="fab text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Share</span>
@@ -125,11 +185,31 @@ const Home = () => {
                     align: "center"
                     }}>
         
-        <div class="flex-grow ">
+        <div class="flex-grow text-yellow-200 font-serif">
           Such an inspirational quote
         </div>
-        
+      
       </div>
+      
+      <div class="grid grid-col-3 grid-row-4 grid-flow-col gap-2 h-screen ">
+        <div class="row-span-4 col-span-2">
+          1
+          <pre>{JSON.stringify(c1Data,null,2)}</pre>
+        </div>
+        <div class="row-end-1">
+          2
+        </div>
+        <div class="row-end-2">
+          3
+        </div>
+        <div class="row-end-3">
+          4
+        </div>
+        <div class="row-end-4">
+          5
+        </div>
+      </div>
+      
       
       <table>
         <tr>
