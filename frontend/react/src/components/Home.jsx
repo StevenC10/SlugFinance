@@ -51,7 +51,7 @@ const Home = () => {
 
   useEffect(()=> {
     ( async()=>{
-        let loadc1 = await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+        await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
           method: 'POST',
           body: `{"ticker": "TSLA"}`,
           headers: new Headers({
@@ -59,7 +59,7 @@ const Home = () => {
             })
         })
 
-        let c1d = await fetch(`http://127.0.0.1:5000/v0/view`, {
+       /* let c1d = await fetch(`http://127.0.0.1:5000/v0/view?id=TSLA`, {
           method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/json',
@@ -70,14 +70,14 @@ const Home = () => {
             }
             return response.json();
           })
-          setC1Data(c1d);
+          setC1Data(c1d);*/
     }) ();
     return() =>{
       
     };
   },[]);
 
-/*
+/* not working 
  for (let i=0; i<1; i++){
   fetch(`http://127.0.0.1:5000/v0/getHistory`, {
     method: 'POST',
