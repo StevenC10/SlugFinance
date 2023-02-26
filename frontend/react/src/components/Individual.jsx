@@ -1,5 +1,5 @@
 import React from "react";
-import './test.css';
+import './Individual.css';
 import {useState,useEffect} from 'react';
 
 const getStock = (symbol, setStockData) => {
