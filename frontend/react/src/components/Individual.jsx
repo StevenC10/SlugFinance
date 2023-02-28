@@ -1,90 +1,133 @@
 import React from "react";
 import './Individual.css';
-import {useState,useEffect} from 'react';
-
-const getStock = (symbol, setStockData) => {
-  //how to stop firing on intial render 
-  //https://stackoverflow.com/questions/72146986/useeffect-firing-on-initial-render
-  symbol && fetch(`http://127.0.0.1:5000/v0/ticker?id=` + symbol, {
-  method: 'GET',
-  headers: new Headers({
-    'Content-Type': 'application/x-www-form-urlencoded',
-  }),
-})
-  .then((response) => {
-    if(!response.ok) {
-      throw response;
-    }
-    return response.json();
-  })
-  .then((json) => {
-    setStockData(json)
-  })
-}
+import ReactApexChart from "react-apexcharts";
 
 const Individual = () => {
+
+  const [stock, setStock] = React.useState({ticker: ''});
+  const [ticker, setTicker] = React.useState();
+  const [view, setView] = React.useState([]);
+
+  const handleInputChange = (event) => {
+    const u = stock;
+    u['ticker'] = event.target.value;
+    setStock(u);
+    setTicker(event.target.value);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    setSymbol(stock);
-  }
-  const [symbol, setSymbol] = useState();
-  const [stock, setStock] = useState();
-  const [stockData, setStockData] = useState([]);
-  const stonks = stockData[0];
-  let price = 'a';
-  let change = 'a'; 
-  let ticker = 'a';
-  let dailyChange = 'a';
-  useEffect(() => {
-    getStock(symbol, setStockData);
-  }, [symbol]);
-  if(stonks !== undefined) {
-    price = stonks.price;
-    change = stonks.change;
-    ticker = stonks.symbol;
-    dailyChange = stonks.dailyChange;
-  }
-  return (
-    <div id = "fullpage">
-      <nav>
-        <div id = "nav-logo-section" class="nav-section">
-        <a href = "/">Slug Finance</a>
-        </div>
-        <div id = "nav-search-section" class="nav-section">
-        <form onSubmit = {handleSubmit}>
-    <input 
-    type = "text" 
-    name = "name"
-    onChange= {(event) =>
-      setStock(event.target.value)}
-    />
-    <button type = "submit"> Submit</button>
-    </form>
-        </div>
-        <div id = "nav-title-section" class="nav-section">
-          <a href = "/individual">myPortfolio</a>
-          <a href = "/login">Log In</a>
-          <a href = "/signup">Sign Up</a>
-        </div>
-      </nav>
+    console.log(stock);
+    fetch('http://127.0.0.1:5000/v0/getHistory', {
+      method: 'POST',
+      body: JSON.stringify(stock),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw res;
+        }
 
-      <main>
-        <article>
-          <div class = "article-image-section article-section">
-            <h2>{ticker} {price} {change} {dailyChange}</h2>
-            <img src="https://i.gyazo.com/95447b3722f580224916474c87eb2363.png" alt="graph" height="500px"></img>
-          </div>
-          <div class = "article-info-section article-section">
-            <h2>Information</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          </div>
-          <div class = "article-about-section article-section">
-           <h2>About</h2>
-           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          </div>
-        </article>
-      </main>
+        fetch('http://127.0.0.1:5000/v0/view?id=' + ticker, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw response;
+            }
+            return response.json();
+          })
+          .then((json) => {
+            setView(json);
+          })
+          .catch((error) => {
+            console.log(error);
+            setView([]);
+          });
+        return res.json();
+      })
+      .catch((error) => {
+        fetch('http://127.0.0.1:5000/v0/view?id=' + ticker, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw response;
+            }
+            return response.json();
+          })
+          .then((json) => {
+            setView(json);
+          })
+          .catch((error) => {
+            console.log(error);
+            setView([]);
+          });
+      });
+  };
+
+
+  const options = {};
+  const lister = [];
+
+  options.series = [];
+  const data = {'data': []}
+  options.series.push(data);
+  if(view.length >= 1) {
+    console.log(view);
+    const historicalData = view[0][0][1];
+    console.log(historicalData);
+    for(let i = historicalData.length-1; i >= 0; i--) {
+        lister.push(<div key = {i}>{historicalData[i].close} {historicalData[i].day} {historicalData[i].high} {historicalData[i].low} {historicalData[i].open} </div>);
+        const temp = {};
+        temp.x = new Date (historicalData[i].day);
+        temp.y = [];
+        temp.y.push(historicalData[i].open);
+        temp.y.push(historicalData[i].high);
+        temp.y.push(historicalData[i].low);
+        temp.y.push(historicalData[i].close);
+        options.series[0].data.push(temp);
+    }
+
+    options.chart = {};
+    options.chart.type = 'candlestick';
+    options.chart.height = 350;
+    options.title = {};
+    options.title.text = 'CandleStick Chart';
+    options.title.align = 'left';
+    options.xaxis = {};
+    options.xaxis.type = 'datetime';
+    options.yaxis = {};
+    options.yaxis.tooltip = {};
+    options.yaxis.tooltip.enabled = true;
+
+    console.log(JSON.stringify(options));
+
+  }
+
+  return (
+    <div>
+      <h1>Individual Page</h1>
+      <form onSubmit = {handleSubmit}>
+        <input 
+        type = "text" 
+        name = "name"
+        onChange= {handleInputChange}
+        />
+        <button type = "submit">Submit</button>
+      </form>
+      <div id="chart">
+        <ReactApexChart options={options} series={options.series} type="candlestick" height={350} />
+      </div>
+      {lister}
     </div>
   );
 };
