@@ -1,8 +1,9 @@
-// import '../App.css';
+
 import React, {useState,useEffect} from 'react';
 import {FaSistrix, FaBars} from "react-icons/fa"
 import Logo from '../images/test2.png'
-// import {useNavigate} from 'react-router-dom';
+import ReactApexChart from "react-apexcharts";
+
 
 const getStock = (symbol, setStockData) => {
   //how to stop firing on intial render 
@@ -34,7 +35,12 @@ const Home = () => {
   const [stockData, setStockData] = useState([]);
   const [navbarOpen, setNavbarOpen] = React.useState(false);
   const [c1Data, setC1Data] = useState([]);
+  const [c2Data, setC2Data] = useState([]);
+  const [c3Data, setC3Data] = useState([]);
+  const [c4Data, setC4Data] = useState([]);
+  const [c5Data, setC5Data] = useState([]);
   const stonks = stockData[0];
+  
   let price = undefined;
   let change = undefined; 
   let ticker = undefined;
@@ -49,6 +55,7 @@ const Home = () => {
     dailyChange = stonks[0][3];
   }
 
+  //CHART 1
   useEffect(()=> {
     ( async()=>{
         await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
@@ -59,7 +66,7 @@ const Home = () => {
             })
         })
 
-       /* let c1d = await fetch(`http://127.0.0.1:5000/v0/view?id=TSLA`, {
+        let c1d = await fetch(`http://127.0.0.1:5000/v0/view?id=TSLA`, {
           method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/json',
@@ -70,49 +77,294 @@ const Home = () => {
             }
             return response.json();
           })
-          setC1Data(c1d);*/
+          setC1Data(c1d);
     }) ();
     return() =>{
-      
+      console.log("fetch");
+      //AbortController.abort();
     };
   },[]);
+  const c1Options = {};
+  c1Options.series = [];
+  const c1GraphData = {'data': []}
+  c1Options.series.push(c1GraphData);
+  if (c1Data.length >= 1){
+    let c1History= c1Data[0][0][1];
+    console.log(c1History);
 
-/* not working 
- for (let i=0; i<1; i++){
-  fetch(`http://127.0.0.1:5000/v0/getHistory`, {
-    method: 'POST',
-    body: `{"ticker": "TSLA"}`,
-    headers: new Headers({
-      'Content-Type': 'application/json',
-      })
-    }).then((response) => {
-      if(!response.ok) {
-        throw response;
-      }
-      return response.json();
-    })
- }
+    for (let i=c1History.length-1; i>=0; i--){
+      const temp = {};
+        temp.x = new Date (c1History[i].day);
+        temp.y = [];
+        temp.y.push(c1History[i].open);
+        temp.y.push(c1History[i].high);
+        temp.y.push(c1History[i].low);
+        temp.y.push(c1History[i].close);
+        c1Options.series[0].data.push(temp);
+    }
+    c1Options.chart = {};
+    c1Options.chart.type = 'candlestick';
+    c1Options.chart.height = 350;
+    c1Options.title = {};
+    c1Options.title.text = 'TSLA';
+    c1Options.title.align = 'left';
+    c1Options.xaxis = {};
+    c1Options.xaxis.type = '';
+    c1Options.yaxis = {};
+    c1Options.yaxis.tooltip = {};
+    c1Options.yaxis.tooltip.enabled = true;
+  }
 
- for (let i=0;i<1;i++){
-  fetch(`http://127.0.0.1:5000/v0/view`, {
-      method: 'GET',
-      headers: new Headers({
-        'Content-Type': 'application/json',
+
+  //CHART 2
+  useEffect(()=> {
+    ( async()=>{
+        await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+          method: 'POST',
+          body: `{"ticker": "NVDA"}`,
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            })
         })
-      }).then((response) => {
-        if(!response.ok) {
-          throw response;
-        }
-        return response.json();
-      }).then((c1Json) => {
-        setC1Data(c1Json)
-      })
- }
-*/
 
+        let c2d = await fetch(`http://127.0.0.1:5000/v0/view?id=NVDA`, {
+          method: 'GET',
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            })
+          }).then((response) => {
+            if(!response.ok) {
+              throw response;
+            }
+            return response.json();
+          })
+          setC2Data(c2d);
+    }) ();
+    return() =>{
+      console.log("fetch");
+      //AbortController.abort();
+    };
+  },[]);
+  const c2Options = {};
+  c2Options.series = [];
+  const c2GraphData = {'data': []}
+  c2Options.series.push(c2GraphData);
+
+  if (c2Data.length >= 1){
+    let c2History= c2Data[0][0][1];
+    console.log(c2History);
+
+    for (let i=c2History.length-1; i>=0; i--){
+      const temp = {};
+        temp.x = new Date (c2History[i].day);
+        temp.y = [];
+        temp.y.push(c2History[i].open);
+        temp.y.push(c2History[i].high);
+        temp.y.push(c2History[i].low);
+        temp.y.push(c2History[i].close);
+        c2Options.series[0].data.push(temp);
+    }
+    c2Options.chart = {};
+    c2Options.chart.type = 'candlestick';
+    c2Options.chart.height = 350;
+    c2Options.title = {};
+    c2Options.title.text = 'NVDA';
+    c2Options.title.align = 'left';
+    c2Options.xaxis = {};
+    c2Options.xaxis.type = 'day';
+    c2Options.yaxis = {};
+    c2Options.yaxis.tooltip = {};
+    c2Options.yaxis.tooltip.enabled = true;
+  }
+
+  //CHART 3
+  useEffect(()=> {
+    ( async()=>{
+        await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+          method: 'POST',
+          body: `{"ticker": "DOW"}`,
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            })
+        })
+
+        let c3d = await fetch(`http://127.0.0.1:5000/v0/view?id=DOW`, {
+          method: 'GET',
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            })
+          }).then((response) => {
+            if(!response.ok) {
+              throw response;
+            }
+            return response.json();
+          })
+          setC3Data(c3d);
+    }) ();
+    return() =>{
+      console.log("fetch");
+      //AbortController.abort();
+    };
+  },[]);
+  const c3Options = {};
+  c3Options.series = [];
+  const c3GraphData = {'data': []}
+  c3Options.series.push(c3GraphData);
+
+  if (c3Data.length >= 1){
+    let c3History= c3Data[0][0][1];
+    console.log(c3History);
+
+    for (let i=c3History.length-1; i>=0; i--){
+      const temp = {};
+        temp.x = new Date (c3History[i].day);
+        temp.y = [];
+        temp.y.push(c3History[i].open);
+        temp.y.push(c3History[i].high);
+        temp.y.push(c3History[i].low);
+        temp.y.push(c3History[i].close);
+        c3Options.series[0].data.push(temp);
+    }
+    c3Options.chart = {};
+    c3Options.chart.type = 'candlestick';
+    c3Options.chart.height = 350;
+    c3Options.title = {};
+    c3Options.title.text = 'DOW';
+    c3Options.title.align = 'left';
+    c3Options.xaxis = {};
+    c3Options.xaxis.type = 'day';
+    c3Options.yaxis = {};
+    c3Options.yaxis.tooltip = {};
+    c3Options.yaxis.tooltip.enabled = true;
+  }
+
+
+  //CHART 4
+  useEffect(()=> {
+    ( async()=>{
+        await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+          method: 'POST',
+          body: `{"ticker": "GOOGL"}`,
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            })
+        })
+
+        let c4d = await fetch(`http://127.0.0.1:5000/v0/view?id=GOOGL`, {
+          method: 'GET',
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            })
+          }).then((response) => {
+            if(!response.ok) {
+              throw response;
+            }
+            return response.json();
+          })
+          setC4Data(c4d);
+    }) ();
+    return() =>{
+      console.log("fetch");
+      //AbortController.abort();
+    };
+  },[]);
+  const c4Options = {};
+  c4Options.series = [];
+  const c4GraphData = {'data': []}
+  c4Options.series.push(c4GraphData);
+
+  if (c4Data.length >= 1){
+    let c4History= c4Data[0][0][1];
+    console.log(c4History);
+
+    for (let i=c4History.length-1; i>=0; i--){
+      const temp = {};
+        temp.x = new Date (c4History[i].day);
+        temp.y = [];
+        temp.y.push(c4History[i].open);
+        temp.y.push(c4History[i].high);
+        temp.y.push(c4History[i].low);
+        temp.y.push(c4History[i].close);
+        c4Options.series[0].data.push(temp);
+    }
+    c4Options.chart = {};
+    c4Options.chart.type = 'candlestick';
+    c4Options.chart.height = 350;
+    c4Options.title = {};
+    c4Options.title.text = 'GOOGL';
+    c4Options.title.align = 'left';
+    c4Options.xaxis = {};
+    c4Options.xaxis.type = 'day';
+    c4Options.yaxis = {};
+    c4Options.yaxis.tooltip = {};
+    c4Options.yaxis.tooltip.enabled = true;
+  }
+
+  //CHART 4
+  useEffect(()=> {
+    ( async()=>{
+        await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+          method: 'POST',
+          body: `{"ticker": "AMZN"}`,
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            })
+        })
+
+        let c5d = await fetch(`http://127.0.0.1:5000/v0/view?id=AMZN`, {
+          method: 'GET',
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            })
+          }).then((response) => {
+            if(!response.ok) {
+              throw response;
+            }
+            return response.json();
+          })
+          setC5Data(c5d);
+    }) ();
+    return() =>{
+      console.log("fetch");
+      //AbortController.abort();
+    };
+  },[]);
+  const c5Options = {};
+  c5Options.series = [];
+  const c5GraphData = {'data': []}
+  c5Options.series.push(c5GraphData);
+
+  if (c5Data.length >= 1){
+    let c5History= c5Data[0][0][1];
+    console.log(c5History);
+
+    for (let i=c5History.length-1; i>=0; i--){
+      const temp = {};
+        temp.x = new Date (c5History[i].day);
+        temp.y = [];
+        temp.y.push(c5History[i].open);
+        temp.y.push(c5History[i].high);
+        temp.y.push(c5History[i].low);
+        temp.y.push(c5History[i].close);
+        c5Options.series[0].data.push(temp);
+    }
+    c5Options.chart = {};
+    c5Options.chart.type = 'candlestick';
+    c5Options.chart.height = 350;
+    c5Options.title = {};
+    c5Options.title.text = 'AMZN';
+    c5Options.title.align = 'left';
+    c5Options.xaxis = {};
+    c5Options.xaxis.type = 'day';
+    c5Options.yaxis = {};
+    c5Options.yaxis.tooltip = {};
+    c5Options.yaxis.tooltip.enabled = true;
+  }
+
+  //RENDER WEBPAGE
   return (
-    <div>
-      <nav className="relative flex items-center justify-between px-2 py-3 bg-[#27a5f8] sticky top-0">
+    <div className="overflow-auto">
+      <nav className="overflow-hidden relative flex items-center justify-between px-2 py-3 bg-[#27a5f8] sticky top-0">
         <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
           <img className="flex inline-block" src={Logo} width='40' height='40' alt=''/>
           <div className="inline-block w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
@@ -178,40 +430,47 @@ const Home = () => {
         </div>
       </nav>
       
-      <div class="flex box-border font-mono font-bold text-6xl items-center text-center h-screen "
+      <div className="flex justify-center box-border font-mono font-bold text-6xl items-center text-center overflow-visible" 
         style={{backgroundImage: 'url(https://knowledge.wharton.upenn.edu/wp-content/uploads/2020/11/Stock-Market-900x387.jpg)',
-                    backgroundRepeat: "no=repeat",
                     backgroundSize: "cover",
-                    align: "center"
+                    align: "center",
+                    height:1000
                     }}>
-        
-        <div class="flex-grow text-yellow-200 font-serif">
-          Such an inspirational quote
+        <div className="flex items-center text-yellow-200 font-serif h-screen">
+          The price is what you pay, value is what you get.
         </div>
-      
       </div>
       
-      <div class="grid grid-col-3 grid-row-4 grid-flow-col gap-2 h-screen ">
-        <div class="row-span-4 col-span-2">
-          1
-          <pre>{JSON.stringify(c1Data,null,2)}</pre>
+      <div className="flex grid grid-col-4 grid-row-4 grid-flow-col-dense gap-2 h-screen" id="chart" style={{height:10}}  >
+        <div className="row-span-4 col-span-2">
+        <ReactApexChart options={c1Options} series={c1Options.series} type="candlestick" height={800} width={1000}/>
         </div>
-        <div class="row-end-1">
+        <div className="row-end-1">
           2
+          <ReactApexChart options={c2Options} series={c2Options.series} type="candlestick" height={300} width={400}/>
         </div>
-        <div class="row-end-2">
+        <div className="row-end-1">
           3
+          <ReactApexChart options={c3Options} series={c3Options.series} type="candlestick" height={300} width={400}/>
         </div>
-        <div class="row-end-3">
+        <div className="row-start-3">
           4
+          <ReactApexChart options={c4Options} series={c4Options.series} type="candlestick" height={300} width={400}/>
         </div>
-        <div class="row-end-4">
+        <div className="row-end-4">
           5
+          <ReactApexChart options={c5Options} series={c5Options.series} type="candlestick" height={300} width={400}/>
         </div>
       </div>
       
       
-      <table>
+      
+    </div>
+  );
+};
+  
+export default Home;
+/*<table>
         <tr>
           <th>Ticker Name</th>
           <th>Change</th>
@@ -227,9 +486,4 @@ const Home = () => {
       </table>
       <ol type = "1">
         
-      </ol>
-    </div>
-  );
-};
-  
-export default Home;
+      </ol>*/
