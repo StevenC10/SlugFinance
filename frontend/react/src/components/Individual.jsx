@@ -1,6 +1,7 @@
 import React from "react";
 import './Individual.css';
 import ReactApexChart from "react-apexcharts";
+import Logo from "../images/test2.png"
 
 const Individual = () => {
 
@@ -76,7 +77,6 @@ const Individual = () => {
 
 
   const options = {};
-  const lister = [];
 
   options.series = [];
   const data = {'data': []}
@@ -86,9 +86,9 @@ const Individual = () => {
     const historicalData = view[0][0][1];
     console.log(historicalData);
     for(let i = historicalData.length-1; i >= 0; i--) {
-        lister.push(<div key = {i}>{historicalData[i].close} {historicalData[i].day} {historicalData[i].high} {historicalData[i].low} {historicalData[i].open} </div>);
         const temp = {};
-        temp.x = new Date (historicalData[i].day);
+        // temp.x = new Date (historicalData[i].day);
+        temp.x = historicalData[i].day;
         temp.y = [];
         temp.y.push(historicalData[i].open);
         temp.y.push(historicalData[i].high);
@@ -101,10 +101,10 @@ const Individual = () => {
     options.chart.type = 'candlestick';
     options.chart.height = 350;
     options.title = {};
-    options.title.text = 'CandleStick Chart';
+    options.title.text = ticker;
     options.title.align = 'left';
     options.xaxis = {};
-    options.xaxis.type = 'datetime';
+    options.xaxis.type = 'numeric';
     options.yaxis = {};
     options.yaxis.tooltip = {};
     options.yaxis.tooltip.enabled = true;
@@ -115,19 +115,45 @@ const Individual = () => {
 
   return (
     <div>
-      <h1>Individual Page</h1>
-      <form onSubmit = {handleSubmit}>
-        <input 
-        type = "text" 
-        name = "name"
-        onChange= {handleInputChange}
-        />
-        <button type = "submit">Submit</button>
-      </form>
-      <div id="chart">
-        <ReactApexChart options={options} series={options.series} type="candlestick" height={350} />
-      </div>
-      {lister}
+      <nav>
+        <div id= "nav-logo-section" class="nav-section">
+         <img src={Logo} alt="logo" width="30"/>
+         <div><b>Slug Finance</b></div>
+        </div>
+        <div id= "nav-search-section" class="nav-section">
+          <form onSubmit = {handleSubmit}>
+          <input 
+          type = "text" 
+          name = "name"
+          onChange= {handleInputChange}
+          />
+          <button type = "submit">Submit</button>
+          </form>
+        </div>
+        <div id= "nav-button-section" class="nav-section">
+          <a href="/login">myPortfolio</a>
+          <a href="/login">Login</a>
+          <a href="/signup">Signup</a>
+        </div>
+      </nav>
+      <main>
+        <div class = "wrapper">
+          <div class = "graph-section main-section">
+            <div id="chart">
+              <ReactApexChart options={options} series={options.series} type="candlestick" height={500} />
+            </div>
+          </div>
+          <div class = "info-section main-section">
+            <h1>Information</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          </div>
+          <div class = "about-section main-section">
+            <h1>About</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
