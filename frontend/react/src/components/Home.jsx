@@ -41,18 +41,18 @@ const Home = () => {
   const [c5Data, setC5Data] = useState([]);
   const stonks = stockData[0];
   
-  let price = undefined;
-  let change = undefined; 
-  let ticker = undefined;
-  let dailyChange = undefined;
+  // let price = undefined;
+  // let change = undefined; 
+  // let ticker = undefined;
+  // let dailyChange = undefined;
   useEffect(() => {
     getStock(symbol, setStockData);
   }, [symbol]);
   if(stonks !== undefined) {
-    price = stonks[0][1];
-    change = stonks[0][2];
-    ticker = stonks[0][0];
-    dailyChange = stonks[0][3];
+    // price = stonks[0][1];
+    // change = stonks[0][2];
+    // ticker = stonks[0][0];
+    // dailyChange = stonks[0][3];
   }
 
   //CHART 1
@@ -414,7 +414,7 @@ const Home = () => {
                   className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
                   href="signup"
                 >
-                  <i className="text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Sign Up</span>
+                  Sign Up
                 </a>
               </li>
               <li className="nav-item">
@@ -422,7 +422,7 @@ const Home = () => {
                   className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
                   href="login"
                 >
-                  <i className="text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Log In</span>
+                  Log In
                 </a>
               </li>
             </ul>
@@ -441,11 +441,11 @@ const Home = () => {
         </div>
       </div>
       
-      <div className="flex grid grid-col-4 grid-row-4 grid-flow-col-dense gap-2 h-screen" id="chart" style={{height:10}}  >
+      <div className="flex grid grid-col-2 grid-row-2 grid-flow-col-dense grid-flow-row-dense gap-2 h-screen" id="chart">
         <div className="row-span-4 col-span-2">
-        <ReactApexChart options={c1Options} series={c1Options.series} type="candlestick" height={800} width={1000}/>
+        <ReactApexChart options={c1Options} series={c1Options.series} type="candlestick" height={800} width={800}/>
         </div>
-        <div className="row-end-1">
+        <div className="row-span-1">
           2
           <ReactApexChart options={c2Options} series={c2Options.series} type="candlestick" height={300} width={400}/>
         </div>
