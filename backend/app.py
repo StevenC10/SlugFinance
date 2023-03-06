@@ -5,6 +5,8 @@ import os
 import json
 import requests
 import psycopg2
+import time
+import datetime
 import sys
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask import Flask, abort, jsonify, request
@@ -212,6 +214,13 @@ def add():
 def getHistoricalData():
     args = request.json
     tickerId = args.get('ticker', '')
+    year = args.get('year', '')
+    year2 = args.get('year2', '')
+    month = args.get('month', '')
+    month2= args.get('month2', '')
+    day = args.get('day', '')
+    day2 = args.get('day2', '')
+    interval = args.get('interval', '')
     conn = getConnection()
     cursor = conn.cursor()
     selectQuery = 'SELECT ticker FROM historicalStockTable WHERE %s ILIKE ticker '
@@ -219,7 +228,11 @@ def getHistoricalData():
     account = cursor.fetchall()
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'}
-    url = f'https://finance.yahoo.com/quote/{tickerId}/history?p={tickerId}'
+    # url = f'https://finance.yahoo.com/quote/{tickerId}/history?p={tickerId}'
+    # Citing Jie Jenn on how to change intervals for historical data https://youtu.be/NjEc7PB0TxQ
+    period1 = int(time.mktime(datetime.datetime(year,month,day).timetuple()))
+    period2 = int(time.mktime(datetime.datetime(year2, month2, day2).timetuple()))
+    url = f'https://finance.yahoo.com/quote/{tickerId}/history?period1={period1}&period2={period2}&interval={interval}&filter=history&frequency=7d&includeAdjustedClose=true'
     r = requests.get(url, headers=headers, timeout=30)
     soup = BeautifulSoup(r.text, 'html.parser')
     stockArr = []

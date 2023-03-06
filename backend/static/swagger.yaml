@@ -208,6 +208,20 @@ components:
       properties:
         ticker:
           type: string
+        year:
+          type: integer
+        month:
+          type: integer
+        day:
+          type: integer
+        year2:
+          type: integer
+        month2:
+          type: integer
+        day2:
+          type: integer
+        interval:
+          type: string
     Data:
       type: object
       properties:
