@@ -20,8 +20,7 @@ def getStock():
     tickerId = args.get("id")
     conn = getConnection()
     cursor = conn.cursor()
-    # selectQuery = 'SELECT ticker,price,change,percentChange FROM stockTable WHERE %s ILIKE ticker'
-    selectQuery = 'SELECT * FROM stockDescriptionTable'
+    selectQuery = 'SELECT ticker,price,change,percentChange FROM stockTable WHERE %s ILIKE ticker'
     cursor.execute(selectQuery, (tickerId,))
     stock = cursor.fetchall()
     if stock:
@@ -78,7 +77,21 @@ def getAbout(symbol):
     cursor.close()
     conn.close()
 
-        
+@app.route('/v0/getDescription', methods = ['GET'])
+def getDescription():
+    args = request.args
+    tickerDescription = args.get("description")
+    conn = getConnection()
+    cursor = conn.cursor()
+    selectQuery = 'SELECT * FROM stockDescriptionTable WHERE %s ILIKE ticker'
+    cursor.execute(selectQuery, (tickerDescription, ))
+    desc = cursor.fetchall()
+    if desc:
+        return jsonify(desc, 200)
+    else:
+        abort(400)
+
+
 
 # Route/Function to check login of user
 @app.route('/v0/login', methods=['POST'])
