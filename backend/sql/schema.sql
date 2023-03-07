@@ -15,3 +15,4 @@ CREATE TABLE stockTable(personemail VARCHAR DEFAULT 'default', ticker VARCHAR, p
 
 CREATE TABLE historicalStockTable(ticker VARCHAR, stockData jsonb);
 CREATE TABLE stockDescriptionTable(ticker VARCHAR, about VARCHAR);
+CREATE TABLE stockInfoTable(ticker VARCHAR, infoData jsonb);

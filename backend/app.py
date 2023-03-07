@@ -15,6 +15,44 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+def storeData(table1, table2):
+    stockInformation = {
+        'Previous Close' : None,
+        'Open' : None,
+        'Bid': None,
+        'Ask' : None,
+        'Day\'s Range': None,
+        '52 Week Range': None,
+        'Volume': None,
+        'Avg. Volume': None,
+        'Market Cap': None,
+        'Beta(5Y Monthly)': None,
+        'PE Ratio (TTM)': None,
+        'EPS(TTM)': None,
+        'Earnings Date': None,
+        'Forward Dividend & Yield': None,
+        'Ex-Dividend Date': None,
+        '1y Target EST': None
+    }
+    stockInformation['Previous Close'] = table1[0].get_text()
+    stockInformation['Open'] = table1[1].get_text()
+    stockInformation['Bid'] = table1[2].get_text()
+    stockInformation['Ask'] = table1[3].get_text()
+    stockInformation['Day\'s Range'] = table1[4].get_text()
+    stockInformation['52 Week Range'] = table1[5].get_text()
+    stockInformation['Volume'] = table1[6].get_text()
+    stockInformation['Avg. Volume'] = table1[7].get_text()
+    stockInformation['Market Cap'] = table2[0].get_text()
+    stockInformation['Beta(5Y Monthly)'] = table2[1].get_text()
+    stockInformation['PE Ratio (TTM)'] = table2[2].get_text()
+    stockInformation['EPS(TTM)'] = table2[3].get_text()
+    stockInformation['Earnings Date'] = table2[4].get_text()
+    stockInformation['Forward Dividend & Yield'] = table2[5].get_text()
+    stockInformation['Ex-Dividend Date'] = table2[6].get_text()
+    stockInformation['1y Target EST'] = table2[7].get_text()
+    stockArr = []
+    stockArr.append(stockInformation)
+    return json.dumps(stockArr)
 # Route/Function to get the stock data of a specific ticker.
 @app.route('/v0/ticker/', methods=['GET'])
 def getStock():
@@ -29,6 +67,22 @@ def getStock():
         return jsonify(stock, 200)
     else:
         abort(404)
+
+# Route/Function to get the stock information of a specific ticker.
+@app.route('/v0/retrieveInfo/', methods=['GET'])
+def retrieveInfo():
+    args = request.args
+    tickerId = args.get("id")
+    conn = getConnection()
+    cursor = conn.cursor()
+    selectQuery = 'SELECT ticker, infoData FROM stockInfoTable WHERE %s ILIKE ticker'
+    cursor.execute(selectQuery, (tickerId,))
+    stock = cursor.fetchall()
+    if stock:
+        return jsonify(stock, 200)
+    else:
+        abort(404)
+
 
 #Function to grab historical data about a stock
 @app.route('/v0/view', methods=['GET'])
@@ -76,9 +130,9 @@ def getAbout(symbol):
         if not found:
             cursor.execute(insertQuery, (symbol, description,))
             conn.commit()
-    cursor.close()
-    conn.close()
 
+
+#Function that lookups description stock table to grab stock description
 @app.route('/v0/getDescription', methods = ['GET'])
 def getDescription():
     args = request.args
@@ -169,6 +223,7 @@ def add():
             percentChange = x.find_all('span')[1].text
             cursor.execute(selectQuery, (symbol, ))
             stock = cursor.fetchall()
+            print(len(stock), file = sys.stderr)
             if (len(stock) > 0):
                 cursor.execute(
                     updateQuery, (price, change, percentChange, symbol,))
@@ -178,6 +233,8 @@ def add():
                     insertQuery, (symbol, price, change, percentChange,))
                 conn.commit()
             getAbout(symbol)
+            cursor.close()
+            conn.close()
         return jsonify('Stocks added!'), 201
     else:
         url = f'https://finance.yahoo.com/quote/{ticker}'
@@ -196,6 +253,7 @@ def add():
         selectQuery = 'SELECT ticker,price,change,percentChange FROM stockTable WHERE %s = ticker'
         cursor.execute(selectQuery, (stockSymbol,))
         stock = cursor.fetchall()
+        print(len(stock), file = sys.stderr)
         if len(stock) > 0:
             updateQuery = 'UPDATE stockTable SET price = %s, change = %s, percentChange = %s WHERE ticker = %s'
             cursor.execute(updateQuery, (stockPrice, stockChange,
@@ -208,6 +266,34 @@ def add():
             conn.commit()
         getAbout(stockSymbol)
         return jsonify('Stock Added!'), 201
+
+@app.route('/v0/getInfo', methods = ['POST'])
+def getInfo():
+    args = request.json
+    tickerId = args.get('ticker')
+    conn = getConnection()
+    cursor = conn.cursor()
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'}
+    url = f'https://finance.yahoo.com/quote/{tickerId}'
+    r = requests.get(url, headers = headers, timeout = 30)
+    soup = BeautifulSoup(r.text, 'html.parser')
+    data = soup.find_all('table')
+    for information in data[0]:
+        firstTable = information.find_all('td', {'class': 'Ta(end) Fw(600) Lh(14px)'})
+    for information in data[1]:
+        secondTable = information.find_all('td', {'class': 'Ta(end) Fw(600) Lh(14px)'})
+    stockData = storeData(firstTable, secondTable)
+    selectQuery = 'SELECT * FROM stockInfoTable WHERE %s ILIKE ticker'
+    cursor.execute(selectQuery, (tickerId,))
+    found = cursor.fetchall()
+    if found:
+        abort(404)
+    insertQuery = 'INSERT INTO stockInfoTable(ticker, infoData) VALUES (%s, %s)'
+    cursor.execute(insertQuery, (tickerId, stockData,))
+    conn.commit()
+    return jsonify('Data Added', 201)
+
 
 #Gets the historical data for specified stock
 @app.route('/v0/getHistory', methods=['POST'])
@@ -262,6 +348,7 @@ def getHistoricalData():
     return jsonify('success', 201)
 
 
+#Swagger Config
 SWAGGER_URL = '/swagger'
 API_URL = '/static/swagger.yaml'
 SWAGGER_BLUEPRINT = get_swaggerui_blueprint(
