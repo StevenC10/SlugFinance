@@ -3,6 +3,8 @@ import React, {useState,useEffect} from 'react';
 import {FaSistrix, FaBars} from "react-icons/fa"
 import Logo from '../images/test2.png'
 import ReactApexChart from "react-apexcharts";
+//import { createChartData } from './Chartdata';
+//import {useRef} from 'react;
 
 
 const getStock = (symbol, setStockData) => {
@@ -30,6 +32,7 @@ const Home = () => {
     event.preventDefault();
     setSymbol(stock);
   }
+  
   const [symbol, setSymbol] = useState();
   const [stock, setStock] = useState();
   const [stockData, setStockData] = useState([]);
@@ -40,7 +43,10 @@ const Home = () => {
   const [c4Data, setC4Data] = useState([]);
   const [c5Data, setC5Data] = useState([]);
   const stonks = stockData[0];
-  
+  //let effectRan=false;
+  //const [chartData,setChartData] = useState({});
+  //const effectRan = useRef(false);
+  //chartData.info=[];
   // let price = undefined;
   // let change = undefined; 
   // let ticker = undefined;
@@ -54,67 +60,92 @@ const Home = () => {
     // ticker = stonks[0][0];
     // dailyChange = stonks[0][3];
   }
+  
+  /* modularizing the graph data code isn't working out, come back later
+ for(let i=0; i<1; i++){}
+        const f = async()=>{
+          const response= await createChartData("TSLA")
+          setChartData(response);
+          
+          console.log(response);
+          console.log(chartData);
+        }
+        f();   
+        return () => {
+          console.log("effectRan");
+          effectRan.current = true;
+        }
+      }
+      
+  },[chartData,effectRan]);
+  effectRan.current = false;
+  console.log(chartData);
+        //console.log(chartData);
+        //console.log(chartData.info);
+        //console.log(chartOptions);
 
+*/
   //CHART 1
-  useEffect(()=> {
-    ( async()=>{
-        await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
-          method: 'POST',
-          body: `{"ticker": "TSLA"}`,
-          headers: new Headers({
-            'Content-Type': 'application/json',
-            })
-        })
-
-        let c1d = await fetch(`http://127.0.0.1:5000/v0/view?id=TSLA`, {
-          method: 'GET',
-          headers: new Headers({
-            'Content-Type': 'application/json',
-            })
-          }).then((response) => {
-            if(!response.ok) {
-              throw response;
-            }
-            return response.json();
+useEffect(()=> {
+  ( async()=>{
+      await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+        method: 'POST',
+        body: `{"ticker": "TSLA"}`,
+        headers: new Headers({
+          'Content-Type': 'application/json',
           })
-          setC1Data(c1d);
-    }) ();
-    return() =>{
-      console.log("fetch");
-      //AbortController.abort();
-    };
-  },[]);
-  const c1Options = {};
-  c1Options.series = [];
-  const c1GraphData = {'data': []}
-  c1Options.series.push(c1GraphData);
-  if (c1Data.length >= 1){
-    let c1History= c1Data[0][0][1];
-    console.log(c1History);
+      })
 
-    for (let i=c1History.length-1; i>=0; i--){
-      const temp = {};
-        temp.x = new Date (c1History[i].day);
-        temp.y = [];
-        temp.y.push(c1History[i].open);
-        temp.y.push(c1History[i].high);
-        temp.y.push(c1History[i].low);
-        temp.y.push(c1History[i].close);
-        c1Options.series[0].data.push(temp);
-    }
-    c1Options.chart = {};
-    c1Options.chart.type = 'candlestick';
-    c1Options.chart.height = 350;
-    c1Options.title = {};
-    c1Options.title.text = 'TSLA';
-    c1Options.title.align = 'left';
-    c1Options.xaxis = {};
-    c1Options.xaxis.type = '';
-    c1Options.yaxis = {};
-    c1Options.yaxis.tooltip = {};
-    c1Options.yaxis.tooltip.enabled = true;
+      let c1d = await fetch(`http://127.0.0.1:5000/v0/view?id=TSLA`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          })
+        }).then((response) => {
+          if(!response.ok) {
+            throw response;
+          }
+          return response.json();
+        })
+      setC1Data(c1d);
+        
+  }) ();
+  return() =>{
+    //AbortController.abort();
+  };
+},[]);
+
+
+const c1Options = {};
+c1Options.series = [];
+const c1GraphData = {'data': []}
+c1Options.series.push(c1GraphData);
+if (c1Data.length >= 1){
+  let c1History= c1Data[0][0][1];
+
+  for (let i=c1History.length-1; i>=0; i--){
+    const temp = {};
+      temp.x = new Date (c1History[i].day);
+      temp.y = [];
+      temp.y.push(c1History[i].open);
+      temp.y.push(c1History[i].high);
+      temp.y.push(c1History[i].low);
+      temp.y.push(c1History[i].close);
+      c1Options.series[0].data.push(temp);
   }
-
+  c1Options.chart = {};
+  c1Options.chart.type = 'candlestick';
+  c1Options.chart.height = 350;
+  c1Options.title = {};
+  c1Options.title.text = 'TSLA';
+  c1Options.title.align = 'left';
+  c1Options.xaxis = {};
+  c1Options.xaxis.type = '';
+  c1Options.yaxis = {};
+  c1Options.yaxis.tooltip = {};
+  c1Options.yaxis.tooltip.enabled = true;
+}
+//console.log(c1Options);
 
   //CHART 2
   useEffect(()=> {
@@ -138,13 +169,15 @@ const Home = () => {
             }
             return response.json();
           })
+
           setC2Data(c2d);
     }) ();
+          
     return() =>{
-      console.log("fetch");
       //AbortController.abort();
     };
   },[]);
+
   const c2Options = {};
   c2Options.series = [];
   const c2GraphData = {'data': []}
@@ -152,7 +185,6 @@ const Home = () => {
 
   if (c2Data.length >= 1){
     let c2History= c2Data[0][0][1];
-    console.log(c2History);
 
     for (let i=c2History.length-1; i>=0; i--){
       const temp = {};
@@ -202,7 +234,6 @@ const Home = () => {
           setC3Data(c3d);
     }) ();
     return() =>{
-      console.log("fetch");
       //AbortController.abort();
     };
   },[]);
@@ -213,7 +244,6 @@ const Home = () => {
 
   if (c3Data.length >= 1){
     let c3History= c3Data[0][0][1];
-    console.log(c3History);
 
     for (let i=c3History.length-1; i>=0; i--){
       const temp = {};
@@ -264,7 +294,6 @@ const Home = () => {
           setC4Data(c4d);
     }) ();
     return() =>{
-      console.log("fetch");
       //AbortController.abort();
     };
   },[]);
@@ -275,7 +304,6 @@ const Home = () => {
 
   if (c4Data.length >= 1){
     let c4History= c4Data[0][0][1];
-    console.log(c4History);
 
     for (let i=c4History.length-1; i>=0; i--){
       const temp = {};
@@ -325,7 +353,7 @@ const Home = () => {
           setC5Data(c5d);
     }) ();
     return() =>{
-      console.log("fetch");
+
       //AbortController.abort();
     };
   },[]);
@@ -336,7 +364,6 @@ const Home = () => {
 
   if (c5Data.length >= 1){
     let c5History= c5Data[0][0][1];
-    console.log(c5History);
 
     for (let i=c5History.length-1; i>=0; i--){
       const temp = {};
@@ -361,6 +388,8 @@ const Home = () => {
     c5Options.yaxis.tooltip.enabled = true;
   }
 
+  
+  
   //RENDER WEBPAGE
   return (
     <div className="overflow-auto">
@@ -400,15 +429,14 @@ const Home = () => {
             id="example-navbar-danger"
           >
             <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
-              {/* <li className="nav-item">
+              { <li className="nav-item">
                 <a
                   className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
                   href="#SLUGFINANCE"
                 >
-                  <FaFacebookSquare/>
-                  <i className="fab text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Share</span>
+                  Watchlist
                 </a>
-              </li> */}
+              </li> }
               <li className="nav-item">
                 <a
                   className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
@@ -441,25 +469,25 @@ const Home = () => {
         </div>
       </div>
       
-      <div className="flex grid grid-col-2 grid-row-2 grid-flow-col-dense grid-flow-row-dense gap-2 h-screen" id="chart">
-        <div className="row-span-4 col-span-2">
-        <ReactApexChart options={c1Options} series={c1Options.series} type="candlestick" height={800} width={800}/>
+      <div className="flex grid grid-col-4 grid-row-4 grid-flow-col-dense h-screen" id="chart">
+        <div className="row-span-4 col-span-2 row-start-1">
+          <ReactApexChart options={c1Options} series={c1Options.series} type="candlestick" height={800} width={850}/>
         </div>
-        <div className="row-span-1">
+        <div className="row-start-1">
           2
-          <ReactApexChart options={c2Options} series={c2Options.series} type="candlestick" height={300} width={400}/>
+          <ReactApexChart options={c2Options} series={c2Options.series} type="candlestick" height={400} width={450}/>
         </div>
-        <div className="row-end-1">
+        <div className="row-start-1">
           3
-          <ReactApexChart options={c3Options} series={c3Options.series} type="candlestick" height={300} width={400}/>
+          <ReactApexChart options={c3Options} series={c3Options.series} type="candlestick" height={400} width={450}/>
         </div>
-        <div className="row-start-3">
+        <div className="row-start-2">
           4
-          <ReactApexChart options={c4Options} series={c4Options.series} type="candlestick" height={300} width={400}/>
+          <ReactApexChart options={c4Options} series={c4Options.series} type="candlestick" height={400} width={450}/>
         </div>
-        <div className="row-end-4">
+        <div className="row-start-2">
           5
-          <ReactApexChart options={c5Options} series={c5Options.series} type="candlestick" height={300} width={400}/>
+          <ReactApexChart options={c5Options} series={c5Options.series} type="candlestick" height={400} width={450}/>
         </div>
       </div>
       
