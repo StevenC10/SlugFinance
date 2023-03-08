@@ -7,59 +7,27 @@ import ReactApexChart from "react-apexcharts";
 //import {useRef} from 'react;
 
 
-const getStock = (symbol, setStockData) => {
-  //how to stop firing on intial render 
-  //https://stackoverflow.com/questions/72146986/useeffect-firing-on-initial-render
-  symbol && fetch(`http://127.0.0.1:5000/v0/ticker?id=` + symbol, {
-  method: 'GET',
-  headers: new Headers({
-    'Content-Type': 'application/x-www-form-urlencoded',
-  }),
-})
-  .then((response) => {
-    if(!response.ok) {
-      throw response;
-    }
-    return response.json();
-  })
-  .then((json) => {
-    setStockData(json)
-  })
-}
 
 const Home = () => {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setSymbol(stock);
-  }
   
-  const [symbol, setSymbol] = useState();
-  const [stock, setStock] = useState();
-  const [stockData, setStockData] = useState([]);
   const [navbarOpen, setNavbarOpen] = React.useState(false);
   const [c1Data, setC1Data] = useState([]);
   const [c2Data, setC2Data] = useState([]);
   const [c3Data, setC3Data] = useState([]);
   const [c4Data, setC4Data] = useState([]);
   const [c5Data, setC5Data] = useState([]);
-  const stonks = stockData[0];
+
+  const today = new Date();
+  const day = today.getDate();
+  const month = today.getMonth()+1;
+  const year = today.getFullYear();
+  
   //let effectRan=false;
   //const [chartData,setChartData] = useState({});
   //const effectRan = useRef(false);
   //chartData.info=[];
-  // let price = undefined;
-  // let change = undefined; 
-  // let ticker = undefined;
-  // let dailyChange = undefined;
-  useEffect(() => {
-    getStock(symbol, setStockData);
-  }, [symbol]);
-  if(stonks !== undefined) {
-    // price = stonks[0][1];
-    // change = stonks[0][2];
-    // ticker = stonks[0][0];
-    // dailyChange = stonks[0][3];
-  }
+
+  
   
   /* modularizing the graph data code isn't working out, come back later
  for(let i=0; i<1; i++){}
@@ -90,12 +58,20 @@ useEffect(()=> {
   ( async()=>{
       await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
         method: 'POST',
-        body: `{"ticker": "TSLA"}`,
+        body: `{"ticker": "TSLA",`
+              + `"year": 2023,`
+              + `"month": 2,`
+              + `"day": 1,`
+              + `"year2": `+year+`,`
+              + `"month2": `+month+`,`
+              + `"day2": `+day+`,`
+              + `"interval": "1d"`
+              +"}",
         headers: new Headers({
           'Content-Type': 'application/json',
           })
       })
-
+      
       let c1d = await fetch(`http://127.0.0.1:5000/v0/view?id=TSLA`, {
         method: 'GET',
         headers: new Headers({
@@ -113,7 +89,7 @@ useEffect(()=> {
   return() =>{
     //AbortController.abort();
   };
-},[]);
+},[day,month,year]);
 
 
 const c1Options = {};
@@ -140,19 +116,27 @@ if (c1Data.length >= 1){
   c1Options.title.text = 'TSLA';
   c1Options.title.align = 'left';
   c1Options.xaxis = {};
-  c1Options.xaxis.type = '';
+  c1Options.xaxis.type = 'numeric';
   c1Options.yaxis = {};
   c1Options.yaxis.tooltip = {};
   c1Options.yaxis.tooltip.enabled = true;
 }
-//console.log(c1Options);
+
 
   //CHART 2
   useEffect(()=> {
     ( async()=>{
         await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
           method: 'POST',
-          body: `{"ticker": "NVDA"}`,
+          body: `{"ticker": "NVDA",`
+                + `"year": 2023,`
+                + `"month": 2,`
+                + `"day": 1,`
+                + `"year2": `+year+`,`
+                + `"month2": `+month+`,`
+                + `"day2": `+day+`,`
+                + `"interval": "1d"`
+                +"}",
           headers: new Headers({
             'Content-Type': 'application/json',
             })
@@ -176,7 +160,7 @@ if (c1Data.length >= 1){
     return() =>{
       //AbortController.abort();
     };
-  },[]);
+  },[day,month,year]);
 
   const c2Options = {};
   c2Options.series = [];
@@ -203,7 +187,7 @@ if (c1Data.length >= 1){
     c2Options.title.text = 'NVDA';
     c2Options.title.align = 'left';
     c2Options.xaxis = {};
-    c2Options.xaxis.type = 'day';
+    c2Options.xaxis.type = 'numeric';
     c2Options.yaxis = {};
     c2Options.yaxis.tooltip = {};
     c2Options.yaxis.tooltip.enabled = true;
@@ -214,7 +198,15 @@ if (c1Data.length >= 1){
     ( async()=>{
         await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
           method: 'POST',
-          body: `{"ticker": "DOW"}`,
+          body: `{"ticker": "DOW",`
+          + `"year": 2023,`
+          + `"month": 2,`
+          + `"day": 1,`
+          + `"year2": `+year+`,`
+          + `"month2": `+month+`,`
+          + `"day2": `+day+`,`
+          + `"interval": "1d"`
+          +"}",
           headers: new Headers({
             'Content-Type': 'application/json',
             })
@@ -236,7 +228,7 @@ if (c1Data.length >= 1){
     return() =>{
       //AbortController.abort();
     };
-  },[]);
+  },[day,month,year]);
   const c3Options = {};
   c3Options.series = [];
   const c3GraphData = {'data': []}
@@ -262,7 +254,7 @@ if (c1Data.length >= 1){
     c3Options.title.text = 'DOW';
     c3Options.title.align = 'left';
     c3Options.xaxis = {};
-    c3Options.xaxis.type = 'day';
+    c3Options.xaxis.type = 'numeric';
     c3Options.yaxis = {};
     c3Options.yaxis.tooltip = {};
     c3Options.yaxis.tooltip.enabled = true;
@@ -274,7 +266,15 @@ if (c1Data.length >= 1){
     ( async()=>{
         await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
           method: 'POST',
-          body: `{"ticker": "GOOGL"}`,
+          body: `{"ticker": "GOOGL",`
+          + `"year": 2023,`
+          + `"month": 2,`
+          + `"day": 1,`
+          + `"year2": `+year+`,`
+          + `"month2": `+month+`,`
+          + `"day2": `+day+`,`
+          + `"interval": "1d"`
+          +"}",
           headers: new Headers({
             'Content-Type': 'application/json',
             })
@@ -296,7 +296,7 @@ if (c1Data.length >= 1){
     return() =>{
       //AbortController.abort();
     };
-  },[]);
+  },[day,month,year]);
   const c4Options = {};
   c4Options.series = [];
   const c4GraphData = {'data': []}
@@ -322,18 +322,26 @@ if (c1Data.length >= 1){
     c4Options.title.text = 'GOOGL';
     c4Options.title.align = 'left';
     c4Options.xaxis = {};
-    c4Options.xaxis.type = 'day';
+    c4Options.xaxis.type = 'numeric';
     c4Options.yaxis = {};
     c4Options.yaxis.tooltip = {};
     c4Options.yaxis.tooltip.enabled = true;
   }
 
-  //CHART 4
+  //CHART 5
   useEffect(()=> {
     ( async()=>{
         await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
           method: 'POST',
-          body: `{"ticker": "AMZN"}`,
+          body: `{"ticker": "AMZN",`
+          + `"year": 2023,`
+          + `"month": 2,`
+          + `"day": 1,`
+          + `"year2": `+year+`,`
+          + `"month2": `+month+`,`
+          + `"day2": `+day+`,`
+          + `"interval": "1d"`
+          +"}",
           headers: new Headers({
             'Content-Type': 'application/json',
             })
@@ -356,7 +364,8 @@ if (c1Data.length >= 1){
 
       //AbortController.abort();
     };
-  },[]);
+  },[day,month,year]);
+
   const c5Options = {};
   c5Options.series = [];
   const c5GraphData = {'data': []}
@@ -377,18 +386,19 @@ if (c1Data.length >= 1){
     }
     c5Options.chart = {};
     c5Options.chart.type = 'candlestick';
-    c5Options.chart.height = 350;
+    //c5Options.chart.height = 350;
     c5Options.title = {};
     c5Options.title.text = 'AMZN';
     c5Options.title.align = 'left';
     c5Options.xaxis = {};
-    c5Options.xaxis.type = 'day';
+    c5Options.xaxis.type = 'numeric';
     c5Options.yaxis = {};
     c5Options.yaxis.tooltip = {};
     c5Options.yaxis.tooltip.enabled = true;
+    
   }
 
-  
+
   
   //RENDER WEBPAGE
   return (
@@ -412,12 +422,11 @@ if (c1Data.length >= 1){
             </button>
           </div>
           <div className="flex flex-grow inline-block">
-            <form className="flex flex-grow"onSubmit = {handleSubmit} style={{background:'white', margin:'2px'}} >
+            <form className="flex flex-grow" style={{background:'white', margin:'2px'}} >
               <input className="flex flex-grow focus:outline-none" placeholder="TSLA, AAPL, NVDA..."
               type = "text" 
               name = "name"
-              onChange= {(event) =>
-                setStock(event.target.value)}/>
+              />
               <button className="flex-end" type="submit" > <FaSistrix/></button>
             </form>
           </div>
@@ -458,39 +467,54 @@ if (c1Data.length >= 1){
         </div>
       </nav>
       
-      <div className="flex justify-center box-border font-mono font-bold text-6xl items-center text-center overflow-visible" 
+      <div className="box-border text-6xl h-screen " 
         style={{backgroundImage: 'url(https://knowledge.wharton.upenn.edu/wp-content/uploads/2020/11/Stock-Market-900x387.jpg)',
                     backgroundSize: "cover",
                     align: "center",
                     height:1000
                     }}>
-        <div className="flex items-center text-yellow-200 font-serif h-screen">
-          The price is what you pay, value is what you get.
+        <div className="grid grid-rows-2 w-2/3 h-screen"style={{paddingLeft:"60px"}}>
+          <p className="grid content-end text-yellow-200 font-serif font-mono font-bold">
+            The price is what you pay, value is what you get.
+          </p>
+          <form className="nav-item" style={{paddingTop:'10px'}} action="Individual" >
+              <input className="flex w-full focus:outline-none" placeholder="TSLA, AAPL, NVDA..."
+              type = "text" 
+              name = "name"
+              />
+            </form>
+        </div>
+        
+        <div className="flex flex-grow inline-block">
+            
         </div>
       </div>
       
       <div className="flex grid grid-col-4 grid-row-4 grid-flow-col-dense h-screen" id="chart">
-        <div className="row-span-4 col-span-2 row-start-1">
+        <div className="px-3 row-span-4 col-span-2 row-start-1">
           <ReactApexChart options={c1Options} series={c1Options.series} type="candlestick" height={800} width={850}/>
         </div>
-        <div className="row-start-1">
-          2
-          <ReactApexChart options={c2Options} series={c2Options.series} type="candlestick" height={400} width={450}/>
+        <div className="px-3 row-start-1">
+          
+          <ReactApexChart options={c2Options} series={c2Options.series} type="line" height={300} width={400}/>
         </div>
-        <div className="row-start-1">
-          3
-          <ReactApexChart options={c3Options} series={c3Options.series} type="candlestick" height={400} width={450}/>
+        <div className="px-3 row-start-1">
+          <ReactApexChart options={c3Options} series={c3Options.series} type="line" height={300} width={400}/>
         </div>
-        <div className="row-start-2">
-          4
-          <ReactApexChart options={c4Options} series={c4Options.series} type="candlestick" height={400} width={450}/>
+        <div className="px-3 row-start-2">
+          
+          <ReactApexChart options={c4Options} series={c4Options.series} type="line" height={300} width={400}/>
         </div>
-        <div className="row-start-2">
-          5
-          <ReactApexChart options={c5Options} series={c5Options.series} type="candlestick" height={400} width={450}/>
+        <div className="px-3 row-start-2">
+          
+          <ReactApexChart options={c5Options} series={c5Options.series} type="line" height={300} width={400}/>
         </div>
       </div>
-      
+      <footer className="bg-[#27a5f8] h-48 px-12 pt-5" >
+        <div className="flex bold text-4xl">About SlugFinance</div>
+        <div className="flex text-2xl">We are a team of students studying computer science at University of California Santa Cruz.</div>
+
+      </footer>
       
       
     </div>
@@ -498,20 +522,23 @@ if (c1Data.length >= 1){
 };
   
 export default Home;
-/*<table>
-        <tr>
-          <th>Ticker Name</th>
-          <th>Change</th>
-          <th>Daily Change</th>
-          <th>Current Price</th>
-        </tr>
-        <tr>
-          <td>{ticker}</td>
-          <td>{change}</td>
-          <td>{dailyChange}</td>
-          <td>{price}</td>
-        </tr>
-      </table>
-      <ol type = "1">
-        
-      </ol>*/
+/*
+const getStock = (symbol, setStockData) => {
+  //how to stop firing on intial render 
+  //https://stackoverflow.com/questions/72146986/useeffect-firing-on-initial-render
+  symbol && fetch(`http://127.0.0.1:5000/v0/ticker?id=` + symbol, {
+  method: 'GET',
+  headers: new Headers({
+    'Content-Type': 'application/x-www-form-urlencoded',
+  }),
+})
+  .then((response) => {
+    if(!response.ok) {
+      throw response;
+    }
+    return response.json();
+  })
+  .then((json) => {
+    setStockData(json)
+  })
+}*/

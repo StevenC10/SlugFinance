@@ -17,7 +17,7 @@ async function createChartData (ticker){
             throw response;
           }
           return response.json();
-        })
+        });
     
     //console.log(fetchData);
     const c1Options = {};
@@ -44,7 +44,7 @@ async function createChartData (ticker){
       c1Options.title.text = `'`+ticker+`'`;
       c1Options.title.align = 'left';
       c1Options.xaxis = {};
-      c1Options.xaxis.type = '';
+      c1Options.xaxis.type = 'numeric';
       c1Options.yaxis = {};
       c1Options.yaxis.tooltip = {};
       c1Options.yaxis.tooltip.enabled = true;
