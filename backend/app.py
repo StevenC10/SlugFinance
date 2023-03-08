@@ -115,21 +115,34 @@ def getConnection():
 def getAbout(symbol):
     selectQuery = 'SELECT ticker FROM stockDescriptionTable WHERE %s = ticker'
     insertQuery = 'INSERT INTO stockDescriptionTable(ticker, about) VALUES (%s, %s)'
+    updateQuery = 'UPDATE stockDescriptionTable SET about = %s WHERE ticker = %s'
     conn = getConnection()
     cursor = conn.cursor()
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'}
-    url = f'https://google.com/search?q={symbol}'
+    url = f'https://finance.yahoo.com/quote/{symbol}/profile'
     r = requests.get(url, headers = headers, timeout = 30)
     soup = BeautifulSoup(r.text, 'html.parser')
-    data = soup.find_all('div', {'class': 'kno-rdesc'})
-    for stock in data:
-        description = stock.find_all('span')[0].text
-        cursor.execute(selectQuery, (symbol,))
-        found = cursor.fetchall()
-        if not found:
-            cursor.execute(insertQuery, (symbol, description,))
-            conn.commit()
+    data = soup.find('section', {'class': 'quote-sub-section Mt(30px)'}).find_all('p')
+    description = data[0].get_text()
+    cursor.execute(selectQuery, (symbol,))
+    found = cursor.fetchall()
+    if found:
+        cursor.execute(updateQuery, (description, symbol,))
+        conn.commit()
+    else:
+        cursor.execute(insertQuery, (symbol, description,))
+        conn.commit()
+    cursor.close()
+    conn.close()
+    # print(data[0].get_text(), 'hello', file = sys.stderr)
+    # for stock in data:
+    #     description = stock.find_all('span')[0].text
+    #     cursor.execute(selectQuery, (symbol,))
+    #     found = cursor.fetchall()
+    #     if not found:
+    #         cursor.execute(insertQuery, (symbol, description,))
+    #         conn.commit()
 
 
 #Function that lookups description stock table to grab stock description
@@ -289,7 +302,10 @@ def getInfo():
     cursor.execute(selectQuery, (tickerId,))
     found = cursor.fetchall()
     if found:
-        abort(404)
+        updateQuery = 'UPDATE stockInfoTable SET infoData = %s WHERE ticker = %s'
+        cursor.execute(updateQuery, (stockData, tickerId, ))
+        conn.commit()
+        return jsonify('Data Updated', 201)
     insertQuery = 'INSERT INTO stockInfoTable(ticker, infoData) VALUES (%s, %s)'
     cursor.execute(insertQuery, (tickerId, stockData,))
     conn.commit()
