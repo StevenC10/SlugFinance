@@ -1,5 +1,4 @@
 import React from "react";
-import './Individual.css';
 import ReactApexChart from "react-apexcharts";
 import Logo from "../images/test2.png"
 
