@@ -121,7 +121,7 @@ if (c1Data.length >= 1){
   c1Options.yaxis.tooltip = {};
   c1Options.yaxis.tooltip.enabled = true;
 }
-//console.log(c1Options);
+
 
   //CHART 2
   useEffect(()=> {
@@ -386,7 +386,7 @@ if (c1Data.length >= 1){
     }
     c5Options.chart = {};
     c5Options.chart.type = 'candlestick';
-    c5Options.chart.height = 350;
+    //c5Options.chart.height = 350;
     c5Options.title = {};
     c5Options.title.text = 'AMZN';
     c5Options.title.align = 'left';
@@ -395,9 +395,10 @@ if (c1Data.length >= 1){
     c5Options.yaxis = {};
     c5Options.yaxis.tooltip = {};
     c5Options.yaxis.tooltip.enabled = true;
+    
   }
 
-  
+
   
   //RENDER WEBPAGE
   return (
@@ -476,7 +477,7 @@ if (c1Data.length >= 1){
           <p className="grid content-end text-yellow-200 font-serif font-mono font-bold">
             The price is what you pay, value is what you get.
           </p>
-          <form className="" style={{paddingTop:'10px'}} >
+          <form className="nav-item" style={{paddingTop:'10px'}} action="Individual" >
               <input className="flex w-full focus:outline-none" placeholder="TSLA, AAPL, NVDA..."
               type = "text" 
               name = "name"
@@ -490,21 +491,21 @@ if (c1Data.length >= 1){
       </div>
       
       <div className="flex grid grid-col-4 grid-row-4 grid-flow-col-dense h-screen" id="chart">
-        <div className="row-span-4 col-span-2 row-start-1">
+        <div className="px-3 row-span-4 col-span-2 row-start-1">
           <ReactApexChart options={c1Options} series={c1Options.series} type="candlestick" height={800} width={850}/>
         </div>
-        <div className="row-start-1">
+        <div className="px-3 row-start-1">
           
           <ReactApexChart options={c2Options} series={c2Options.series} type="line" height={300} width={400}/>
         </div>
-        <div className="row-start-1">
+        <div className="px-3 row-start-1">
           <ReactApexChart options={c3Options} series={c3Options.series} type="line" height={300} width={400}/>
         </div>
-        <div className="row-start-2">
+        <div className="px-3 row-start-2">
           
           <ReactApexChart options={c4Options} series={c4Options.series} type="line" height={300} width={400}/>
         </div>
-        <div className="row-start-2">
+        <div className="px-3 row-start-2">
           
           <ReactApexChart options={c5Options} series={c5Options.series} type="line" height={300} width={400}/>
         </div>
