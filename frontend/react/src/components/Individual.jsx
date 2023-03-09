@@ -48,6 +48,39 @@ const Individual = () => {
     setStock(u);
     setTicker(u['ticker']);
     console.log(stock['year'], stock['month'], stock['day']);
+    fetch('http://127.0.0.1:5000/v0/getHistory', {
+      method: 'POST',
+      body: JSON.stringify(stock),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw res;
+        }
+
+        fetch('http://127.0.0.1:5000/v0/view?id=' + ticker, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw response;
+            }
+            return response.json();
+          })
+          .then((json) => {
+            setView(json);
+          })
+          .catch((error) => {
+            console.log(error);
+            setView([]);
+          });
+        return res.json();
+      })
   }
 
   const handleSubmit = (event) => {
