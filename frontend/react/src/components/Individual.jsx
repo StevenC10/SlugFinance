@@ -5,11 +5,9 @@ import ReactApexChart from "react-apexcharts";
 const Individual = () => {
 
   const today = new Date();
-  ////console.log(today.getDate());
-  ////console.log(today.getMonth());
-  //console.log(window.location.search);
-  const queryParameters = new URLSearchParams(window.location.search);
-  let name = queryParameters.get("name");
+  console.log(today.getDate());
+  console.log(today.getMonth());
+
 
   const [stock, setStock] = React.useState({ticker: '', year: 2022, month: today.getMonth()+1, day: today.getDate(), year2: today.getFullYear(), month2: today.getMonth()+1, day2: today.getDate(), interval: "1d"});
   const [ticker, setTicker] = React.useState();
@@ -18,9 +16,6 @@ const Individual = () => {
   const [info, setInfo] = React.useState([]);
   const [description, setDescription] = React.useState([]);
   const [priceInfo, setPriceInfo] = React.useState([]);
-  const [renderedOnce,setRenderedOnce]=React.useState(false);
-
-  
 
   const handleInputChange = (event) => {
     const u = stock;
@@ -33,13 +28,13 @@ const Individual = () => {
   };
 
   function changeDuration(duration) {
-    //console.log(stock['year'], stock['month'], stock['day']);
-    //console.log(duration);
+    console.log(stock['year'], stock['month'], stock['day']);
+    console.log(duration);
     const u = stock;
     const durationDay = new Date();
     if(duration === 1) {
       durationDay.setDate(durationDay.getDate()-7);
-      //console.log(durationDay);
+      console.log(durationDay);
     } else if (duration === 2) {
       durationDay.setMonth(durationDay.getMonth()-1);
     } else if (duration === 3) {
@@ -52,12 +47,7 @@ const Individual = () => {
     u['day'] = durationDay.getDate();
     setStock(u);
     setTicker(u['ticker']);
-    //console.log(stock['year'], stock['month'], stock['day']);
-  }
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    //console.log(stock);
+    console.log(stock['year'], stock['month'], stock['day']);
     fetch('http://127.0.0.1:5000/v0/getHistory', {
       method: 'POST',
       body: JSON.stringify(stock),
@@ -86,7 +76,45 @@ const Individual = () => {
             setView(json);
           })
           .catch((error) => {
-            //console.log(error);
+            console.log(error);
+            setView([]);
+          });
+        return res.json();
+      })
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(stock);
+    fetch('http://127.0.0.1:5000/v0/getHistory', {
+      method: 'POST',
+      body: JSON.stringify(stock),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw res;
+        }
+
+        fetch('http://127.0.0.1:5000/v0/view?id=' + ticker, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw response;
+            }
+            return response.json();
+          })
+          .then((json) => {
+            setView(json);
+          })
+          .catch((error) => {
+            console.log(error);
             setView([]);
           });
         return res.json();
@@ -121,7 +149,7 @@ const Individual = () => {
               setPriceInfo(json);
             })
             .catch((error) => {
-              //console.log(error);
+              console.log(error);
               setPriceInfo([]);
             });
 
@@ -153,7 +181,7 @@ const Individual = () => {
             setInfo(json);
           })
           .catch((error) => {
-            //console.log(error);
+            console.log(error);
             setInfo([]);
           });
 
@@ -173,7 +201,7 @@ const Individual = () => {
             setDescription(json);
           })
           .catch((error) => {
-            //console.log(error);
+            console.log(error);
             setDescription([]);
           });
 
@@ -181,23 +209,12 @@ const Individual = () => {
         })
         return res.json();
       }).catch((error) => {
-        //console.log(error);
+        console.log(error);
         alert(`Doesn't Exist`);
       });
   };
 
-  // Tries to render on initial page load
-  if (name !== null && name.length > 0 && renderedOnce===false) {
-    const u = stock;
-    u['ticker'] = name;
-    const temp = getInfo;
-    temp['ticker'] = name;
-    setStock(u);
-    setGetInfo(temp);
-    setTicker(name);
-    setRenderedOnce(true);
-  }
-  //console.log(info);
+  console.log(info);
   const options = {};
 
   options.series = [];
@@ -205,13 +222,13 @@ const Individual = () => {
   options.series.push(data);
   let viewDescription = '';
   const viewInformation = [];
-  //console.log(description);
-  //console.log(info);
+  console.log(description);
+  console.log(info);
   const tickerInfo = [];
   if(view.length >= 1 && description.length >= 1 && info.length >= 1 && priceInfo.length >= 1) {
-    //console.log(description[0][0][1]);
-    //console.log(info[0][0][1][0]);
-    //console.log(priceInfo[0][0][2][0]);
+    console.log(description[0][0][1]);
+    console.log(info[0][0][1][0]);
+    console.log(priceInfo[0][0][2][0]);
     tickerInfo.push(<p class = "text-2xl font-sans font-semibold pl-2 pt-2 inline-block">{priceInfo[0][0][0]}</p>)
     tickerInfo.push(<p class = "text-2xl font-sans font-bold pl-2 inline-block">{priceInfo[0][0][1]}</p>)
     if(priceInfo[0][0][2][0] === '+') {
@@ -251,12 +268,12 @@ const Individual = () => {
       }
     }
     
-    //console.log(view);
-    //console.log(priceInfo);
+    console.log(view);
+    console.log(priceInfo);
     const historicalData = view[0][0][1];
-    //console.log(historicalData);
+    console.log(historicalData);
     viewDescription = description[0][0][1];
-    //console.log(historicalData.length);
+    console.log(historicalData.length);
     for(let i = historicalData.length-1; i >= 0; i--) {
         const temp = {};
         // temp.x = new Date (historicalData[i].day);
@@ -281,7 +298,7 @@ const Individual = () => {
     options.yaxis.tooltip = {};
     options.yaxis.tooltip.enabled = true;
 
-    //console.log(JSON.stringify(options));
+    console.log(JSON.stringify(options));
   }
 
   return (
