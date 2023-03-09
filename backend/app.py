@@ -60,7 +60,7 @@ def getStock():
     tickerId = args.get("id")
     conn = getConnection()
     cursor = conn.cursor()
-    selectQuery = 'SELECT ticker,price,change,percentChange FROM stockTable WHERE %s ILIKE ticker'
+    selectQuery = 'SELECT ticker,company, price,change,percentChange FROM stockTable WHERE %s ILIKE ticker'
     cursor.execute(selectQuery, (tickerId,))
     stock = cursor.fetchall()
     if stock:
@@ -135,14 +135,6 @@ def getAbout(symbol):
         conn.commit()
     cursor.close()
     conn.close()
-    # print(data[0].get_text(), 'hello', file = sys.stderr)
-    # for stock in data:
-    #     description = stock.find_all('span')[0].text
-    #     cursor.execute(selectQuery, (symbol,))
-    #     found = cursor.fetchall()
-    #     if not found:
-    #         cursor.execute(insertQuery, (symbol, description,))
-    #         conn.commit()
 
 
 #Function that lookups description stock table to grab stock description
@@ -255,27 +247,29 @@ def add():
         r = requests.get(url, headers=headers, timeout=30)
         soup = BeautifulSoup(r.text, 'html.parser')
         stock = {
+            'company': soup.find('h1', {'class' : 'D(ib) Fz(18px)'}).get_text(),
             'symbol': ticker,
             'price': soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('fin-streamer')[0].text,
             'change': soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('fin-streamer')[1].text,
             'dailyChange': soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('fin-streamer')[2].text
         }
+        stockCompany = stock['company']
         stockPrice = stock['price']
         stockSymbol = ticker
         stockChange = stock['change']
         stockPercentChange = stock['dailyChange']
-        selectQuery = 'SELECT ticker,price,change,percentChange FROM stockTable WHERE %s = ticker'
+        selectQuery = 'SELECT ticker,company, price,change,percentChange FROM stockTable WHERE %s = ticker'
         cursor.execute(selectQuery, (stockSymbol,))
         stock = cursor.fetchall()
         print(len(stock), file = sys.stderr)
         if len(stock) > 0:
-            updateQuery = 'UPDATE stockTable SET price = %s, change = %s, percentChange = %s WHERE ticker = %s'
-            cursor.execute(updateQuery, (stockPrice, stockChange,
+            updateQuery = 'UPDATE stockTable SET price = %s, SET company = %s, change = %s, percentChange = %s WHERE ticker = %s'
+            cursor.execute(updateQuery, (stockPrice, stockCompany, stockChange,
                            stockPercentChange, stockSymbol,))
             conn.commit()
         else:
-            insertQuery = 'INSERT INTO stockTable (ticker, price, change, percentChange) VALUES (%s, %s, %s, %s)'
-            cursor.execute(insertQuery, (stockSymbol, stockPrice,
+            insertQuery = 'INSERT INTO stockTable (ticker, company, price, change, percentChange) VALUES (%s,%s, %s, %s, %s)'
+            cursor.execute(insertQuery, (stockSymbol,stockCompany,stockPrice,
                            stockChange, stockPercentChange,))
             conn.commit()
         getAbout(stockSymbol)
