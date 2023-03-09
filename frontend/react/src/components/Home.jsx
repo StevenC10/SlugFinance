@@ -6,7 +6,7 @@ import ReactApexChart from "react-apexcharts";
 //import { createChartData } from './Chartdata';
 //import {useRef} from 'react;
 
-
+export const tickerContext = React.createContext();
 
 const Home = () => {
   
@@ -398,7 +398,7 @@ if (c1Data.length >= 1){
     
   }
 
-
+  // search bar ticker context
   
   //RENDER WEBPAGE
   return (
@@ -485,9 +485,6 @@ if (c1Data.length >= 1){
             </form>
         </div>
         
-        <div className="flex flex-grow inline-block">
-            
-        </div>
       </div>
       
       <div className="flex grid grid-col-4 grid-row-4 grid-flow-col-dense h-screen" id="chart">
