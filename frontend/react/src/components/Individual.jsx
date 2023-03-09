@@ -1,22 +1,21 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
-import Logo from "../images/test2.png"
+
 
 const Individual = () => {
 
   const today = new Date();
   console.log(today.getDate());
   console.log(today.getMonth());
-  console.log(today.getFullYear());
 
 
-  const [stock, setStock] = React.useState({ticker: '', year: today.getFullYear(), month: today.getMonth(), day: today.getDate(), year2: today.getFullYear(), month2: today.getMonth()+1, day2: today.getDate(), interval: "1d"});
+  const [stock, setStock] = React.useState({ticker: '', year: 2022, month: today.getMonth()+1, day: today.getDate(), year2: today.getFullYear(), month2: today.getMonth()+1, day2: today.getDate(), interval: "1d"});
   const [ticker, setTicker] = React.useState();
-  const [title, setTitle] = React.useState();
   const [getInfo, setGetInfo] = React.useState({ticker: ''});
   const [view, setView] = React.useState([]);
   const [info, setInfo] = React.useState([]);
   const [description, setDescription] = React.useState([]);
+  const [priceInfo, setPriceInfo] = React.useState([]);
 
   const handleInputChange = (event) => {
     const u = stock;
@@ -48,11 +47,11 @@ const Individual = () => {
     u['day'] = durationDay.getDate();
     setStock(u);
     setTicker(u['ticker']);
+    console.log(stock['year'], stock['month'], stock['day']);
   }
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setTitle(ticker);
     console.log(stock);
     fetch('http://127.0.0.1:5000/v0/getHistory', {
       method: 'POST',
@@ -101,13 +100,33 @@ const Individual = () => {
           throw res;
         }
 
+        fetch('http://127.0.0.1:5000/v0/ticker?id=' + ticker, {
+          method: 'GET',
+          headers: new Headers({
+            'Content-Type': 'application/x-www-form-urlencoded',
+          }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw response;
+              }
+              return response.json();
+            })
+            .then((json) => {
+              setPriceInfo(json);
+            })
+            .catch((error) => {
+              console.log(error);
+              setPriceInfo([]);
+            });
+
         fetch('http://127.0.0.1:5000/v0/getInfo', {
         method: 'POST',
         body: JSON.stringify(getInfo),
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+        })
         .then((res) => {
           if (!res.ok) {
             throw res;
@@ -158,10 +177,11 @@ const Individual = () => {
         return res.json();
       }).catch((error) => {
         console.log(error);
-        setInfo([]);
+        alert(`Doesn't Exist`);
       });
   };
 
+  console.log(info);
   const options = {};
 
   options.series = [];
@@ -171,38 +191,52 @@ const Individual = () => {
   const viewInformation = [];
   console.log(description);
   console.log(info);
-  if(view.length >= 1 && description.length >= 1 && info.length >= 1) {
+  const tickerInfo = [];
+  if(view.length >= 1 && description.length >= 1 && info.length >= 1 && priceInfo.length >= 1) {
     console.log(description[0][0][1]);
     console.log(info[0][0][1][0]);
+    console.log(priceInfo[0][0][2][0]);
+    tickerInfo.push(<p class = "text-2xl font-sans font-semibold pl-2 pt-2 inline-block">{priceInfo[0][0][0]}</p>)
+    tickerInfo.push(<p class = "text-2xl font-sans font-bold pl-2 inline-block">{priceInfo[0][0][1]}</p>)
+    if(priceInfo[0][0][2][0] === '+') {
+      tickerInfo.push(<p class = "text-2xl font-sans font-semibold pl-2 inline-block text-green-600">{priceInfo[0][0][2]}</p>)
+      tickerInfo.push(<p class = "text-2xl font-sans font-semibold pl-2 inline-block text-green-600">{priceInfo[0][0][3]}</p>)
+    } else {
+      tickerInfo.push(<p class = "text-2xl font-sans font-semibold pl-2 inline-block text-red-600">{priceInfo[0][0][2]}</p>)
+      tickerInfo.push(<p class = "text-2xl font-sans font-semibold pl-2 inline-block text-red-600">{priceInfo[0][0][3]}</p>)
+    }
+
     let counter = 0;
     let row = [];
     for (const key in info[0][0][1][0]) {
       counter++;
       if(counter % 4 === 1) {
-        row.push(<div class="flex flex-col pb-3">
-        <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
-        <dd class="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
+        row.push(<div className="flex flex-col pb-3">
+        <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
+        <dd className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
         </div>);
       } else if(counter % 4 === 2) {
-        row.push(<div class="flex flex-col py-3">
-        <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
-        <dd class="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
+        row.push(<div className="flex flex-col py-3">
+        <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
+        <dd className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
         </div>);
       } else if(counter % 4 === 3) {
-        row.push(<div class="flex flex-col py-3">
-        <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
-        <dd class="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
+        row.push(<div className="flex flex-col py-3">
+        <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
+        <dd className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
         </div>);
       } else if(counter % 4 === 0) {
-        row.push(<div class="flex flex-col pt-3">
-        <dt class="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
-        <dd class="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
+        row.push(<div className="flex flex-col pt-3">
+        <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
+        <dd className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
         </div>);
-        viewInformation.push(<div class = "w-1/3"><dl class="w-5/6 text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">{row}</dl></div>)
+        viewInformation.push(<div className = "w-1/3"><dl className="w-5/6 text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">{row}</dl></div>)
         row = [];
       }
     }
+    
     console.log(view);
+    console.log(priceInfo);
     const historicalData = view[0][0][1];
     console.log(historicalData);
     viewDescription = description[0][0][1];
@@ -235,7 +269,7 @@ const Individual = () => {
   }
 
   return (
-    <div class = "h-screen">
+    <div className = "h-screen">
       <form onSubmit = {handleSubmit}>
          <input 
          type = "text" 
@@ -244,92 +278,33 @@ const Individual = () => {
          />
          <button type = "submit">Submit</button>
       </form>
-      <div class = "flex h-3/5">
-        <div class = "w-full h-full border-2">
-        <p class = "text-2xl font-sans font-semibold p-2">{title}</p>
+      <div className = "flex h-3/5">
+        <div className = "w-full h-full border-2">
+        {tickerInfo}
+        <button type="button" className="w-1/6 py-1 mt-2 font-semibold border rounded dark:border-gray-100 dark:text-gray-100 float-right bg-blue-300">Add to myPortfolio</button>
           <div id="chart">
             <ReactApexChart options={options} series={options.series} type="candlestick" height={500} />
           </div>
-          <button type="button" onClick={() => changeDuration('1')} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-100 dark:text-gray-100">1 Week</button>
-          <button type="button" onClick={() => changeDuration('2')} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-100 dark:text-gray-100">1 Month</button>
-          <button type="button" onClick={() => changeDuration('3')} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-100 dark:text-gray-100">6 Months</button>
-          <button type="button" onClick={() => changeDuration('4')} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-100 dark:text-gray-100">1 Year</button>
+          <button type="button" onClick={() => changeDuration(1)} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-100 dark:text-gray-100">1 Week</button>
+          <button type="button" onClick={() => changeDuration(2)} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-100 dark:text-gray-100">1 Month</button>
+          <button type="button" onClick={() => changeDuration(3)} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-100 dark:text-gray-100">6 Months</button>
+          <button type="button" onClick={() => changeDuration(4)} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-100 dark:text-gray-100">1 Year</button>
         </div>
       </div>
-      <div class = "flex h-2/5">
-        <div class = "w-3/4 border-2 h-full w-full">
-          <p class = "text-2xl font-sans font-semibold p-2">Information</p>
-          {/* <div class = "h-5/6 border w-full">
-            <div class = "border flex h-1/4 w-full">
-              <div class = "border h-full w-1/2"></div>
-              <div class = "border h-full w-1/2"></div>
-            </div>
-            <div class = "border flex h-1/4 w-full">
-              <div class = "border h-full w-1/2"></div>
-              <div class = "border h-full w-1/2"></div>
-            </div>
-            <div class = "border flex h-1/4 w-full">
-              <div class = "border h-full w-1/2"></div>
-              <div class = "border h-full w-1/2"></div>
-            </div>
-            <div class = "border flex h-1/4 w-full">
-              <div class = "border h-full w-1/2"></div>
-              <div class = "border h-full w-1/2"></div>
-            </div>
-          </div> */}
-          <div class = "flex px-2">
+      <div className = "flex h-2/5">
+        <div className = "w-3/4 border-r h-full w-full">
+          <p className = "text-2xl font-sans font-semibold p-2">Information</p>
+          <div className = "flex px-2">
             {viewInformation}
           </div>
         </div>
-        <div class = "w-1/4 border-2">
-         <p class = "text-2xl font-sans font-semibold p-2">About</p>
-         <p class = "text-base font-sans px-2">{viewDescription}</p>
+        <div className = "w-1/4">
+         <p className = "text-2xl font-sans font-semibold p-2">About</p>
+         <p className = "text-base font-sans px-2">{viewDescription}</p>
         </div>
       </div>
     </div>
   )
-  // return (
-  //   <div>
-  //     <nav>
-  //       <div id= "nav-logo-section" class="nav-section">
-  //        <img src={Logo} alt="logo" width="30"/>
-  //        <div><b>Slug Finance</b></div>
-  //       </div>
-  //       <div id= "nav-search-section" class="nav-section">
-  //         <form onSubmit = {handleSubmit}>
-  //         <input 
-  //         type = "text" 
-  //         name = "name"
-  //         onChange= {handleInputChange}
-  //         />
-  //         <button type = "submit">Submit</button>
-  //         </form>
-  //       </div>
-  //       <div id= "nav-button-section" class="nav-section">
-  //         <a href="/login">myPortfolio</a>
-  //         <a href="/login">Login</a>
-  //         <a href="/signup">Signup</a>
-  //       </div>
-  //     </nav>
-  //     <main>
-  //       <div class = "wrapper">
-  //         <div class = "graph-section main-section">
-  //           <div id="chart">
-  //             <ReactApexChart options={options} series={options.series} type="candlestick" height={500} />
-  //           </div>
-  //         </div>
-  //         <div class = "info-section main-section">
-  //           <h1>Information</h1>
-  //           <ul>{viewAbout}</ul>
-  //         </div>
-  //         <div class = "about-section main-section">
-  //           <h1>About</h1>
-  //           <p>{viewDescription}</p>
-  //         </div>
-  //       </div>
-  //     </main>
-  //   </div>
-  // );
 };
   
 export default Individual;
