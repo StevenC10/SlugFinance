@@ -145,7 +145,6 @@ def getDescription():
     conn = getConnection()
     cursor = conn.cursor()
     selectQuery = 'SELECT * FROM stockDescriptionTable WHERE %s ILIKE ticker'
-    # selectQuery = 'SELECT * FROM stockDescriptionTable'
     cursor.execute(selectQuery, (tickerDescription, ))
     desc = cursor.fetchall()
     if desc:
@@ -263,8 +262,8 @@ def add():
         stock = cursor.fetchall()
         print(len(stock), file = sys.stderr)
         if len(stock) > 0:
-            updateQuery = 'UPDATE stockTable SET price = %s, SET company = %s, change = %s, percentChange = %s WHERE ticker = %s'
-            cursor.execute(updateQuery, (stockPrice, stockCompany, stockChange,
+            updateQuery = 'UPDATE stockTable SET price = %s, change = %s, percentChange = %s WHERE ticker = %s'
+            cursor.execute(updateQuery, (stockPrice, stockChange,
                            stockPercentChange, stockSymbol,))
             conn.commit()
         else:
