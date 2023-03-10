@@ -60,7 +60,7 @@ def getStock():
     tickerId = args.get("id")
     conn = getConnection()
     cursor = conn.cursor()
-    selectQuery = 'SELECT ticker,price,change,percentChange FROM stockTable WHERE %s ILIKE ticker'
+    selectQuery = 'SELECT ticker,company, price,change,percentChange FROM stockTable WHERE %s ILIKE ticker'
     cursor.execute(selectQuery, (tickerId,))
     stock = cursor.fetchall()
     if stock:
@@ -115,21 +115,26 @@ def getConnection():
 def getAbout(symbol):
     selectQuery = 'SELECT ticker FROM stockDescriptionTable WHERE %s = ticker'
     insertQuery = 'INSERT INTO stockDescriptionTable(ticker, about) VALUES (%s, %s)'
+    updateQuery = 'UPDATE stockDescriptionTable SET about = %s WHERE ticker = %s'
     conn = getConnection()
     cursor = conn.cursor()
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'}
-    url = f'https://google.com/search?q={symbol}'
+    url = f'https://finance.yahoo.com/quote/{symbol}/profile'
     r = requests.get(url, headers = headers, timeout = 30)
     soup = BeautifulSoup(r.text, 'html.parser')
-    data = soup.find_all('div', {'class': 'kno-rdesc'})
-    for stock in data:
-        description = stock.find_all('span')[0].text
-        cursor.execute(selectQuery, (symbol,))
-        found = cursor.fetchall()
-        if not found:
-            cursor.execute(insertQuery, (symbol, description,))
-            conn.commit()
+    data = soup.find('section', {'class': 'quote-sub-section Mt(30px)'}).find_all('p')
+    description = data[0].get_text()
+    cursor.execute(selectQuery, (symbol,))
+    found = cursor.fetchall()
+    if found:
+        cursor.execute(updateQuery, (description, symbol,))
+        conn.commit()
+    else:
+        cursor.execute(insertQuery, (symbol, description,))
+        conn.commit()
+    cursor.close()
+    conn.close()
 
 
 #Function that lookups description stock table to grab stock description
@@ -140,7 +145,6 @@ def getDescription():
     conn = getConnection()
     cursor = conn.cursor()
     selectQuery = 'SELECT * FROM stockDescriptionTable WHERE %s ILIKE ticker'
-    # selectQuery = 'SELECT * FROM stockDescriptionTable'
     cursor.execute(selectQuery, (tickerDescription, ))
     desc = cursor.fetchall()
     if desc:
@@ -242,16 +246,18 @@ def add():
         r = requests.get(url, headers=headers, timeout=30)
         soup = BeautifulSoup(r.text, 'html.parser')
         stock = {
+            'company': soup.find('h1', {'class' : 'D(ib) Fz(18px)'}).get_text(),
             'symbol': ticker,
             'price': soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('fin-streamer')[0].text,
             'change': soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('fin-streamer')[1].text,
             'dailyChange': soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('fin-streamer')[2].text
         }
+        stockCompany = stock['company']
         stockPrice = stock['price']
         stockSymbol = ticker
         stockChange = stock['change']
         stockPercentChange = stock['dailyChange']
-        selectQuery = 'SELECT ticker,price,change,percentChange FROM stockTable WHERE %s = ticker'
+        selectQuery = 'SELECT ticker,company, price,change,percentChange FROM stockTable WHERE %s = ticker'
         cursor.execute(selectQuery, (stockSymbol,))
         stock = cursor.fetchall()
         print(len(stock), file = sys.stderr)
@@ -261,8 +267,8 @@ def add():
                            stockPercentChange, stockSymbol,))
             conn.commit()
         else:
-            insertQuery = 'INSERT INTO stockTable (ticker, price, change, percentChange) VALUES (%s, %s, %s, %s)'
-            cursor.execute(insertQuery, (stockSymbol, stockPrice,
+            insertQuery = 'INSERT INTO stockTable (ticker, company, price, change, percentChange) VALUES (%s,%s, %s, %s, %s)'
+            cursor.execute(insertQuery, (stockSymbol,stockCompany,stockPrice,
                            stockChange, stockPercentChange,))
             conn.commit()
         getAbout(stockSymbol)
@@ -289,7 +295,10 @@ def getInfo():
     cursor.execute(selectQuery, (tickerId,))
     found = cursor.fetchall()
     if found:
-        abort(404)
+        updateQuery = 'UPDATE stockInfoTable SET infoData = %s WHERE ticker = %s'
+        cursor.execute(updateQuery, (stockData, tickerId, ))
+        conn.commit()
+        return jsonify('Data Updated', 201)
     insertQuery = 'INSERT INTO stockInfoTable(ticker, infoData) VALUES (%s, %s)'
     cursor.execute(insertQuery, (tickerId, stockData,))
     conn.commit()

@@ -7,6 +7,7 @@ import Individual from './components/Individual';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import NavBar from './components/Navbar';
+import Portfolio from './components/Portfolio';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/individual" element={<Individual />} />
         <Route path="/navbar" element={<NavBar />} />
+        <Route path="/portfolio" element={<Portfolio />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </BrowserRouter>
