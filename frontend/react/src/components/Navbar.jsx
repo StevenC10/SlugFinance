@@ -37,10 +37,10 @@ const Navbar = () => {
           </ul> */}
           <div className="items-center space-x-2 flex-shrink-0 hidden lg:flex">
             <li className="flex">
-              <a rel="noopener noreferrer" href="/" className="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent">Link</a>
+              <a rel="noopener noreferrer" href="/" className="flex items-center text-lg px-4 -mb-1 text-gray-200">myPortfolio</a>
             </li>
-            <button className="self-center px-8 py-3 font-semibold rounded bg-purple-600 text-gray-300" onClick={toSignup}>Sign up</button>
-            <button className="self-center px-8 py-3 rounded text-gray-300 bg-gray-600" onClick={toLogin}>Log in</button>
+            <button className="self-center px-8 py-3 rounded text-gray-200 bg-blue-500 hover:bg-blue-600 font-semibold active:bg-blue-700" onClick={toSignup}>Sign up</button>
+            <button className="self-center px-8 py-3 rounded text-gray-200 bg-gray-500 hover:bg-gray-600 font-semibold active:bg-gray-700" onClick={toLogin}>Log in</button>
           </div>
         </div>
       </header>

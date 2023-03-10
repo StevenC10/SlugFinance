@@ -5,6 +5,7 @@ import Logo from '../images/test2.png'
 import ReactApexChart from "react-apexcharts";
 //import { createChartData } from './Chartdata';
 //import {useRef} from 'react;
+import Navbar from './Navbar';
 
 export const tickerContext = React.createContext();
 
@@ -403,7 +404,7 @@ if (c1Data.length >= 1){
   //RENDER WEBPAGE
   return (
     <div className="overflow-auto">
-      <nav className="overflow-hidden relative flex items-center justify-between px-2 py-3 bg-[#27a5f8] sticky top-0">
+      {/* <nav className="overflow-hidden relative flex items-center justify-between px-2 py-3 bg-[#27a5f8] sticky top-0">
         <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
           <img className="flex inline-block" src={Logo} width='40' height='40' alt=''/>
           <div className="inline-block w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
@@ -465,15 +466,16 @@ if (c1Data.length >= 1){
             </ul>
           </div>
         </div>
-      </nav>
+      </nav> */}
       
-      <div className="box-border text-6xl h-screen " 
+      <div className="box-border h-screen " 
         style={{backgroundImage: 'url(https://knowledge.wharton.upenn.edu/wp-content/uploads/2020/11/Stock-Market-900x387.jpg)',
                     backgroundSize: "cover",
                     align: "center",
                     height:1000
                     }}>
-        <div className="grid grid-rows-2 w-2/3 h-screen"style={{paddingLeft:"60px"}}>
+        <Navbar />
+        <div className="grid grid-rows-2 w-2/3 text-6xl h-screen"style={{paddingLeft:"60px"}}>
           <p className="grid content-end text-yellow-200 font-serif font-mono font-bold">
             The price is what you pay, value is what you get.
           </p>
