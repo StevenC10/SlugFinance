@@ -8,6 +8,7 @@ import psycopg2
 import time
 import datetime
 import sys
+import pandas as pd
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask import Flask, abort, jsonify, request
 from bs4 import BeautifulSoup
@@ -308,6 +309,7 @@ def getInfo():
 #Gets the historical data for specified stock
 @app.route('/v0/getHistory', methods=['POST'])
 def getHistoricalData():
+    stockArr = []
     args = request.json
     tickerId = args.get('ticker', '')
     year = args.get('year', '')
@@ -328,24 +330,21 @@ def getHistoricalData():
     # Citing Jie Jenn on how to change intervals for historical data https://youtu.be/NjEc7PB0TxQ
     period1 = int(time.mktime(datetime.datetime(year,month,day).timetuple()))
     period2 = int(time.mktime(datetime.datetime(year2, month2, day2).timetuple()))
-    url = f'https://finance.yahoo.com/quote/{tickerId}/history?period1={period1}&period2={period2}&interval={interval}&filter=history&frequency=7d&includeAdjustedClose=true'
-    r = requests.get(url, headers=headers, timeout=30)
-    soup = BeautifulSoup(r.text, 'html.parser')
-    stockArr = []
-    stockData = soup.find_all('table')
-    for table in stockData:
-        trs = table.find_all('tr')
-        for tr in trs:
-            tds = tr.find_all('td')
-            if len(tds) > 6:
-                data = {
-                    'day': tds[0].get_text(),
-                    'open': tds[1].get_text(),
-                    'high': tds[2].get_text(),
-                    'low': tds[3].get_text(),
-                    'close': tds[4].get_text()
-                }
-                stockArr.append(data)
+    # url = f'https://finance.yahoo.com/quote/{tickerId}/history?period1={period1}&period2={period2}&interval={interval}&filter=history&frequency=7d&includeAdjustedClose=true'
+    url = f'https://query1.finance.yahoo.com/v7/finance/download/{tickerId}?period1={period1}&period2={period2}&interval={interval}&events=history&includeAdjustedClose=true'
+
+    dataFromUrl = pd.read_csv(url, header = 0, usecols = ["Date", "Open", "High", "Low", "Close"])
+    dataFromUrlReverse = dataFromUrl.iloc[::-1]
+    for i, row in dataFromUrlReverse.iterrows():
+        stock = {
+            'day' : row[0],
+            'open': row[1],
+            'high': row[2],
+            'low': row[3],
+            'close': row[4]
+        }
+        stockArr.append(stock)
+    # stockArr.sort(key = lambda x: datetime.datetime.strptime(x['day'], '%Y-%m-%d'))
     res = json.dumps(stockArr)
     if (account):
         updateQuery = 'UPDATE historicalStockTable SET stockData = %s WHERE %s ILIKE ticker'
