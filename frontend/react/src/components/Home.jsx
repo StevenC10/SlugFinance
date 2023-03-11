@@ -4,36 +4,35 @@ import {FaSistrix, FaBars} from "react-icons/fa"
 import Logo from '../images/test2.png'
 import ReactApexChart from "react-apexcharts";
 //import { createChartData } from './Chartdata';
-//import {useRef} from 'react;
+import {useRef} from 'react';
 
 export const tickerContext = React.createContext();
 
 const Home = () => {
-  const today = new Date();
-  const day = today.getDate();
-  const month = today.getMonth()+1;
-  const year = today.getFullYear();
+  const today = useRef(new Date());
   const yesterday = new Date(Date.now() - 86400000);
 
   const [navbarOpen, setNavbarOpen] = React.useState(false);
   const [c1Data, setC1Data] = useState([]);
   const [c2Data, setC2Data] = useState([]);
-  const [Icon1,setIcon1] = useState([]);
-  const iconBody = useRef({ticker: '', year: yesterday.getFullYear(), month: yesterday.getMonth()+1, day: yesterday.getDate(), year2: today.getFullYear(), month2: today.getMonth()+1, day2: today.getDate(), interval: "1d"});
-  //const newIcon = useRef({});
+  //const [c3Data, setC3Data] = useState({current:[["",[{close: "0",day: "Mar 09, 2023",high: "0",low: "0",open: "0"}]]]});
+  //const [Icon1,setIcon1] = useState([]);
+  const iconBody = useRef({ticker: '', year: yesterday.getFullYear(), month: yesterday.getMonth()+1, day: yesterday.getDate(), year2: today.current.getFullYear(), month2: today.current.getMonth()+1, day2: today.current.getDate(), interval: "1d"});
+  const newIcon = useRef({});
    
   const c1Options = {};
   c1Options.series = [];
   const c1GraphData = {'data': []}
   c1Options.series.push(c1GraphData);
+  //const iconArray=useRef([]);
 
-  const getTickerData = useCallback(async (tickerName)=> {
+  const getTickerData = useRef(useCallback((tickerName)=> {
     
     let temp=iconBody.current;
     temp.ticker= tickerName
     //console.log(temp);
     //console.log(iconBody);
-    let tempData = await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+    let tempData = fetch(`http://127.0.0.1:5000/v0/getHistory`, {
       method: 'POST',
       body: JSON.stringify(temp),
       headers: new Headers({
@@ -54,24 +53,17 @@ const Home = () => {
           }
           return response1.json();
         }).then((json)=>{
-          //newIcon.current=json;
+          newIcon.current=json[0];
           setC2Data(json);
           //console.log(newIcon.current);
           return(json);
         })
       })
-    
+      
     return tempData;
-      //console.log(c2Data);
-  }, [iconBody,setC2Data])
-
-  const icon1= useRef([]);
-  const icon2= useRef([]);
-  /*const icon3= useRef([]);
-  const icon4= useRef([]);
-  const icon5= useRef([]);
-  const icon6= useRef([]);*/
-    
+     
+  }, [iconBody,setC2Data]));
+  
  
   //CHART 1
   useEffect(()=> {
@@ -81,20 +73,20 @@ const Home = () => {
         + `"year": 2023,`
         + `"month": 2,`
         + `"day": 1,`
-        + `"year2": `+year+`,`
-        + `"month2": `+month+`,`
-        + `"day2": `+day+`,`
+        + `"year2": `+today.current.getFullYear()+`,`
+        + `"month2": `+today.current.getMonth()+`,`
+        + `"day2": `+today.current.getDate()+`,`
         + `"interval": "1d"`
         +"}",
       headers: new Headers({
         'Content-Type': 'application/json',
-        })
+      })
     })
     
-  fetch(`http://127.0.0.1:5000/v0/view?id=TSLA`, {
-    method: 'GET',
-    headers: new Headers({
-      'Content-Type': 'application/json',
+    fetch(`http://127.0.0.1:5000/v0/view?id=TSLA`, {
+      method: 'GET',
+      headers: new Headers({
+        'Content-Type': 'application/json',
       })
     }).then((response) => {
       if(!response.ok) {
@@ -105,22 +97,16 @@ const Home = () => {
       setC1Data(json);
       return(json);
     })
-    //console.log(c1d);
+    getTickerData.current("NVDA");
+    
   
-    getTickerData("NVDA");
-    
-    
-    getTickerData("TSLA");
-    //icon2.current=newIcon.current;
-    
-    console.log(icon1.current[0]);
-    console.log(icon1); 
-    
     return() =>{
-      //AbortController.abort();
+      //return null;
     };
-  },[day,month,year,getTickerData]);
-
+  },[]);
+  console.log(c2Data);
+ 
+  
   if (c1Data.length >= 1){
     let c1History= c1Data[0][0][1];
 
@@ -145,10 +131,8 @@ const Home = () => {
     c1Options.yaxis = {};
     c1Options.yaxis.tooltip = {};
     c1Options.yaxis.tooltip.enabled = true;
-
-    
   }
-  
+  //console.log(c1Data);
   
   //RENDER WEBPAGE
   return (
@@ -248,7 +232,7 @@ const Home = () => {
             <ReactApexChart options={c1Options} series={c1Options.series} type="candlestick" height={800}/>
           </div>
           <div className="px-3 row-start-1 w-1/6">
-            
+             
             {/*<ReactApexChart options={c2Options} series={c2Options.series} type="line" height={300} width={400}/>*/}
           </div>
           <div className="px-3 row-start-1 w-1/6">
