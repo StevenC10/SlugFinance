@@ -6,7 +6,7 @@ info:
 servers:
   - url: /
 paths:
-  '/v0/ticker/':
+  /v0/ticker/:
     parameters:
       - name: id
         in: query
@@ -34,7 +34,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  '/v0/retrieveInfo/':
+  /v0/retrieveInfo/:
     parameters:
       - name: id
         in: query
@@ -62,7 +62,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  '/v0/getDescription':
+  /v0/getDescription:
     parameters:
       - name: id
         in: query
@@ -76,7 +76,7 @@ paths:
       responses:
         '200':
           description: Stock Found
-          content: 
+          content:
             application/json:
               schema:
                 type: string
@@ -88,7 +88,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  '/v0/getInfo':
+  /v0/getInfo:
     post:
       description: Get Information
       requestBody:
@@ -105,7 +105,7 @@ paths:
             application/json:
               schema:
                 type: string
-  '/v0/login':
+  /v0/login:
     post:
       description: Login
       requestBody:
@@ -122,7 +122,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-  '/v0/create':
+  /v0/create:
     post:
       description: Create
       requestBody:
@@ -139,7 +139,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-  '/v0/add':
+  /v0/add:
     post:
       description: Add Stock to Database
       requestBody:
@@ -156,7 +156,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Stock'
-  '/v0/view':
+  /v0/view:
     parameters:
       - name: id
         in: query
@@ -166,7 +166,7 @@ paths:
           type: string
           format: string
     get:
-      description:
+      description: null
       responses:
         '200':
           description: Stock table found
@@ -175,10 +175,10 @@ paths:
               schema:
                 type: object
                 items:
-                  $ref: '#/components/schemas/Stock'     
-  '/v0/getHistory':
+                  $ref: '#/components/schemas/Stock'
+  /v0/getHistory:
     post:
-      description:
+      description: null
       requestBody:
         description: Request Body
         required: true
@@ -217,7 +217,6 @@ paths:
                   month2: 2
                   day2: 1
                   interval: 1mo
-                
       responses:
         '201':
           description: Historical Data found
@@ -226,8 +225,65 @@ paths:
               schema:
                 type: object
                 items:
-                  $ref: '#components/schemas/Data'
-
+                  $ref: '#/components/schemas/Data'
+  /v0/addPortfolio:
+    post:
+      description: null
+      requestBody:
+        description: Request body
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Portfolio'
+      responses:
+        '201':
+          description: Data Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Portfolio'
+        '400':
+          description: Already in portfolio
+  /v0/deleteFromPortfolio:
+    delete:
+      description: delete from portfolio
+      requestBody:
+        description: Request body
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Portfolio'
+      responses:
+        '200':
+          description: Deleted from portfolio
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Res'
+        '400':
+          description: Not in Portfolio
+  /v0/getFromPortfolio:
+    parameters:
+      - name: email
+        in: query
+        description: Stock Ticker
+        required: true
+        schema:
+          type: string
+          format: string
+    get:
+      description: Retrive Portfolio
+      responses:
+        '200':
+          description: Stocks found
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Portfolio'
 
 components:
   schemas:
@@ -267,7 +323,7 @@ components:
           type: string
       required:
         - name
-        - accessToken      
+        - accessToken
     Credentials:
       type: object
       properties:
@@ -309,4 +365,17 @@ components:
       type: object
       properties:
         ticker:
+          type: string
+    Portfolio:
+      type: object
+      properties:
+        useremail:
+          type: string
+          format: email
+        ticker:
+          type: string
+    Res:
+      type: object
+      properties:
+        userresponse:
           type: string

@@ -183,6 +183,7 @@ def createUser():
     args = request.json
     email = args.get('email', '')
     password = args.get('password', '')
+    email.replace('@', '%40')
     conn = getConnection()
     cursor = conn.cursor()
     insertQuery = 'INSERT INTO emailtable (personemail, personpassword) VALUES (%s, %s)'
@@ -356,7 +357,54 @@ def getHistoricalData():
         conn.commit()
     return jsonify('success', 201)
 
+@app.route('/v0/addPortfolio', methods = ['POST'])
+def addPortfolio():
+    args = request.json
+    email = args.get('useremail', '')
+    ticker = args.get('ticker', '')
+    asciiemail = email.replace('@', '%40')
+    print("ticker:" ,ticker, file = sys.stderr)
+    conn = getConnection()
+    cursor = conn.cursor()
+    insertQuery = 'INSERT INTO userPortfolioTable(personemail,ticker) VALUES (%s, %s)'
+    cursor.execute(insertQuery, (asciiemail, ticker,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify("Added to Portfolio", 200)
 
+
+@app.route('/v0/deleteFromPortfolio', methods = ['DELETE'])
+def deletePortfolio():
+    args = request.json
+    email = args.get('useremail', '')
+    ticker = args.get('ticker', '')
+    asciiemail = email.replace('@', '%40')
+    conn = getConnection()
+    cursor = conn.cursor()
+    deleteQuery = 'DELETE FROM userPortfolioTable WHERE %s = ticker AND %s = personemail'
+    cursor.execute(deleteQuery, (ticker, asciiemail,))
+    conn.commit()
+    return jsonify('deleted from portfolio', 200)
+
+@app.route('/v0/getFromPortfolio', methods = ['GET'])
+def getPortfolio():
+    args = request. args
+    email = args.get('email')
+    conn = getConnection()
+    cursor = conn.cursor()
+    email = email.replace('@', '%40')
+    updateQuery = "UPDATE userPortfolioTable SET personemail = REPLACE(personemail, '@', '%40')"
+    cursor.execute(updateQuery)
+    conn.commit()
+    selectQuery = 'SELECT DISTINCT ticker FROM userPortfolioTable WHERE %s = personemail'
+    # selectQuery = 'SELECT * FROM userPortfolioTable'
+    cursor.execute(selectQuery, (email,))
+    ticker = cursor.fetchall()
+    print("sdadasda" ,ticker, file = sys.stderr)
+    if ticker:
+        return jsonify(ticker,200)
+    return jsonify('No email found', 404)
 #Swagger Config
 SWAGGER_URL = '/swagger'
 API_URL = '/static/swagger.yaml'

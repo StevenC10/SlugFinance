@@ -16,3 +16,4 @@ CREATE TABLE stockTable(personemail VARCHAR DEFAULT 'default', ticker VARCHAR,co
 CREATE TABLE historicalStockTable(ticker VARCHAR, stockData jsonb);
 CREATE TABLE stockDescriptionTable(ticker VARCHAR, about VARCHAR);
 CREATE TABLE stockInfoTable(ticker VARCHAR, infoData jsonb);
+CREATE TABLE userPortfolioTable(personemail VARCHAR,ticker VARCHAR,FOREIGN KEY (personemail) REFERENCES emailtable);
