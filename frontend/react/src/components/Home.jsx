@@ -1,10 +1,9 @@
 
 import React, {useState,useEffect,useCallback} from 'react';
-import {FaSistrix, FaBars} from "react-icons/fa"
-import Logo from '../images/test2.png'
 import ReactApexChart from "react-apexcharts";
 //import { createChartData } from './Chartdata';
 import {useRef} from 'react';
+import Navbar from './Navbar';
 
 export const tickerContext = React.createContext();
 
@@ -12,7 +11,6 @@ const Home = () => {
   const today = useRef(new Date());
   const yesterday = new Date(Date.now() - 86400000);
 
-  const [navbarOpen, setNavbarOpen] = React.useState(false);
   const [c1Data, setC1Data] = useState([]);
   const [c2Data, setC2Data] = useState([]);
   //const [c3Data, setC3Data] = useState({current:[["",[{close: "0",day: "Mar 09, 2023",high: "0",low: "0",open: "0"}]]]});
@@ -24,10 +22,11 @@ const Home = () => {
   c1Options.series = [];
   const c1GraphData = {'data': []}
   c1Options.series.push(c1GraphData);
-  //const iconArray=useRef([]);
+  //const iconArray={};
+  //iconArray
+
 
   const getTickerData = useRef(useCallback((tickerName)=> {
-    
     let temp=iconBody.current;
     temp.ticker= tickerName
     //console.log(temp);
@@ -61,7 +60,6 @@ const Home = () => {
       })
       
     return tempData;
-     
   }, [iconBody,setC2Data]));
   
  
@@ -81,7 +79,7 @@ const Home = () => {
       headers: new Headers({
         'Content-Type': 'application/json',
       })
-    })
+    });
     
     fetch(`http://127.0.0.1:5000/v0/view?id=TSLA`, {
       method: 'GET',
@@ -96,10 +94,11 @@ const Home = () => {
     }).then((json)=>{
       setC1Data(json);
       return(json);
-    })
+    });
+
     getTickerData.current("NVDA");
+    //getTickerData.current("DOW");
     
-  
     return() =>{
       //return null;
     };
@@ -137,78 +136,17 @@ const Home = () => {
   //RENDER WEBPAGE
   return (
     <div className="overflow-auto">
-      <nav className="overflow-hidden relative flex items-center justify-between px-2 py-3 bg-[#27a5f8] sticky top-0">
-        <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
-          <img className="flex inline-block" src={Logo} width='40' height='40' alt=''/>
-          <div className="inline-block w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
-            <a
-              className="text-sm flex flex-col font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white"
-              href="#SLUGFINANCE"
-            >
-              SLUG FINANCE 
-            </a>
-            <button
-              className="text-white cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
-              type="button"
-              onClick={() => setNavbarOpen(!navbarOpen)}
-            >
-              <i><FaBars/></i>
-            </button>
-          </div>
-          <div className="flex flex-grow inline-block">
-            <form className="flex flex-grow" style={{background:'white', margin:'2px'}} >
-              <input className="flex flex-grow focus:outline-none" placeholder="TSLA, AAPL, NVDA..."
-              type = "text" 
-              name = "name"
-              />
-              <button className="flex-end" type="submit" > <FaSistrix/></button>
-            </form>
-          </div>
-          <div
-            className={
-              "lg:flex flex-grow inline-block items-center" +
-              (navbarOpen ? " flex" : " hidden")
-            }
-            id="example-navbar-danger"
-          >
-            <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
-              { <li className="nav-item">
-                <a
-                  className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
-                  href="#SLUGFINANCE"
-                >
-                  Watchlist
-                </a>
-              </li> }
-              <li className="nav-item">
-                <a
-                  className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
-                  href="signup"
-                >
-                  Sign Up
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
-                  href="login"
-                >
-                  Log In
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
       
-      <div className="box-border text-6xl h-screen " 
+      <div className="box-border h-screen " 
         style={{backgroundImage: 'url(https://knowledge.wharton.upenn.edu/wp-content/uploads/2020/11/Stock-Market-900x387.jpg)',
                     backgroundSize: "cover",
                     align: "center",
-                    opacity: "0.85",
+                    // opacity: "0.85",
                     height:1000
                     }}>
-        <div className="grid w-1/2 h-screen"style={{paddingLeft:"60px"}}>
+        <Navbar />
+        
+        <div className="grid w-1/2 text-6xl h-screen"style={{paddingLeft:"60px"}}>
           <div className="grid content-end text-yellow-300 font-serif font-mono font-bold">
             The price is what you pay, value is what you get.
             <p className="pt-3 content-end text-stone-400 text-3xl">
@@ -223,8 +161,8 @@ const Home = () => {
               />
             </form>
         </div>
+        
       </div>
-      
       <div className="pt-4 pl-4 text-6xl">
         Market Trends
         <div className="flex pt-4 gridgrid-row-4 grid-flow-col-dense h-screen" id="chart">
