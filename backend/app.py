@@ -78,6 +78,8 @@ def getStock():
     selectQuery = 'SELECT ticker,company, price,change,percentChange FROM stockTable WHERE %s ILIKE ticker'
     cursor.execute(selectQuery, (tickerId,))
     stock = cursor.fetchall()
+    cursor.close()
+    conn.close()
     if stock:
         return jsonify(stock, 200)
     else:
@@ -101,6 +103,8 @@ def retrieveInfo():
     selectQuery = 'SELECT ticker, infoData FROM stockInfoTable WHERE %s ILIKE ticker'
     cursor.execute(selectQuery, (tickerId,))
     stock = cursor.fetchall()
+    cursor.close()
+    conn.close()
     if stock:
         return jsonify(stock, 200)
     else:
@@ -126,6 +130,8 @@ def viewStock():
     selectQuery = 'SELECT ticker,stockData FROM historicalStockTable WHERE %s ILIKE ticker '
     cursor.execute(selectQuery, (tickerId, ))
     stock = cursor.fetchall()
+    cursor.close()
+    conn.close()
     if stock:
         return jsonify(stock, 200)
     else:
@@ -201,6 +207,8 @@ def getDescription():
     selectQuery = 'SELECT * FROM stockDescriptionTable WHERE %s ILIKE ticker'
     cursor.execute(selectQuery, (tickerDescription, ))
     desc = cursor.fetchall()
+    cursor.close()
+    conn.close()
     if desc:
         return jsonify(desc, 200)
     else:
@@ -227,6 +235,8 @@ def submitLogin():
     selectQuery = 'SELECT personemail, personpassword FROM emailtable WHERE %s = personemail AND %s = personpassword'
     cursor.execute(selectQuery, (email, password,))
     account = cursor.fetchall()
+    cursor.close()
+    conn.close()
     if account:
         queryEmail = account[0][0]
         queryPassword = account[0][1]
@@ -292,7 +302,6 @@ def add():
         soup = BeautifulSoup(r.text, 'html.parser')
         data = soup.find_all('h3', {'class': 'Maw(160px)'})
         insertQuery = 'INSERT INTO stockTable (ticker, price, change, percentChange) VALUES (%s, %s, %s, %s)'
-        selectQuery = 'SELECT ticker FROM stockTable WHERE %s ILIKE ticker'
         updateQuery = 'UPDATE stockTable SET price = %s, change = %s, percentChange = %s WHERE ticker = %s'
         for x in data:
             symbol = x.find_all('a')[0].text
@@ -312,10 +321,9 @@ def add():
                     insertQuery, (symbol, price, change, percentChange,))
                 conn.commit()
             getAbout(symbol)
-            cursor.close()
-            conn.close()
         return jsonify('Stocks added!'), 201
     else:
+        selectQuery = 'SELECT ticker FROM stockTable WHERE %s ILIKE ticker'
         url = f'https://finance.yahoo.com/quote/{ticker}'
         r = requests.get(url, headers=headers, timeout=30)
         soup = BeautifulSoup(r.text, 'html.parser')
@@ -331,7 +339,7 @@ def add():
         stockSymbol = ticker
         stockChange = stock['change']
         stockPercentChange = stock['dailyChange']
-         
+        cursor.execute(selectQuery, (stockSymbol, ))
         stock = cursor.fetchall()
         print(len(stock), file = sys.stderr)
         if len(stock) > 0:
@@ -345,6 +353,8 @@ def add():
                            stockChange, stockPercentChange,))
             conn.commit()
         getAbout(stockSymbol)
+        cursor.close()
+        conn.close()
         return jsonify('Stock Added!'), 201
 
 """ This function scrapes yahoo finance to get information such as 52 week high/low and will add into the database.
@@ -381,6 +391,8 @@ def getInfo():
     insertQuery = 'INSERT INTO stockInfoTable(ticker, infoData) VALUES (%s, %s)'
     cursor.execute(insertQuery, (tickerId, stockData,))
     conn.commit()
+    cursor.close()
+    conn.close()
     return jsonify('Data Added', 201)
 
 
@@ -437,6 +449,8 @@ def getHistoricalData():
         insertQuery = 'INSERT INTO historicalStockTable(ticker, stockData) VALUES (%s, %s)'
         cursor.execute(insertQuery, (tickerId, res, ))
         conn.commit()
+    cursor.close()
+    conn.close()
     return jsonify('success', 201)
 
 
@@ -477,6 +491,8 @@ def deletePortfolio():
     deleteQuery = 'DELETE FROM userPortfolioTable WHERE %s = ticker AND %s = personemail'
     cursor.execute(deleteQuery, (ticker, asciiemail,))
     conn.commit()
+    cursor.close()
+    conn.close()
     return jsonify('deleted from portfolio', 200)
 """This function will return all stock tickers that belong to a specific email.
 
@@ -497,6 +513,8 @@ def getPortfolio():
     # selectQuery = 'SELECT * FROM userPortfolioTable'
     cursor.execute(selectQuery, (email,))
     ticker = cursor.fetchall()
+    cursor.close()
+    conn.close()
     print("sdadasda" ,ticker, file = sys.stderr)
     if ticker:
         return jsonify(ticker,200)
