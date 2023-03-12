@@ -246,7 +246,7 @@ const Individual = () => {
     // console.log(description[0][0][1]);
     // console.log(info[0][0][1][0]);
     // console.log(priceInfo[0][0][2][0]);
-    tickerInfo.push(<p className = "text-2xl font-sans font-semibold pl-2 pt-2 inline-block">{priceInfo[0][0][0]}</p>)
+    tickerInfo.push(<p className = "text-2xl font-sans font-semibold pl-2 pt-2 inline-block uppercase">{priceInfo[0][0][0]}</p>)
     tickerInfo.push(<p className = "text-2xl font-sans font-bold pl-2 inline-block">{priceInfo[0][0][2]}</p>)
     if(priceInfo[0][0][2][0] === '+') {
       tickerInfo.push(<p className = "text-2xl font-sans font-semibold pl-2 inline-block text-green-600">{priceInfo[0][0][3]}</p>)
@@ -262,23 +262,23 @@ const Individual = () => {
       counter++;
       if(counter % 4 === 1) {
         row.push(<div className="flex flex-col pb-3">
-        <dt key = {key} className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
-        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
+        <dt key = {key} className="mb-1 text-gray-400 md:text-lg">{key}</dt>
+        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold text-gray-500">{info[0][0][1][0][key]}</dd>
         </div>);
       } else if(counter % 4 === 2) {
         row.push(<div className="flex flex-col py-3">
-        <dt key = {key} className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
-        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
+        <dt key = {key} className="mb-1 text-gray-400 md:text-lg">{key}</dt>
+        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold text-gray-500">{info[0][0][1][0][key]}</dd>
         </div>);
       } else if(counter % 4 === 3) {
         row.push(<div className="flex flex-col py-3">
-        <dt key = {key} className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
-        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
+        <dt key = {key} className="mb-1 text-gray-400 md:text-lg">{key}</dt>
+        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold text-gray-500">{info[0][0][1][0][key]}</dd>
         </div>);
       } else if(counter % 4 === 0) {
         row.push(<div className="flex flex-col pt-3">
-        <dt key = {key} className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
-        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
+        <dt key = {key} className="mb-1 text-gray-400 md:text-lg">{key}</dt>
+        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold text-gray-500">{info[0][0][1][0][key]}</dd>
         </div>);
         viewInformation.push(<div key = {counter} className = "w-1/3"><dl className="w-5/6 text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">{row}</dl></div>)
         row = [];
@@ -328,6 +328,7 @@ const Individual = () => {
          />
          <button type = "submit">Submit</button>
       </form> */}
+      {/* navbar start */}
       <header className="sticky top-0 sm:px-12 mx-auto flex items-center p-4 bg-blue-900">
         <div className="container flex justify-between h-10 mx-auto">
           <a rel="noopener noreferrer" href="/" aria-label="Back to homepage" className="flex items-center p-2 mx-0">
@@ -339,7 +340,7 @@ const Individual = () => {
           <div className="mb-6 items-center justify-start">
             <form onSubmit={handleSubmit}>
               <input type="text" name="name" id="search" placeholder="TSLA, AAPL, NVDA" onChange={handleInputChange} className="w-full px-4 py-2 placeholder-gray-500 border border-gray-200 rounded-md focus:outline-none bg-gray-20 border-gray-600" />
-              <button type = "submit">Submit</button>
+              {/* <button type = "submit">Submit</button> */}
             </form>
           </div>
           <div className="items-center space-x-2 flex-shrink-0 hidden lg:flex">
@@ -352,17 +353,19 @@ const Individual = () => {
           </div>
         </div>
       </header>
+      {/* navbar end */}
+
       <div className = "flex h-3/5">
         <div className = "w-full h-full border-2">
         {tickerInfo}
-        <button type="button" className="w-1/6 py-1 mt-2 font-semibold border rounded dark:border-gray-100 dark:text-gray-100 float-right bg-blue-300">Add to myPortfolio</button>
-          <div id="chart">
-            <ReactApexChart options={options} series={options.series} type="candlestick" height={500} />
+        <button type="button" className="w-1/6 py-1 mt-2 font-semibold border rounded dark:border-gray-100 dark:text-gray-100 float-right bg-blue-500">Add to myPortfolio</button>
+          <div id="chart" className="h-5/6">
+            <ReactApexChart options={options} series={options.series} type="candlestick" height={'100%'} />
           </div>
-          <button type="button" onClick={() => changeDuration(1)} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-100 dark:text-gray-100">1 Week</button>
-          <button type="button" onClick={() => changeDuration(2)} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-100 dark:text-gray-100">1 Month</button>
-          <button type="button" onClick={() => changeDuration(3)} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-100 dark:text-gray-100">6 Months</button>
-          <button type="button" onClick={() => changeDuration(4)} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-100 dark:text-gray-100">1 Year</button>
+          <button type="button" onClick={() => changeDuration(1)} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-500 dark:text-gray-500">1 Week</button>
+          <button type="button" onClick={() => changeDuration(2)} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-500 dark:text-gray-500">1 Month</button>
+          <button type="button" onClick={() => changeDuration(3)} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-500 dark:text-gray-500">6 Months</button>
+          <button type="button" onClick={() => changeDuration(4)} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-500 dark:text-gray-500">1 Year</button>
         </div>
       </div>
       <div className = "flex h-2/5">
