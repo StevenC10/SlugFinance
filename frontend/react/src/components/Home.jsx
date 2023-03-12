@@ -1,122 +1,240 @@
 
-import React, {useState,useEffect,useCallback} from 'react';
+import React, {useState,useEffect} from 'react';
 import ReactApexChart from "react-apexcharts";
-//import { createChartData } from './Chartdata';
 import {useRef} from 'react';
 import Navbar from './Navbar';
+
+import Amazon from '../images/Amazon.png';
+import Apple from '../images/Apple.png';
+import Google from '../images/Google.png';
+import Microsoft from '../images/MSFT.png';
+import Meta from '../images/Meta.png';
+import Netflix from '../images/Netflix.png';
 
 export const tickerContext = React.createContext();
 
 const Home = () => {
-  const today = useRef(new Date());
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth()+1;
+  const day = today.getDate();
+  const baseDay = `"`+year+`-`+month+`-`+day;
   const yesterday = new Date(Date.now() - 86400000);
+  const [c1Data, setC1Data] = useState({});
+  const [icon1, setIcon1] = useState([[["",[{high:0,close:0,low:0,open:0,day:baseDay}]]]]);
+  const [icon2, setIcon2] = useState([[["",[{high:0,close:0,low:0,open:0,day:baseDay}]]]]);
+  const [icon3, setIcon3] = useState([[["",[{high:0,close:0,low:0,open:0,day:baseDay}]]]]);
+  const [icon4, setIcon4] = useState([[["",[{high:0,close:0,low:0,open:0,day:baseDay}]]]]);
+  const [icon5, setIcon5] = useState([[["",[{high:0,close:0,low:0,open:0,day:baseDay}]]]]);
+  const [icon6, setIcon6] = useState([[["",[{high:0,close:0,low:0,open:0,day:baseDay}]]]]);
 
-  const [c1Data, setC1Data] = useState([]);
-  const [c2Data, setC2Data] = useState([]);
-  //const [c3Data, setC3Data] = useState({current:[["",[{close: "0",day: "Mar 09, 2023",high: "0",low: "0",open: "0"}]]]});
-  //const [Icon1,setIcon1] = useState([]);
-  const iconBody = useRef({ticker: '', year: yesterday.getFullYear(), month: yesterday.getMonth()+1, day: yesterday.getDate(), year2: today.current.getFullYear(), month2: today.current.getMonth()+1, day2: today.current.getDate(), interval: "1d"});
-  const newIcon = useRef({});
+  const iconBody = useRef({ticker: '', year: yesterday.getFullYear(), month: yesterday.getMonth()+1, day: yesterday.getDate(), year2: year, month2: month, day2: day, interval: "1d"});
+
    
+
+
+
+  useEffect(()=> {
+
+      fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+        method: 'POST',
+        body: `{"ticker": "TSLA",`
+          + `"year": 2023,`
+          + `"month": 2,`
+          + `"day": 1,`
+          + `"year2": `+year+`,`
+          + `"month2": `+month+`,`
+          + `"day2": `+day+`,`
+          + `"interval": "1d"`
+          +"}",
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
+      });
+      
+      fetch(`http://127.0.0.1:5000/v0/view?id=TSLA`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
+      }).then((response) => {
+        if(!response.ok) {
+          throw response;
+        }
+        return response.json();
+      }).then((json)=>{
+        setC1Data(json);
+        return(json);
+      });
+
+      // Icon 1
+      let temp=iconBody.current;
+      temp.ticker="META"
+      fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+        method: 'POST',
+        body: JSON.stringify(temp),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          })
+      })
+      fetch(`http://127.0.0.1:5000/v0/view?id=META`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
+      }).then((response) => {
+        if(!response.ok) {
+          throw response;
+        }
+        return response.json();
+      }).then((json)=>{
+        setIcon1(json);
+        return(json);
+      })
+      
+      // Icon 2
+      temp.ticker="AAPL";
+      fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+        method: 'POST',
+        body: JSON.stringify(temp),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          })
+      })
+       fetch(`http://127.0.0.1:5000/v0/view?id=AAPL`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
+      }).then((response) => {
+        if(!response.ok) {
+          throw response;
+        }
+        return response.json();
+      }).then((json)=>{
+        setIcon2(json);
+        return(json);
+      })
+      
+      // Icon 3
+      temp.ticker="AMZN";
+      fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+        method: 'POST',
+        body: JSON.stringify(temp),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          })
+      })
+       fetch(`http://127.0.0.1:5000/v0/view?id=AMZN`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
+      }).then((response) => {
+        if(!response.ok) {
+          throw response;
+        }
+        return response.json();
+      }).then((json)=>{
+        setIcon3(json);
+        return(json);
+      })
+      
+      // Icon 4
+      temp.ticker="NFLX";
+      fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+        method: 'POST',
+        body: JSON.stringify(temp),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          })
+      })
+       fetch(`http://127.0.0.1:5000/v0/view?id=NFLX`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
+      }).then((response) => {
+        if(!response.ok) {
+          throw response;
+        }
+        return response.json();
+      }).then((json)=>{
+        setIcon4(json);
+        return(json);
+      })
+      
+      // Icon 5
+      temp.ticker="GOOGL";
+      fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+        method: 'POST',
+        body: JSON.stringify(temp),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          })
+      })
+       fetch(`http://127.0.0.1:5000/v0/view?id=GOOGL`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
+      }).then((response) => {
+        if(!response.ok) {
+          throw response;
+        }
+        return response.json();
+      }).then((json)=>{
+        setIcon5(json);
+        return(json);
+      })
+      
+      // Icon 6
+      temp.ticker="MSFT";
+      fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+        method: 'POST',
+        body: JSON.stringify(temp),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          })
+      })
+       fetch(`http://127.0.0.1:5000/v0/view?id=MSFT`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
+      }).then((response) => {
+        if(!response.ok) {
+          throw response;
+        }
+        return response.json();
+      }).then((json)=>{
+        setIcon6(json);
+        return(json);
+      })
+
+    return() =>{
+      //return null;
+    };
+  },[year, month, day]);
+
+
   const c1Options = {};
   c1Options.series = [];
   const c1GraphData = {'data': []}
   c1Options.series.push(c1GraphData);
-  //const iconArray={};
-  //iconArray
 
-
-  const getTickerData = useRef(useCallback((tickerName)=> {
-    let temp=iconBody.current;
-    temp.ticker= tickerName
-    //console.log(temp);
-    //console.log(iconBody);
-    let tempData = fetch(`http://127.0.0.1:5000/v0/getHistory`, {
-      method: 'POST',
-      body: JSON.stringify(temp),
-      headers: new Headers({
-        'Content-Type': 'application/json',
-        })
-    }).then((response)=>{
-      if(!response.ok) {
-        throw response;
-      }
-      fetch(`http://127.0.0.1:5000/v0/view?id=`+tickerName, {
-        method: 'GET',
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          })
-        }).then((response1) => {
-          if(!response1.ok) {
-            throw response1;
-          }
-          return response1.json();
-        }).then((json)=>{
-          newIcon.current=json[0];
-          setC2Data(json);
-          //console.log(newIcon.current);
-          return(json);
-        })
-      })
-      
-    return tempData;
-  }, [iconBody,setC2Data]));
   
- 
-  //CHART 1
-  useEffect(()=> {
-    fetch(`http://127.0.0.1:5000/v0/getHistory`, {
-      method: 'POST',
-      body: `{"ticker": "TSLA",`
-        + `"year": 2023,`
-        + `"month": 2,`
-        + `"day": 1,`
-        + `"year2": `+today.current.getFullYear()+`,`
-        + `"month2": `+today.current.getMonth()+`,`
-        + `"day2": `+today.current.getDate()+`,`
-        + `"interval": "1d"`
-        +"}",
-      headers: new Headers({
-        'Content-Type': 'application/json',
-      })
-    });
-    
-    fetch(`http://127.0.0.1:5000/v0/view?id=TSLA`, {
-      method: 'GET',
-      headers: new Headers({
-        'Content-Type': 'application/json',
-      })
-    }).then((response) => {
-      if(!response.ok) {
-        throw response;
-      }
-      return response.json();
-    }).then((json)=>{
-      setC1Data(json);
-      return(json);
-    });
-
-    getTickerData.current("NVDA");
-    //getTickerData.current("DOW");
-    
-    return() =>{
-      //return null;
-    };
-  },[]);
-  console.log(c2Data);
- 
-  
-  if (c1Data.length >= 1){
+  if (c1Data.length>0){
     let c1History= c1Data[0][0][1];
 
     for (let i=c1History.length-1; i>=0; i--){
       const temp = {};
         temp.x = new Date (c1History[i].day);
         temp.y = [];
-        temp.y.push(c1History[i].open);
-        temp.y.push(c1History[i].high);
-        temp.y.push(c1History[i].low);
-        temp.y.push(c1History[i].close);
+        temp.y.push(c1History[i].open.toFixed(2));
+        temp.y.push(c1History[i].high.toFixed(2));
+        temp.y.push(c1History[i].low.toFixed(2));
+        temp.y.push(c1History[i].close.toFixed(2));
         c1Options.series[0].data.push(temp);
     }
     c1Options.chart = {};
@@ -130,9 +248,9 @@ const Home = () => {
     c1Options.yaxis = {};
     c1Options.yaxis.tooltip = {};
     c1Options.yaxis.tooltip.enabled = true;
+
   }
-  //console.log(c1Data);
-  
+  //console.log(icon1[0][0][1][0].open);
   //RENDER WEBPAGE
   return (
     <div className="overflow-auto">
@@ -141,7 +259,7 @@ const Home = () => {
         style={{backgroundImage: 'url(https://knowledge.wharton.upenn.edu/wp-content/uploads/2020/11/Stock-Market-900x387.jpg)',
                     backgroundSize: "cover",
                     align: "center",
-                    // opacity: "0.85",
+                    opacity: "0.82",
                     height:1000
                     }}>
         <Navbar />
@@ -155,7 +273,7 @@ const Home = () => {
           </div>
           
           <form className="nav-item" style={{paddingTop:'10px'}} action="Individual" >
-              <input className="flex w-full focus:outline-none" placeholder="TSLA, AAPL, NVDA..."
+              <input className="rounded-lg flex w-full focus:outline-none" placeholder=" TSLA, AAPL, NVDA..."
               type = "text" 
               name = "name"
               />
@@ -165,26 +283,35 @@ const Home = () => {
       </div>
       <div className="pt-4 pl-4 text-6xl">
         Market Trends
-        <div className="flex pt-4 gridgrid-row-4 grid-flow-col-dense h-screen" id="chart">
-          <div className="pr-3 text-lg row-span-4 row-start-1 w-2/3">
-            <ReactApexChart options={c1Options} series={c1Options.series} type="candlestick" height={800}/>
+        <div className="flex pt-4 grid grid-row-3 grid-col-6 gap-3 h-screen" id="chart">
+          <div className=" text-lg row-span-3 col-span-4 row-start-1 min-w-full">
+            <ReactApexChart options={c1Options} series={c1Options.series} type="candlestick" height={800} />
           </div>
-          <div className="px-3 row-start-1 w-1/6">
-             
-            {/*<ReactApexChart options={c2Options} series={c2Options.series} type="line" height={300} width={400}/>*/}
+          <div className="p-2 rounded max-h-24 border border-slate-900 px-1 row-start-1  text-2xl">
+            <img src={Meta} className="flex" height="90px" width="90px"  alt=""/>
+            <p className="flex">{icon1[0][0][0]} {icon1[0][0][1][0].close.toFixed(2)}&emsp;{((icon1[0][0][1][0].close/icon1[0][0][1][0].open)-1).toFixed(2)}%</p>
           </div>
-          <div className="px-3 row-start-1 w-1/6">
-
-            {/*<ReactApexChart options={c3Options} series={c3Options.series} type="line" height={300} width={400}/> */}
+          <div className="p-2 rounded max-h-24 border border-slate-900 px-1 row-start-1  text-2xl">
+            <img src={Apple} className="" height="75px" width="75px" alt=""></img>
+            {icon2[0][0][0]} {icon2[0][0][1][0].close.toFixed(2)}&emsp;{((icon2[0][0][1][0].close/icon2[0][0][1][0].open)-1).toFixed(2)}%       
           </div>
-          <div className="px-3 row-start-2 w-1/6">
-            
-            {/*<ReactApexChart options={c4Options} series={c4Options.series} type="line" height={300} width={400}/>*/}
+          <div className="p-2 rounded max-h-24 border border-slate-900 px-1 row-start-2  text-2xl">
+            <img src={Amazon} className="" height="90px" width="90px" alt=""></img>
+            {icon3[0][0][0]} {icon3[0][0][1][0].close.toFixed(2)}&emsp;{((icon3[0][0][1][0].close/icon3[0][0][1][0].open)-1).toFixed(2)}%
           </div>
-          <div className="px-3 row-start-2 w-1/6">
-            
-            {/*<ReactApexChart options={c5Options} series={c5Options.series} type="line" height={300} width={400}/>*/}
+          <div className="p-2 rounded  max-h-24 border border-slate-900 px-1 row-start-2 text-2xl">
+            <img src={Netflix} className="" height="90px" width="90px" alt=""></img>
+            {icon4[0][0][0]} {icon4[0][0][1][0].close.toFixed(2)}&emsp;{((icon4[0][0][1][0].close/icon4[0][0][1][0].open)-1).toFixed(2)}%
           </div>
+          <div className="p-2 rounded max-h-24 border border-slate-900 px-1 row-start-3 text-2xl">
+            <img src={Google} className="" height="90px" width="90px" alt=""></img>
+            {icon5[0][0][0]} {icon5[0][0][1][0].close.toFixed(2)}&emsp;{((icon5[0][0][1][0].close/icon5[0][0][1][0].open)-1).toFixed(2)}%
+          </div>
+          <div className="p-2 rounded max-h-24 border border-slate-900 px-2 row-start-3 text-2xl">
+            <img src={Microsoft} className="" height="75px" width="75px" alt=""></img>
+            {icon6[0][0][0]} {icon6[0][0][1][0].close.toFixed(2)}&emsp;{((icon6[0][0][1][0].close/icon6[0][0][1][0].open)-1).toFixed(2)}%
+          </div>
+          
         </div>
       </div>         
 
@@ -201,473 +328,3 @@ const Home = () => {
   
 export default Home;
 
-
-  //let effectRan=false;
-  //const [chartData,setChartData] = useState({});
-  
-  //chartData.info=[];
-
-  /* modularizing the graph data code isn't working out, come back later
- for(let i=0; i<1; i++){}
-        const f = async()=>{
-          const response= await createChartData("TSLA")
-          setChartData(response);
-          
-          console.log(response);
-          console.log(chartData);
-        }
-        f();   
-        return () => {
-          console.log("effectRan");
-          effectRan.current = true;
-        }
-      }
-      
-  },[chartData,effectRan]);
-  effectRan.current = false;
-  console.log(chartData);
-        //console.log(chartData);
-        //console.log(chartData.info);
-        //console.log(chartOptions);
-
-*/
-
-/*
-const getStock = (symbol, setStockData) => {
-  //how to stop firing on intial render 
-  //https://stackoverflow.com/questions/72146986/useeffect-firing-on-initial-render
-  symbol && fetch(`http://127.0.0.1:5000/v0/ticker?id=` + symbol, {
-  method: 'GET',
-  headers: new Headers({
-    'Content-Type': 'application/x-www-form-urlencoded',
-  }),
-})
-  .then((response) => {
-    if(!response.ok) {
-      throw response;
-    }
-    return response.json();
-  })
-  .then((json) => {
-    setStockData(json)
-  })
-}*/
-
-/*
-
-  //CHART 2
-  useEffect(()=> {
-    ( async()=>{
-        await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
-          method: 'POST',
-          body: `{"ticker": "NVDA",`
-                + `"year": 2023,`
-                + `"month": 2,`
-                + `"day": 1,`
-                + `"year2": `+year+`,`
-                + `"month2": `+month+`,`
-                + `"day2": `+day+`,`
-                + `"interval": "1d"`
-                +"}",
-          headers: new Headers({
-            'Content-Type': 'application/json',
-            })
-        })
-
-        let c2d = await fetch(`http://127.0.0.1:5000/v0/view?id=NVDA`, {
-          method: 'GET',
-          headers: new Headers({
-            'Content-Type': 'application/json',
-            })
-          }).then((response) => {
-            if(!response.ok) {
-              throw response;
-            }
-            return response.json();
-          })
-
-          setC2Data(c2d);
-    }) ();
-          
-    return() =>{
-      //AbortController.abort();
-    };
-  },[day,month,year]);
-
-  const c2Options = {};
-  c2Options.series = [];
-  const c2GraphData = {'data': []}
-  c2Options.series.push(c2GraphData);
-
-  if (c2Data.length >= 1){
-    let c2History= c2Data[0][0][1];
-
-    for (let i=c2History.length-1; i>=0; i--){
-      const temp = {};
-        temp.x = new Date (c2History[i].day);
-        temp.y = [];
-        temp.y.push(c2History[i].open);
-        temp.y.push(c2History[i].high);
-        temp.y.push(c2History[i].low);
-        temp.y.push(c2History[i].close);
-        c2Options.series[0].data.push(temp);
-    }
-    c2Options.chart = {};
-    c2Options.chart.type = 'candlestick';
-    c2Options.chart.height = 350;
-    c2Options.title = {};
-    c2Options.title.text = 'NVDA';
-    c2Options.title.align = 'left';
-    c2Options.xaxis = {};
-    c2Options.xaxis.type = 'numeric';
-    c2Options.yaxis = {};
-    c2Options.yaxis.tooltip = {};
-    c2Options.yaxis.tooltip.enabled = true;
-  }
-
-  //CHART 3
-  useEffect(()=> {
-    ( async()=>{
-        await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
-          method: 'POST',
-          body: `{"ticker": "DOW",`
-          + `"year": 2023,`
-          + `"month": 2,`
-          + `"day": 1,`
-          + `"year2": `+year+`,`
-          + `"month2": `+month+`,`
-          + `"day2": `+day+`,`
-          + `"interval": "1d"`
-          +"}",
-          headers: new Headers({
-            'Content-Type': 'application/json',
-            })
-        })
-
-        let c3d = await fetch(`http://127.0.0.1:5000/v0/view?id=DOW`, {
-          method: 'GET',
-          headers: new Headers({
-            'Content-Type': 'application/json',
-            })
-          }).then((response) => {
-            if(!response.ok) {
-              throw response;
-            }
-            return response.json();
-          })
-          setC3Data(c3d);
-    }) ();
-    return() =>{
-      //AbortController.abort();
-    };
-  },[day,month,year]);
-  const c3Options = {};
-  c3Options.series = [];
-  const c3GraphData = {'data': []}
-  c3Options.series.push(c3GraphData);
-
-  if (c3Data.length >= 1){
-    let c3History= c3Data[0][0][1];
-
-    for (let i=c3History.length-1; i>=0; i--){
-      const temp = {};
-        temp.x = new Date (c3History[i].day);
-        temp.y = [];
-        temp.y.push(c3History[i].open);
-        temp.y.push(c3History[i].high);
-        temp.y.push(c3History[i].low);
-        temp.y.push(c3History[i].close);
-        c3Options.series[0].data.push(temp);
-    }
-    c3Options.chart = {};
-    c3Options.chart.type = 'candlestick';
-    c3Options.chart.height = 350;
-    c3Options.title = {};
-    c3Options.title.text = 'DOW';
-    c3Options.title.align = 'left';
-    c3Options.xaxis = {};
-    c3Options.xaxis.type = 'numeric';
-    c3Options.yaxis = {};
-    c3Options.yaxis.tooltip = {};
-    c3Options.yaxis.tooltip.enabled = true;
-  }
-
-
-  //CHART 4
-  useEffect(()=> {
-    ( async()=>{
-        await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
-          method: 'POST',
-          body: `{"ticker": "GOOGL",`
-          + `"year": 2023,`
-          + `"month": 2,`
-          + `"day": 1,`
-          + `"year2": `+year+`,`
-          + `"month2": `+month+`,`
-          + `"day2": `+day+`,`
-          + `"interval": "1d"`
-          +"}",
-          headers: new Headers({
-            'Content-Type': 'application/json',
-            })
-        })
-
-        let c4d = await fetch(`http://127.0.0.1:5000/v0/view?id=GOOGL`, {
-          method: 'GET',
-          headers: new Headers({
-            'Content-Type': 'application/json',
-            })
-          }).then((response) => {
-            if(!response.ok) {
-              throw response;
-            }
-            return response.json();
-          })
-          setC4Data(c4d);
-    }) ();
-    return() =>{
-      //AbortController.abort();
-    };
-  },[day,month,year]);
-  const c4Options = {};
-  c4Options.series = [];
-  const c4GraphData = {'data': []}
-  c4Options.series.push(c4GraphData);
-
-  if (c4Data.length >= 1){
-    let c4History= c4Data[0][0][1];
-
-    for (let i=c4History.length-1; i>=0; i--){
-      const temp = {};
-        temp.x = new Date (c4History[i].day);
-        temp.y = [];
-        temp.y.push(c4History[i].open);
-        temp.y.push(c4History[i].high);
-        temp.y.push(c4History[i].low);
-        temp.y.push(c4History[i].close);
-        c4Options.series[0].data.push(temp);
-    }
-    c4Options.chart = {};
-    c4Options.chart.type = 'candlestick';
-    c4Options.chart.height = 350;
-    c4Options.title = {};
-    c4Options.title.text = 'GOOGL';
-    c4Options.title.align = 'left';
-    c4Options.xaxis = {};
-    c4Options.xaxis.type = 'numeric';
-    c4Options.yaxis = {};
-    c4Options.yaxis.tooltip = {};
-    c4Options.yaxis.tooltip.enabled = true;
-  }
-
-  //CHART 5
-  useEffect(()=> {
-    ( async()=>{
-        await fetch(`http://127.0.0.1:5000/v0/getHistory`, {
-          method: 'POST',
-          body: `{"ticker": "AMZN",`
-          + `"year": 2023,`
-          + `"month": 2,`
-          + `"day": 1,`
-          + `"year2": `+year+`,`
-          + `"month2": `+month+`,`
-          + `"day2": `+day+`,`
-          + `"interval": "1d"`
-          +"}",
-          headers: new Headers({
-            'Content-Type': 'application/json',
-            })
-        })
-
-        let c5d = await fetch(`http://127.0.0.1:5000/v0/view?id=AMZN`, {
-          method: 'GET',
-          headers: new Headers({
-            'Content-Type': 'application/json',
-            })
-          }).then((response) => {
-            if(!response.ok) {
-              throw response;
-            }
-            return response.json();
-          })
-          setC5Data(c5d);
-    }) ();
-    return() =>{
-
-      //AbortController.abort();
-    };
-  },[day,month,year]);
-
-  const c5Options = {};
-  c5Options.series = [];
-  const c5GraphData = {'data': []}
-  c5Options.series.push(c5GraphData);
-
-  if (c5Data.length >= 1){
-    let c5History= c5Data[0][0][1];
-
-    for (let i=c5History.length-1; i>=0; i--){
-      const temp = {};
-        temp.x = new Date (c5History[i].day);
-        temp.y = [];
-        temp.y.push(c5History[i].open);
-        temp.y.push(c5History[i].high);
-        temp.y.push(c5History[i].low);
-        temp.y.push(c5History[i].close);
-        c5Options.series[0].data.push(temp);
-    }
-    c5Options.chart = {};
-    c5Options.chart.type = 'candlestick';
-    //c5Options.chart.height = 350;
-    c5Options.title = {};
-    c5Options.title.text = 'AMZN';
-    c5Options.title.align = 'left';
-    c5Options.xaxis = {};
-    c5Options.xaxis.type = 'numeric';
-    c5Options.yaxis = {};
-    c5Options.yaxis.tooltip = {};
-    c5Options.yaxis.tooltip.enabled = true;
-    
-  }
-
-  // search bar ticker context
-  
-  //RENDER WEBPAGE
-  return (
-    <div className="overflow-auto">
-      <nav className="overflow-hidden relative flex items-center justify-between px-2 py-3 bg-[#27a5f8] sticky top-0">
-        <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
-          <img className="flex inline-block" src={Logo} width='40' height='40' alt=''/>
-          <div className="inline-block w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
-            <a
-              className="text-sm flex flex-col font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white"
-              href="#SLUGFINANCE"
-            >
-              SLUG FINANCE 
-            </a>
-            <button
-              className="text-white cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
-              type="button"
-              onClick={() => setNavbarOpen(!navbarOpen)}
-            >
-              <i><FaBars/></i>
-            </button>
-          </div>
-          <div className="flex flex-grow inline-block">
-            <form className="flex flex-grow" style={{background:'white', margin:'2px'}} >
-              <input className="flex flex-grow focus:outline-none" placeholder="TSLA, AAPL, NVDA..."
-              type = "text" 
-              name = "name"
-              />
-              <button className="flex-end" type="submit" > <FaSistrix/></button>
-            </form>
-          </div>
-          <div
-            className={
-              "lg:flex flex-grow inline-block items-center" +
-              (navbarOpen ? " flex" : " hidden")
-            }
-            id="example-navbar-danger"
-          >
-            <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
-              { <li className="nav-item">
-                <a
-                  className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
-                  href="#SLUGFINANCE"
-                >
-                  Watchlist
-                </a>
-              </li> }
-              <li className="nav-item">
-                <a
-                  className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
-                  href="signup"
-                >
-                  Sign Up
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
-                  href="login"
-                >
-                  Log In
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      
-      <div className="box-border text-6xl h-screen " 
-        style={{backgroundImage: 'url(https://knowledge.wharton.upenn.edu/wp-content/uploads/2020/11/Stock-Market-900x387.jpg)',
-                    backgroundSize: "cover",
-                    align: "center",
-                    height:1000
-                    }}>
-        <div className="grid grid-rows-2 w-2/3 h-screen"style={{paddingLeft:"60px"}}>
-          <p className="grid content-end text-yellow-200 font-serif font-mono font-bold">
-            The price is what you pay, value is what you get.
-          </p>
-          <form className="nav-item" style={{paddingTop:'10px'}} action="Individual" >
-              <input className="flex w-full focus:outline-none" placeholder="TSLA, AAPL, NVDA..."
-              type = "text" 
-              name = "name"
-              />
-            </form>
-        </div>
-        
-      </div>
-      
-      <div className="flex grid grid-col-4 grid-row-4 grid-flow-col-dense h-screen" id="chart">
-        <div className="px-3 row-span-4 col-span-2 row-start-1">
-          <ReactApexChart options={c1Options} series={c1Options.series} type="candlestick" height={800} width={850}/>
-        </div>
-        <div className="px-3 row-start-1">
-          
-          <ReactApexChart options={c2Options} series={c2Options.series} type="line" height={300} width={400}/>
-        </div>
-        <div className="px-3 row-start-1">
-          <ReactApexChart options={c3Options} series={c3Options.series} type="line" height={300} width={400}/>
-        </div>
-        <div className="px-3 row-start-2">
-          
-          <ReactApexChart options={c4Options} series={c4Options.series} type="line" height={300} width={400}/>
-        </div>
-        <div className="px-3 row-start-2">
-          
-          <ReactApexChart options={c5Options} series={c5Options.series} type="line" height={300} width={400}/>
-        </div>
-      </div>
-      <footer className="bg-[#27a5f8] h-48 px-12 pt-5" >
-        <div className="flex bold text-4xl">About SlugFinance</div>
-        <div className="flex text-2xl">We are a team of students studying computer science at University of California Santa Cruz.</div>
-
-      </footer>
-      
-      
-    </div>
-  );
-};
-  
-export default Home;
-/*
-const getStock = (symbol, setStockData) => {
-  //how to stop firing on intial render 
-  //https://stackoverflow.com/questions/72146986/useeffect-firing-on-initial-render
-  symbol && fetch(`http://127.0.0.1:5000/v0/ticker?id=` + symbol, {
-  method: 'GET',
-  headers: new Headers({
-    'Content-Type': 'application/x-www-form-urlencoded',
-  }),
-})
-  .then((response) => {
-    if(!response.ok) {
-      throw response;
-    }
-    return response.json();
-  })
-  .then((json) => {
-    setStockData(json)
-  })
-}*/

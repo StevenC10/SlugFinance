@@ -13,7 +13,7 @@ function toSignup() {
 const Navbar = () => {
   return (
     // dark:bg-gray-800 dark:text-gray-100
-      <header className="sticky top-0 sm:px-12 mx-auto flex items-center p-4 bg-white bg-opacity-5">
+      <header className="sticky top-0 sm:px-12 mx-auto flex items-center p-4 bg-blue-600 bg-opacity-70">
         <div className="container flex justify-between h-10 mx-auto">
           <a rel="noopener noreferrer" href="/" aria-label="Back to homepage" className="flex items-center p-2 mx-0">
             <img src={Logo} className="w-12 h-12" alt="logo" />

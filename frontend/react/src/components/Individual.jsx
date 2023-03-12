@@ -297,7 +297,6 @@ const Individual = () => {
     options.yaxis = {};
     options.yaxis.tooltip = {};
     options.yaxis.tooltip.enabled = true;
-
     console.log(JSON.stringify(options));
   }
 
