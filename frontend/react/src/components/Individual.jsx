@@ -23,13 +23,15 @@ const Individual = () => {
   console.log(today.getMonth());
 
 
-  const [stock, setStock] = React.useState({ticker: '', year: 2022, month: today.getMonth()+1, day: today.getDate(), year2: today.getFullYear(), month2: today.getMonth()+1, day2: today.getDate(), interval: "1d"});
+  const [stock, setStock] = React.useState({ticker: '', year: today.getFullYear(), month: today.getMonth(), day: today.getDate(), year2: today.getFullYear(), month2: today.getMonth()+1, day2: today.getDate(), interval: "1d"});
   const [ticker, setTicker] = React.useState();
   const [getInfo, setGetInfo] = React.useState({ticker: ''});
   const [view, setView] = React.useState([]);
   const [info, setInfo] = React.useState([]);
   const [description, setDescription] = React.useState([]);
   const [priceInfo, setPriceInfo] = React.useState([]);
+
+  console.log(stock);
 
   const handleInputChange = (event) => {
     const u = stock;
@@ -42,13 +44,14 @@ const Individual = () => {
   };
 
   function changeDuration(duration) {
-    console.log(stock['year'], stock['month'], stock['day']);
-    console.log(duration);
+    // console.log(stock['year'], stock['month'], stock['day']);
+    // console.log(duration);
     const u = stock;
     const durationDay = new Date();
     if(duration === 1) {
       durationDay.setDate(durationDay.getDate()-7);
-      console.log(durationDay);
+
+      // console.log(durationDay);
     } else if (duration === 2) {
       durationDay.setMonth(durationDay.getMonth()-1);
     } else if (duration === 3) {
@@ -57,11 +60,11 @@ const Individual = () => {
       durationDay.setFullYear(durationDay.getFullYear()-1);
     }
     u['year'] = durationDay.getFullYear();
-    u['month'] = durationDay.getMonth();
+    u['month'] = durationDay.getMonth() + 1;
     u['day'] = durationDay.getDate();
     setStock(u);
     setTicker(u['ticker']);
-    console.log(stock['year'], stock['month'], stock['day']);
+    // console.log(stock['year'], stock['month'], stock['day']);
     fetch('http://127.0.0.1:5000/v0/getHistory', {
       method: 'POST',
       body: JSON.stringify(stock),
@@ -99,7 +102,7 @@ const Individual = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(stock);
+    // console.log(stock);
     fetch('http://127.0.0.1:5000/v0/getHistory', {
       method: 'POST',
       body: JSON.stringify(stock),
@@ -228,7 +231,7 @@ const Individual = () => {
       });
   };
 
-  console.log(info);
+  // console.log(info);
   const options = {};
 
   options.series = [];
@@ -236,21 +239,21 @@ const Individual = () => {
   options.series.push(data);
   let viewDescription = '';
   const viewInformation = [];
-  console.log(description);
-  console.log(info);
+  // console.log(description);
+  // console.log(info);
   const tickerInfo = [];
   if(view.length >= 1 && description.length >= 1 && info.length >= 1 && priceInfo.length >= 1) {
-    console.log(description[0][0][1]);
-    console.log(info[0][0][1][0]);
-    console.log(priceInfo[0][0][2][0]);
-    tickerInfo.push(<p class = "text-2xl font-sans font-semibold pl-2 pt-2 inline-block">{priceInfo[0][0][0]}</p>)
-    tickerInfo.push(<p class = "text-2xl font-sans font-bold pl-2 inline-block">{priceInfo[0][0][1]}</p>)
+    // console.log(description[0][0][1]);
+    // console.log(info[0][0][1][0]);
+    // console.log(priceInfo[0][0][2][0]);
+    tickerInfo.push(<p className = "text-2xl font-sans font-semibold pl-2 pt-2 inline-block">{priceInfo[0][0][0]}</p>)
+    tickerInfo.push(<p className = "text-2xl font-sans font-bold pl-2 inline-block">{priceInfo[0][0][2]}</p>)
     if(priceInfo[0][0][2][0] === '+') {
-      tickerInfo.push(<p class = "text-2xl font-sans font-semibold pl-2 inline-block text-green-600">{priceInfo[0][0][2]}</p>)
-      tickerInfo.push(<p class = "text-2xl font-sans font-semibold pl-2 inline-block text-green-600">{priceInfo[0][0][3]}</p>)
+      tickerInfo.push(<p className = "text-2xl font-sans font-semibold pl-2 inline-block text-green-600">{priceInfo[0][0][3]}</p>)
+      tickerInfo.push(<p className = "text-2xl font-sans font-semibold pl-2 inline-block text-green-600">{priceInfo[0][0][4]}</p>)
     } else {
-      tickerInfo.push(<p class = "text-2xl font-sans font-semibold pl-2 inline-block text-red-600">{priceInfo[0][0][2]}</p>)
-      tickerInfo.push(<p class = "text-2xl font-sans font-semibold pl-2 inline-block text-red-600">{priceInfo[0][0][3]}</p>)
+      tickerInfo.push(<p className = "text-2xl font-sans font-semibold pl-2 inline-block text-red-600">{priceInfo[0][0][3]}</p>)
+      tickerInfo.push(<p className = "text-2xl font-sans font-semibold pl-2 inline-block text-red-600">{priceInfo[0][0][4]}</p>)
     }
 
     let counter = 0;
@@ -259,35 +262,35 @@ const Individual = () => {
       counter++;
       if(counter % 4 === 1) {
         row.push(<div className="flex flex-col pb-3">
-        <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
-        <dd className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
+        <dt key = {key} className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
+        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
         </div>);
       } else if(counter % 4 === 2) {
         row.push(<div className="flex flex-col py-3">
-        <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
-        <dd className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
+        <dt key = {key} className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
+        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
         </div>);
       } else if(counter % 4 === 3) {
         row.push(<div className="flex flex-col py-3">
-        <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
-        <dd className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
+        <dt key = {key} className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
+        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
         </div>);
       } else if(counter % 4 === 0) {
         row.push(<div className="flex flex-col pt-3">
-        <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
-        <dd className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
+        <dt key = {key} className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">{key}</dt>
+        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
         </div>);
-        viewInformation.push(<div className = "w-1/3"><dl className="w-5/6 text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">{row}</dl></div>)
+        viewInformation.push(<div key = {counter} className = "w-1/3"><dl className="w-5/6 text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">{row}</dl></div>)
         row = [];
       }
     }
     
-    console.log(view);
-    console.log(priceInfo);
+    // console.log(view);
+    // console.log(priceInfo);
     const historicalData = view[0][0][1];
-    console.log(historicalData);
+    // console.log(historicalData);
     viewDescription = description[0][0][1];
-    console.log(historicalData.length);
+    // console.log(historicalData.length);
     for(let i = historicalData.length-1; i >= 0; i--) {
         const temp = {};
         // temp.x = new Date (historicalData[i].day);
@@ -311,7 +314,8 @@ const Individual = () => {
     options.yaxis = {};
     options.yaxis.tooltip = {};
     options.yaxis.tooltip.enabled = true;
-    console.log(JSON.stringify(options));
+
+    // console.log(JSON.stringify(options));
   }
 
   return (
