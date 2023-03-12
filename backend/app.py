@@ -16,6 +16,51 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+from selenium import webdriver
+import seleniumScraper as ss
+import stockDataToExcel as sdte
+from selenium.webdriver.firefox.options import Options 
+
+@app.route('/v0/yahooAdd', methods=['POST'])
+def yahooAdd():
+    with open('pairs.json', 'r') as ct_file:
+        ct_data = json.load(ct_file)
+    conn = getConnection()
+    cursor = conn.cursor()
+    options = Options() 
+    #options.add_argument("-headless") 
+    with webdriver.Firefox(options=options) as browser: 
+        args = request.json
+        user = args.get('email', '')
+        user = user + "@yahoo.com" 
+        pswd = args.get('password', '')
+        portfolio = args.get('portfolio', '')
+        ss.launchAndLogin(browser, user, pswd)
+        todayData = ss.getPortfolioData(browser, portfolio)
+        sdte.jsonListToExcel(todayData)
+        selectQuery = 'SELECT ticker,company, price,change,percentChange FROM stockTable WHERE %s = ticker'
+        for i in todayData:
+            stockSymbol = i['symbol'] 
+            stockPrice = i['price']
+            stockChange = i['change']
+            stockPercentChange = i['percentChange']
+            stockCompany = ct_data[stockSymbol]
+            cursor.execute(selectQuery, (stockSymbol,))
+            stock = cursor.fetchall()
+            if len(stock) > 0:
+                updateQuery = 'UPDATE stockTable SET price = %s, change = %s, percentChange = %s WHERE ticker = %s'
+                cursor.execute(updateQuery, (stockPrice, stockChange,
+                               stockPercentChange, stockSymbol,))
+                conn.commit()
+            else:
+                insertQuery = 'INSERT INTO stockTable (ticker, company, price, change, percentChange) VALUES (%s,%s, %s, %s, %s)'
+                cursor.execute(insertQuery, (stockSymbol,stockCompany,stockPrice,
+                               stockChange, stockPercentChange,))
+                conn.commit()
+            print(stockSymbol)
+            getAbout(stockSymbol)
+    return jsonify('Stocks Added!'), 201
+
 """
 This function gets two tables of stock information and stores it into a dictionary.
 

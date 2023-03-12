@@ -6,6 +6,23 @@ info:
 servers:
   - url: /
 paths:
+  /v0/yahooAdd:
+    post:
+      description: Add Stocks in portfolio to Database
+      requestBody:
+        description: Request Body
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/YahooCredentials'
+      responses:
+        '201':
+          description: added to database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stock'
   /v0/ticker/:
     parameters:
       - name: id
@@ -287,6 +304,15 @@ paths:
 
 components:
   schemas:
+    YahooCredentials:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        portfolio:
+          type: string
     Error:
       required:
         - code
