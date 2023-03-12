@@ -61,14 +61,14 @@ def yahooAdd():
             getAbout(stockSymbol)
     return jsonify('Stocks Added!'), 201
 
-"""
-This function gets two tables of stock information and stores it into a dictionary.
-
-Function accesses the two tables and stores the data into a dictionary which gets
-appended to an array. The array is then turned into JSON to be easily readable
-and parsable. Used in getInfo(), and is abstracted.
-"""
 def storeData(table1, table2):
+    """
+    This function gets two tables of stock information and stores it into a dictionary.
+    
+    Function accesses the two tables and stores the data into a dictionary which gets
+    appended to an array. The array is then turned into JSON to be easily readable
+    and parsable. Used in getInfo(), and is abstracted.
+    """
     stockInformation = {
         'Previous Close' : None,
         'Open' : None,
@@ -106,16 +106,16 @@ def storeData(table1, table2):
     stockArr.append(stockInformation)
     return json.dumps(stockArr)
 
-""" This function requests and id and returns a stock's performance for the day and full name.
-
-Function will check postgres database to see if ticker is found, if not then it will return 404
-error not found. You can test this through 127.0.0.1:5000/v0/ticker/{specifiedTicker} or by fetching
-on the frontend.
-
-Example: 127.0.0.1:5000/v0/ticker/TSLA
-"""
 @app.route('/v0/ticker/', methods=['GET'])
 def getStock():
+    """ This function requests and id and returns a stock's performance for the day and full name.
+    
+    Function will check postgres database to see if ticker is found, if not then it will return 404
+    error not found. You can test this through 127.0.0.1:5000/v0/ticker/{specifiedTicker} or by fetching
+    on the frontend.
+    
+    Example: 127.0.0.1:5000/v0/ticker/TSLA
+    """
     args = request.args
     tickerId = args.get("id")
     conn = getConnection()
@@ -130,17 +130,17 @@ def getStock():
     else:
         abort(404)
 
-""" This function request an id and returns a stock's information such as 52 week high, dividend yield.
-
-Function will check postgres database to see if requested ticker is in the database, if not then
-the function will return a 404 error, stating that it's not found.
-You can test this through 127.0.0.1:5000/v0/retriveInfo/{specifiedTicker} or by fetching
-on the frontend.
-
-Example: 127.0.0.1:5000/v0/retrieveInfo/TSLA
-"""
 @app.route('/v0/retrieveInfo/', methods=['GET'])
 def retrieveInfo():
+    """ This function request an id and returns a stock's information such as 52 week high, dividend yield.
+    
+    Function will check postgres database to see if requested ticker is in the database, if not then
+    the function will return a 404 error, stating that it's not found.
+    You can test this through 127.0.0.1:5000/v0/retriveInfo/{specifiedTicker} or by fetching
+    on the frontend.
+    
+    Example: 127.0.0.1:5000/v0/retrieveInfo/TSLA
+    """
     args = request.args
     tickerId = args.get("id")
     conn = getConnection()
@@ -156,18 +156,18 @@ def retrieveInfo():
         abort(404)
 
 
-"""This function will request an id and return's the stock's historical data
-
-Function will check postgres database if requested ticker is in the database.
-If it is not in the database, then the function will return a 404 not found error.
-You can test this through 127.0.0.1:5000/v0/view/{specifiedTicker}, or through
-the frontend.
-
-Example: 127.0.0.1:5000/v0/view/GOOGL 
-
-"""
 @app.route('/v0/view', methods=['GET'])
 def viewStock():
+    """This function will request an id and return's the stock's historical data
+    
+    Function will check postgres database if requested ticker is in the database.
+    If it is not in the database, then the function will return a 404 not found error.
+    You can test this through 127.0.0.1:5000/v0/view/{specifiedTicker}, or through
+    the frontend.
+    
+    Example: 127.0.0.1:5000/v0/view/GOOGL 
+    
+    """
     args = request.args
     tickerId = args.get("id")
     conn = getConnection()
@@ -182,14 +182,14 @@ def viewStock():
     else:
         abort(404)
 
-""" This function connects flask to database to store data for fast lookup
-
-Function will connect to database to handle connections to store data,
-return data, etc. This can be used in every function to setup a connection,
-and a cursor to insert,update,delete,etc sql query statements.
-
-"""
 def getConnection():
+    """ This function connects flask to database to store data for fast lookup
+    
+    Function will connect to database to handle connections to store data,
+    return data, etc. This can be used in every function to setup a connection,
+    and a cursor to insert,update,delete,etc sql query statements.
+    
+    """
     conn = psycopg2.connect(
         host='localhost',
         database=os.environ.get('POSTGRES_DB'),
@@ -200,16 +200,16 @@ def getConnection():
     return conn
 
 
-""" This function will use BeautifulSoup to scrape yahoo finance and insert/update data into postgres.
-
-Function will scrape yahoo finance for it's description of company 
-requested by the user and store into postgres database. It will
-check if its in the database, if it's in the database then it will
-update it. If it isn't then it will insert it into the database.
-
-"""
 
 def getAbout(symbol):
+    """ This function will use BeautifulSoup to scrape yahoo finance and insert/update data into postgres.
+    
+    Function will scrape yahoo finance for it's description of company 
+    requested by the user and store into postgres database. It will
+    check if its in the database, if it's in the database then it will
+    update it. If it isn't then it will insert it into the database.
+    
+    """
     selectQuery = 'SELECT ticker FROM stockDescriptionTable WHERE %s = ticker'
     insertQuery = 'INSERT INTO stockDescriptionTable(ticker, about) VALUES (%s, %s)'
     updateQuery = 'UPDATE stockDescriptionTable SET about = %s WHERE ticker = %s'
@@ -234,17 +234,17 @@ def getAbout(symbol):
     conn.close()
 
 
-"""This function will do a lookup into the database to see if user specified ticker exists.
-
-Function will do a select query statement to check postgres database if specified ticker exists.
-If not, then the function will return a 404 error.
-
-
-Example: 127.0.0.1:5000/v0/getDescription/SPY will return the description of SPY.
-
-"""
 @app.route('/v0/getDescription', methods = ['GET'])
 def getDescription():
+    """This function will do a lookup into the database to see if user specified ticker exists.
+    
+    Function will do a select query statement to check postgres database if specified ticker exists.
+    If not, then the function will return a 404 error.
+    
+    
+    Example: 127.0.0.1:5000/v0/getDescription/SPY will return the description of SPY.
+    
+    """
     args = request.args
     tickerDescription = args.get("id")
     conn = getConnection()
@@ -261,15 +261,15 @@ def getDescription():
 
 
 
-""" This function will check if the username/password combo exists in the database
-
-Function will query postgres database if username/password combo exists in database.
-If the combo exists, then the function will return a 200 OK. If not, then
-the function will return a 404 error not found.
-
-"""
 @app.route('/v0/login', methods=['POST'])
 def submitLogin():
+    """ This function will check if the username/password combo exists in the database
+    
+    Function will query postgres database if username/password combo exists in database.
+    If the combo exists, then the function will return a 200 OK. If not, then
+    the function will return a 404 error not found.
+    
+    """
     args = request.json
     email = args.get('email', '')
     password = args.get('password', '')
@@ -290,14 +290,14 @@ def submitLogin():
     else:
         abort(404)
 
-""" This function will create a new username/password combo and insert it into the postgres table.
-
-This function will check if the username/password combo exists in the database already, if
-the combo exists then the function will return a 400 Bad Request. If it isn't then 
-it will insert it into the database.
-"""
 @app.route('/v0/create', methods=['POST'])
 def createUser():
+    """ This function will create a new username/password combo and insert it into the postgres table.
+    
+    This function will check if the username/password combo exists in the database already, if
+    the combo exists then the function will return a 400 Bad Request. If it isn't then 
+    it will insert it into the database.
+    """
     args = request.json
     email = args.get('email', '')
     password = args.get('password', '')
@@ -322,15 +322,15 @@ def createUser():
         return jsonify("account already exists"), 400
 
 
-""" Function will add performance about specified stock, and its full name.
-
-This function scrapes yahoo finance to get information such as its price,how much it gain/loss 
-in the day, the gain/loss in percent difference from it's performance day prior, and will
-get it's full name of its company. TSLA = (Tesla Inc.)
-
-"""
 @app.route('/v0/add', methods=['POST'])
 def add():
+    """ Function will add performance about specified stock, and its full name.
+    
+    This function scrapes yahoo finance to get information such as its price,how much it gain/loss 
+    in the day, the gain/loss in percent difference from it's performance day prior, and will
+    get it's full name of its company. TSLA = (Tesla Inc.)
+    
+    """
     marketIndexFound = False
     marketIndexes = ['S&P 500', 'Dow 30', 'Nasdaq']
     args = request.json
@@ -403,14 +403,14 @@ def add():
         conn.close()
         return jsonify('Stock Added!'), 201
 
-""" This function scrapes yahoo finance to get information such as 52 week high/low and will add into the database.
-
-This function will check if the data exists already in the database before inserting it.
-If it exists then it will update the data.
-
-"""
 @app.route('/v0/getInfo', methods = ['POST'])
 def getInfo():
+    """ This function scrapes yahoo finance to get information such as 52 week high/low and will add into the database.
+    
+    This function will check if the data exists already in the database before inserting it.
+    If it exists then it will update the data.
+    
+    """
     args = request.json
     tickerId = args.get('ticker')
     conn = getConnection()
@@ -442,14 +442,14 @@ def getInfo():
     return jsonify('Data Added', 201)
 
 
-""" This function will scrape yahoo finance to get historical data.
-
-Function will get the interval that user specified, and download the data to a csv.
-The CSV is then converted into JSON, to show the user on the individual page in the 
-frontend.
-"""
 @app.route('/v0/getHistory', methods=['POST'])
 def getHistoricalData():
+    """ This function will scrape yahoo finance to get historical data.
+    
+    Function will get the interval that user specified, and download the data to a csv.
+    The CSV is then converted into JSON, to show the user on the individual page in the 
+    frontend.
+    """
     stockArr = []
     args = request.json
     tickerId = args.get('ticker', '')
@@ -500,11 +500,9 @@ def getHistoricalData():
     return jsonify('success', 201)
 
 
-""" This function will add specified ticker into postgres database based on user that is logged in.
-
-"""
 @app.route('/v0/addPortfolio', methods = ['POST'])
 def addPortfolio():
+    """ This function will add specified ticker into postgres database based on user that is logged in."""
     args = request.json
     email = args.get('useremail', '')
     ticker = args.get('ticker', '')
@@ -520,14 +518,14 @@ def addPortfolio():
     return jsonify("Added to Portfolio", 200)
 
 
-""" This function will delete a specified ticker from postgres database based on user logon.
-
-This can be used when a user no longer wants to have stock in their watchlist.
- 
-"""
 
 @app.route('/v0/deleteFromPortfolio', methods = ['DELETE'])
 def deletePortfolio():
+    """ This function will delete a specified ticker from postgres database based on user logon.
+    
+    This can be used when a user no longer wants to have stock in their watchlist.
+     
+    """
     args = request.json
     email = args.get('useremail', '')
     ticker = args.get('ticker', '')
@@ -540,13 +538,14 @@ def deletePortfolio():
     cursor.close()
     conn.close()
     return jsonify('deleted from portfolio', 200)
-"""This function will return all stock tickers that belong to a specific email.
 
-Example: lance@ucsc.edu, TSLA, AMD, SPY, VOOG, AMC, GME
-         steven@ucsc.edu, BBB, RBLX, COST
-"""
 @app.route('/v0/getFromPortfolio', methods = ['GET'])
 def getPortfolio():
+    """This function will return all stock tickers that belong to a specific email.
+    
+    Example: lance@ucsc.edu, TSLA, AMD, SPY, VOOG, AMC, GME
+             steven@ucsc.edu, BBB, RBLX, COST
+    """
     args = request. args
     email = args.get('email')
     conn = getConnection()
@@ -565,8 +564,7 @@ def getPortfolio():
         return jsonify(ticker,200)
     return jsonify('No email found', 404)
 
-""" Used to configure swagger and add routes for frontend to grab data from backend
-"""
+#Used to configure swagger and add routes for frontend to grab data from backend
 SWAGGER_URL = '/swagger'
 API_URL = '/static/swagger.yaml'
 SWAGGER_BLUEPRINT = get_swaggerui_blueprint(
