@@ -11,6 +11,8 @@ import Microsoft from '../images/MSFT.png';
 import Meta from '../images/Meta.png';
 import Netflix from '../images/Netflix.png';
 
+// import homeBackground from '../images/homeImage1.jpg';
+
 export const tickerContext = React.createContext();
 
 const Home = () => {
@@ -256,30 +258,29 @@ const Home = () => {
     <div className="overflow-auto">
       
       <div className="box-border h-screen " 
-        style={{backgroundImage: 'url(https://knowledge.wharton.upenn.edu/wp-content/uploads/2020/11/Stock-Market-900x387.jpg)',
+        style={{backgroundImage: 'url(/homeImage.jpg)',
                     backgroundSize: "cover",
                     align: "center",
-                    opacity: "0.82",
+                    // opacity: "0.82",
                     height:1000
                     }}>
-        <Navbar />
-        
-        <div className="grid w-1/2 text-6xl h-screen"style={{paddingLeft:"60px"}}>
-          <div className="grid content-end text-yellow-300 font-serif font-mono font-bold">
-            The price is what you pay, value is what you get.
-            <p className="pt-3 content-end text-stone-400 text-3xl">
-            Always an informed investment decision. First you prepare, then you go for it.
-            </p>
-          </div>
-          
-          <form className="nav-item" style={{paddingTop:'10px'}} action="Individual" >
+          <Navbar />
+          <div className="grid w-1/2 text-6xl h-screen"style={{paddingLeft:"60px"}}>
+            <div className="grid content-end text-yellow-300 font-serif font-mono font-bold">
+              The price is what you pay, value is what you get.
+              <p className="pt-3 content-end text-stone-400 text-3xl">
+              Always an informed investment decision. First you prepare, then you go for it.
+              </p>
+            </div>
+            
+            <form className="nav-item" style={{paddingTop:'10px'}} action="Individual" >
               <input className="rounded-lg flex w-full focus:outline-none" placeholder=" TSLA, AAPL, NVDA..."
               type = "text" 
               name = "name"
               />
             </form>
-        </div>
-        
+          </div>
+
       </div>
       <div className="pt-4 pl-4 text-6xl">
         Market Trends
