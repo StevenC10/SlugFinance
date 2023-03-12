@@ -256,13 +256,14 @@ def createUser():
     args = request.json
     email = args.get('email', '')
     password = args.get('password', '')
-    email.replace('@', '%40')
+    email = email.replace('@', '%40')
     conn = getConnection()
     cursor = conn.cursor()
     # https://stackoverflow.com/questions/45128902/psycopg2-and-sql-injection-security how to do parameterized queries.
     selectQuery = 'SELECT personemail,personpassword FROM emailtable WHERE %s = personEmail'
     cursor.execute(selectQuery, (email, ))
     account = cursor.fetchall()
+    print(len(account), file = sys.stderr)
     if len(account) == 0:
         insertQuery = 'INSERT INTO emailtable (personemail, personpassword) VALUES (%s, %s)'
         cursor.execute(insertQuery, (email, password, ))
@@ -273,7 +274,7 @@ def createUser():
     else:
         cursor.close()
         conn.close()
-        abort(400)
+        return jsonify("account already exists"), 400
 
 
 """ Function will add performance about specified stock, and its full name.
@@ -463,7 +464,7 @@ def addPortfolio():
     email = args.get('useremail', '')
     ticker = args.get('ticker', '')
     asciiemail = email.replace('@', '%40')
-    print("ticker:" ,ticker, file = sys.stderr)
+    print("email:" ,asciiemail, file = sys.stderr)
     conn = getConnection()
     cursor = conn.cursor()
     insertQuery = 'INSERT INTO userPortfolioTable(personemail,ticker) VALUES (%s, %s)'
@@ -515,7 +516,6 @@ def getPortfolio():
     ticker = cursor.fetchall()
     cursor.close()
     conn.close()
-    print("sdadasda" ,ticker, file = sys.stderr)
     if ticker:
         return jsonify(ticker,200)
     return jsonify('No email found', 404)
