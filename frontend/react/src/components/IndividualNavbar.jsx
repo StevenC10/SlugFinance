@@ -16,7 +16,8 @@ function toPortfolio() {
 
 const Navbar = () => {
   return (
-      <header className="sticky top-0 sm:px-12 mx-auto flex items-center p-4 bg-blue-600 bg-opacity-0">
+    // dark:bg-gray-800 dark:text-gray-100
+      <header className="sticky top-0 sm:px-12 mx-auto flex items-center p-4 bg-blue-900">
         <div className="container flex justify-between h-10 mx-auto">
           <a rel="noopener noreferrer" href="/" aria-label="Back to homepage" className="flex items-center p-2 mx-0">
             <img src={Logo} className="w-12 h-12" alt="logo" />
@@ -24,6 +25,10 @@ const Navbar = () => {
               SLUG FINANCE 
             </div>
           </a>
+          <div className="mb-6 items-center justify-start">
+              <input type="text" name="name" id="search" placeholder="TSLA, AAPL, NVDA" className="w-full px-4 py-2 placeholder-gray-500 border border-gray-200 rounded-md focus:outline-none bg-gray-20 border-gray-600" />
+              <button type = "submit">Submit</button>
+          </div>
           <div className="items-center space-x-2 flex-shrink-0 hidden lg:flex">
             <li className="flex">
               {/* <a rel="noopener noreferrer" href="/" className="flex items-center text-lg px-4 font-bold -mb-1 text-yellow-300">myPortfolio</a> */}

@@ -58,17 +58,17 @@ const Login = () => {
                     <p className="text-gray-500 dark:text-gray-400">Sign in to access your account</p>
                 </div>
                 <div className="m-7">
-                    <form action="">
+                    <form>
                         <div className="mb-6">
                             <label htmlFor="email" className="block mb-2 text-sm text-gray-600 dark:text-gray-400">Email Address</label>
-                            <input type="email" name="email" id="email" placeholder="user@ucsc.edu" onChange={handleInputChange} className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500" />
+                            <input type="email" name="email" id="email" placeholder="user@ucsc.edu" onChange={handleInputChange} className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500" required />
                         </div>
                         <div className="mb-6">
                             <div className="flex justify-between mb-2">
                                 <label htmlFor="password" className="text-sm text-gray-600 dark:text-gray-400">Password</label>
                                 <a href="#!" className="text-sm text-gray-400 focus:outline-none focus:text-indigo-500 hover:text-indigo-500 dark:hover:text-indigo-300">Forgot password?</a>
                             </div>
-                            <input type="password" name="password" id="password" placeholder="••••••••••" onChange={handleInputChange} className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500" />
+                            <input type="password" name="password" id="password" placeholder="••••••••••" onChange={handleInputChange} className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500" required />
                         </div>
                         <div className="flex justify-between">
                           <div className="form-check">
