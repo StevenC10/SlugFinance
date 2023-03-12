@@ -33,7 +33,7 @@ const Home = () => {
 
   useEffect(()=> {
     let tempDate=new Date(Date.now()-7890000000);
-    console.log(tempDate.getMonth()+1);
+
   
     fetch(`http://127.0.0.1:5000/v0/getHistory`, {
       method: 'POST',
@@ -57,9 +57,6 @@ const Home = () => {
         'Content-Type': 'application/json',
       })
     }).then((response) => {
-      if(!response.ok) {
-        throw response;
-      }
       return response.json();
     }).then((json)=>{
       setC1Data(json);
@@ -82,9 +79,6 @@ const Home = () => {
         'Content-Type': 'application/json',
       })
     }).then((response) => {
-      if(!response.ok) {
-        throw response;
-      }
       return response.json();
     }).then((json)=>{
       setIcon1(json);
@@ -106,9 +100,6 @@ const Home = () => {
         'Content-Type': 'application/json',
       })
     }).then((response) => {
-      if(!response.ok) {
-        throw response;
-      }
       return response.json();
     }).then((json)=>{
       setIcon2(json);
@@ -130,9 +121,6 @@ const Home = () => {
         'Content-Type': 'application/json',
       })
     }).then((response) => {
-      if(!response.ok) {
-        throw response;
-      }
       return response.json();
     }).then((json)=>{
       setIcon3(json);
@@ -154,9 +142,6 @@ const Home = () => {
         'Content-Type': 'application/json',
       })
     }).then((response) => {
-      if(!response.ok) {
-        throw response;
-      }
       return response.json();
     }).then((json)=>{
       setIcon4(json);
@@ -178,9 +163,6 @@ const Home = () => {
         'Content-Type': 'application/json',
       })
     }).then((response) => {
-      if(!response.ok) {
-        throw response;
-      }
       return response.json();
     }).then((json)=>{
       setIcon5(json);
@@ -202,9 +184,6 @@ const Home = () => {
         'Content-Type': 'application/json',
       })
     }).then((response) => {
-      if(!response.ok) {
-        throw response;
-      }
       return response.json();
     }).then((json)=>{
       setIcon6(json);
@@ -248,7 +227,7 @@ const Home = () => {
     c1Options.yaxis.tooltip.enabled = true;
 
   }
-  console.log(c1Options);
+
 
   //RENDER WEBPAGE
   return (
