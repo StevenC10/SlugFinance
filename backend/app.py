@@ -287,7 +287,7 @@ def submitLogin():
         queryEmail = account[0][0]
         queryPassword = account[0][1]
         if (email == queryEmail and password == queryPassword):
-            return jsonify('200 OK')
+            return jsonify(account,200)
     else:
         abort(404)
 
@@ -506,6 +506,7 @@ def addPortfolio():
     email = args.get('useremail', '')
     ticker = args.get('ticker', '')
     asciiemail = email.replace('@', '%40')
+    print(asciiemail, file = sys.stderr)
     conn = getConnection()
     cursor = conn.cursor()
     insertQuery = 'INSERT INTO userPortfolioTable(personemail,ticker) VALUES (%s, %s)'
@@ -556,6 +557,7 @@ def getPortfolio():
     # selectQuery = 'SELECT * FROM userPortfolioTable'
     cursor.execute(selectQuery, (email,))
     ticker = cursor.fetchall()
+    print(ticker, file = sys.stderr)
     cursor.close()
     conn.close()
     if len(ticker) > 0:
