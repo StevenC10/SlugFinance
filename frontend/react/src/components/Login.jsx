@@ -37,7 +37,7 @@ const Login = () => {
       })
       .then((json) => {
         alert('Success!');
-        localStorage.setItem('user', JSON.stringify(json));
+        localStorage.setItem('user', json[0][0][0]);
         history('/');
       })
       .catch((err) => {
