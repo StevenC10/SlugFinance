@@ -21,7 +21,7 @@ const Home = () => {
   const month = today.getMonth()+1;
   const day = today.getDate();
   const baseDay = `"`+year+`-`+month+`-`+day;
-  const yesterday = new Date(Date.now() - 86400000);
+  const yesterday = new Date(Date.now() - 432000000);
   const [c1Data, setC1Data] = useState({});
   const [icon1, setIcon1] = useState([[["",[{high:0,close:0,low:0,open:0,day:baseDay}]]]]);
   const [icon2, setIcon2] = useState([[["",[{high:0,close:0,low:0,open:0,day:baseDay}]]]]);
@@ -65,7 +65,8 @@ const Home = () => {
 
     // Icon 1
     let temp=iconBody.current;
-    temp.ticker="META"
+    temp.ticker="META";
+
     fetch(`http://127.0.0.1:5000/v0/getHistory`, {
       method: 'POST',
       body: JSON.stringify(temp),
@@ -264,7 +265,7 @@ const Home = () => {
           <div className=" text-lg row-span-3 col-span-4 row-start-1 min-w-full">
             <ReactApexChart className=" " options={c1Options} series={c1Options.series} type="candlestick" height={800} />
           </div>
-          <div className="flex p-2 rounded-lg max-h-28 border-2 border-stone-200 px-1 row-start-1">
+          <div className="flex p-2 rounded-lg max-h-24 border-2 border-stone-200 px-1 row-start-1">
             <img src={Meta} className="" height="65px" width="90px"  alt=""/>
             <div className="flex-1" >
               <p className="text-3xl">{icon1[0][0][0]}</p> 
@@ -274,7 +275,7 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <div className="flex p-2 rounded-lg max-h-28 border-2 border-stone-200 px-1 row-start-1 text-2xl">
+          <div className="flex p-2 rounded-lg max-h-24 border-2 border-stone-200 px-1 row-start-1 text-2xl">
             <img src={Apple} className="" height="75px" width="75px" alt=""></img>
             <div className="pl-2 flex-1" >
               <p className="text-3xl">{icon2[0][0][0]}</p> 
@@ -284,7 +285,7 @@ const Home = () => {
               </div>
             </div>    
           </div>
-          <div className="flex p-2 rounded-lg max-h-28 border-2 border-stone-200 px-1 row-start-2 text-2xl">
+          <div className="flex p-2 rounded-lg max-h-24 border-2 border-stone-200 px-1 row-start-2 text-2xl">
             <img src={Amazon} className="" height="80px" width="80px" alt=""></img>
             <div className="pl-2 flex-1" >
               <p className="text-3xl">{icon3[0][0][0]}</p> 
@@ -294,7 +295,7 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <div className="flex p-2 rounded-lg max-h-28 border-2 border-stone-200 px-1 row-start-2text-2xl">
+          <div className="flex p-2 rounded-lg max-h-24 border-2 border-stone-200 px-1 row-start-2text-2xl">
             <img src={Netflix} className="" height="80px" width="90px" alt=""></img>
             <div className="flex-1" >
               <p className="text-3xl">{icon4[0][0][0]}</p> 
@@ -304,9 +305,9 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <div className="flex p-2 rounded-lg max-h-28 border-2 border-stone-200 px-1 row-start-3 text-2xl">
-            <img src={Google} className="" height="70px" width="90px" alt=""></img>
-            <div className="flex-1" >
+          <div className="flex p-2 rounded-lg max-h-24 border-2 border-stone-200 px-1 row-start-3 text-2xl">
+            <img src={Google} className="" height="85px" width="80px" alt=""></img>
+            <div className="pl-2 flex-1" >
               <p className="text-3xl">{icon5[0][0][0]}</p> 
               <div className="flex text-2xl">
                 ${icon5[0][0][1][0].close.toFixed(2)}&emsp;
@@ -314,7 +315,7 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <div className="flex p-2 rounded-lg max-h-28 border-2 border-stone-200 px-2 row-start-3 text-2xl">
+          <div className="flex p-2 rounded-lg max-h-24 border-2 border-stone-200 px-2 row-start-3 text-2xl">
             <img src={Microsoft} className="" height="70px" width="70px" alt=""></img>
             <div className="pl-3 flex-1" >
               <p className="text-3xl">{icon6[0][0][0]}</p> 
