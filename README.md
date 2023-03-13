@@ -1,46 +1,56 @@
-```## SlugFinance
-Install docker : https://docs.docker.com/get-docker/
-After installing docker
-open a terminal:
-cd backend
-docker compose up -d (to start up a instance of postgres)
-docker compose down (if you want to update, or  if anything goes wrong)
+# SlugFinance
+## Install docker : https://docs.docker.com/get-docker/
+After installing docker open a terminal:
+```
+$ cd backend
+$ docker compose up -d (to start up a instance of postgres)
+$ docker compose down (if you want to update, or  if anything goes wrong)
+```
 
+## Python Virtual Environment Setup
 
-Notes from steven:
-i used pip install to install my packages, but others used py -m to get them installed .
+Inside the backend directory:
+```
+$ python3 -m venv venv
+```
+For Windows:
+```
+$ source venv/source/activate
+```
+For Mac:
+```
+$ source venv/bin/activate
+```
+To install dependencies:
+```
+$ python3 -m pip install -r requirements.txt
+```
+To stop the venv:
+```
+$ deactivate
+```
 
-
-py -m pip install BeautifulSoup4
-py -m pip install requests
-py -m pip install psycopg2
-py -m pip install python-dotenv
-
-use python3 -m flask run to run flask
-=======
-Notes for frontend
-make sure to install node.js and npm onto your machine
+## Notes for frontend:
+#### make sure to install node.js and npm onto your machine
 
 npm install react-apexcharts --save
+
 npm install -D tailwindcss
+
 npm install react-icons --save
 
-=======
-to use app:
-python3 -m pip install -U flask-cors
 
-
-python3 -m pip install Flask
-
-python3 -m pip install flask-swagger-ui
+## To Use App:
 
 open a terminal:
-cd backend
-python3 -m flask run
+```
+$ cd backend
+$ python3 -m flask run
+```
 
 open a second terminal:
-cd frontend
-cd react
-npm start
-
+```
+$ cd frontend
+$ cd react
+$ npm start
 ```
