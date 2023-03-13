@@ -15,7 +15,7 @@ $ python3 -m venv venv
 ```
 For Windows:
 ```
-$ source venv/source/activate
+$ source venv/scripts/activate
 ```
 For Mac:
 ```
