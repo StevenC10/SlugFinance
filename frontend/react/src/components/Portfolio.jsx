@@ -1,5 +1,5 @@
 import React from "react";
-// import {useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import Logo from "../images/test2.png"
 
 function toLogin() {
@@ -125,11 +125,11 @@ const fetchPortfolio = (setPortfolio) => {
 
 const Portfolio = () => {
 
-	// const history = useNavigate();
+	const history = useNavigate();
 
-	// const redirect = (event) => {
-	// 	history('/individual');
-	// };
+	const redirect = (event) => {
+		history('/individual');
+	};
 
   // console.log(localStorage.user);
 
@@ -147,10 +147,10 @@ const Portfolio = () => {
     for (let i = 0; i < portfolio.length; i++) {
       const column = [];
       console.log(portfolio[i][0][0][0]);
-      column.push(<th className="flex gap-3 px-6 py-4 font-normal text-gray-900"><div className="text-sm"><div className="font-medium text-gray-700">{portfolio[i][0][0][0].toUpperCase()}</div><div className="text-gray-400">{portfolio[i][0][0][1]}</div></div></th>);
-      column.push(<td className="px-6 py-4 font-medium">{portfolio[i][0][0][3]}</td>);
-      column.push(<td className="px-6 py-4 font-medium">{portfolio[i][0][0][4]}</td>);
-      column.push(<td className="px-6 py-4 font-medium">{portfolio[i][0][0][2]}</td>);
+      column.push(<th onClick ={redirect} className="flex gap-3 px-6 py-4 font-normal text-gray-900"><div className="text-sm"><div className="font-medium text-gray-700">{portfolio[i][0][0][0].toUpperCase()}</div><div className="text-gray-400">{portfolio[i][0][0][1]}</div></div></th>);
+      column.push(<td onClick ={redirect} className="px-6 py-4 font-medium">{portfolio[i][0][0][3]}</td>);
+      column.push(<td onClick ={redirect} className="px-6 py-4 font-medium">{portfolio[i][0][0][4]}</td>);
+      column.push(<td onClick ={redirect} className="px-6 py-4 font-medium">{portfolio[i][0][0][2]}</td>);
       column.push(<td className="px-6 py-4">
       <div className="flex justify-end gap-4">
           <svg
@@ -189,6 +189,10 @@ const Portfolio = () => {
             </div>
           </a>
           <div className="mb-6 items-center justify-start">
+            <form action="Individual">
+              <input type="text" name="name" id="search" placeholder="TSLA, AAPL, NVDA" className="w-full px-4 py-2 placeholder-gray-500 border border-gray-200 rounded-md focus:outline-none bg-gray-20 border-gray-600" />
+              {/* <button type = "submit">Submit</button> */}
+            </form>
           </div>
           <div className="items-center space-x-2 flex-shrink-0 hidden lg:flex">
             <li className="flex">
