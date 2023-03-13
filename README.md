@@ -38,11 +38,13 @@ Then, move the driver executable into a directory in your $PATH
 ## Notes for frontend:
 #### make sure to install node.js and npm onto your machine
 
-npm install react-apexcharts --save
+```
+$ npm install react-apexcharts --save
 
-npm install -D tailwindcss
+$ npm install -D tailwindcss
 
-npm install react-icons --save
+$ npm install react-icons --save
+```
 
 
 ## To Use App:
