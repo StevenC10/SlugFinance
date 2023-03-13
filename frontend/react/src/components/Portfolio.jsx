@@ -68,33 +68,16 @@ const fetchPortfolio = (setPortfolio) => {
     });
 
     result.then(tickers => {
-      for (const ticker of tickers[0]) {
-        // console.log(ticker);
-        const getInfo = {ticker: ticker[0]};
-        const adding = fetch('http://127.0.0.1:5000/v0/add', {
-          method: 'POST',
-          body: JSON.stringify(getInfo),
-          headers: new Headers({
-            'Content-Type': 'application/json',
-          }),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw response;
-            }
-            return response.json();
-          })
-          .catch((error) => {
-            // console.log(error);
-            setPortfolio([]);
-          });
-
-        adding.then(add => {
-          fetch('http://127.0.0.1:5000/v0/ticker?id=' + ticker[0], {
-          method: 'GET',
-          headers: new Headers({
-            'Content-Type': 'application/x-www-form-urlencoded',
-          }),
+      if (tickers[1] === 200) {
+        for (const ticker of tickers[0]) {
+          // console.log(ticker);
+          const getInfo = {ticker: ticker[0]};
+          const adding = fetch('http://127.0.0.1:5000/v0/add', {
+            method: 'POST',
+            body: JSON.stringify(getInfo),
+            headers: new Headers({
+              'Content-Type': 'application/json',
+            }),
           })
             .then((response) => {
               if (!response.ok) {
@@ -102,24 +85,45 @@ const fetchPortfolio = (setPortfolio) => {
               }
               return response.json();
             })
-            .then((json) => {
-              info.push(json);
-              console.log(tickers[0]);
-              console.log(info.length);
-              if(info.length === tickers[0].length) {
-                console.log(info);
-                let sorted = info.sort(function(a, b) {
-                  return b[0][0][2] - a[0][0][2];
-                });
-                console.log(sorted);
-                setPortfolio(sorted);
-              }
-            })
             .catch((error) => {
-              console.log(error);
+              // console.log(error);
+              setPortfolio([]);
             });
-          })
-        }
+  
+          adding.then(add => {
+            fetch('http://127.0.0.1:5000/v0/ticker?id=' + ticker[0], {
+            method: 'GET',
+            headers: new Headers({
+              'Content-Type': 'application/x-www-form-urlencoded',
+            }),
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  throw response;
+                }
+                return response.json();
+              })
+              .then((json) => {
+                info.push(json);
+                console.log(tickers[0]);
+                console.log(info.length);
+                if(info.length === tickers[0].length) {
+                  console.log(info);
+                  let sorted = info.sort(function(a, b) {
+                    return b[0][0][2] - a[0][0][2];
+                  });
+                  console.log(sorted);
+                  setPortfolio(sorted);
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            })
+          }
+      } else {
+        alert('No stocks in watchlist!');
+      }
     });
 };
 
