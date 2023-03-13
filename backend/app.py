@@ -57,7 +57,6 @@ def yahooAdd():
                 cursor.execute(insertQuery, (stockSymbol,stockCompany,stockPrice,
                                stockChange, stockPercentChange,))
                 conn.commit()
-            print(stockSymbol)
             getAbout(stockSymbol)
     return jsonify('Stocks Added!'), 201
 
@@ -273,6 +272,7 @@ def submitLogin():
     args = request.json
     email = args.get('email', '')
     password = args.get('password', '')
+    email = email.replace('@', '%40')
     conn = getConnection()
     cursor = conn.cursor()
     # https://stackoverflow.com/questions/45128902/psycopg2-and-sql-injection-security
@@ -286,7 +286,7 @@ def submitLogin():
         queryEmail = account[0][0]
         queryPassword = account[0][1]
         if (email == queryEmail and password == queryPassword):
-            return jsonify(account, 200)
+            return jsonify('200 OK')
     else:
         abort(404)
 
@@ -308,7 +308,6 @@ def createUser():
     selectQuery = 'SELECT personemail,personpassword FROM emailtable WHERE %s = personEmail'
     cursor.execute(selectQuery, (email, ))
     account = cursor.fetchall()
-    print(len(account), file = sys.stderr)
     if len(account) == 0:
         insertQuery = 'INSERT INTO emailtable (personemail, personpassword) VALUES (%s, %s)'
         cursor.execute(insertQuery, (email, password, ))
@@ -337,6 +336,7 @@ def add():
     ticker = args.get('ticker', '')
     conn = getConnection()
     cursor = conn.cursor()
+    selectQuery = 'SELECT ticker FROM stockTable WHERE %s ILIKE ticker'
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'}
     for index in marketIndexes:
@@ -357,7 +357,6 @@ def add():
             percentChange = x.find_all('span')[1].text
             cursor.execute(selectQuery, (symbol, ))
             stock = cursor.fetchall()
-            print(len(stock), file = sys.stderr)
             if (len(stock) > 0):
                 cursor.execute(
                     updateQuery, (price, change, percentChange, symbol,))
@@ -366,10 +365,9 @@ def add():
                 cursor.execute(
                     insertQuery, (symbol, price, change, percentChange,))
                 conn.commit()
-            getAbout(symbol)
-        return jsonify('Stocks added!'), 201
+            # getAbout(symbol)
+        return jsonify('Market Indexes added!'), 201
     else:
-        selectQuery = 'SELECT ticker FROM stockTable WHERE %s ILIKE ticker'
         url = f'https://finance.yahoo.com/quote/{ticker}'
         r = requests.get(url, headers=headers, timeout=30)
         soup = BeautifulSoup(r.text, 'html.parser')
@@ -387,7 +385,6 @@ def add():
         stockPercentChange = stock['dailyChange']
         cursor.execute(selectQuery, (stockSymbol, ))
         stock = cursor.fetchall()
-        print(len(stock), file = sys.stderr)
         if len(stock) > 0:
             updateQuery = 'UPDATE stockTable SET price = %s, change = %s, percentChange = %s WHERE ticker = %s'
             cursor.execute(updateQuery, (stockPrice, stockChange,
@@ -507,7 +504,6 @@ def addPortfolio():
     email = args.get('useremail', '')
     ticker = args.get('ticker', '')
     asciiemail = email.replace('@', '%40')
-    print("email:" ,asciiemail, file = sys.stderr)
     conn = getConnection()
     cursor = conn.cursor()
     insertQuery = 'INSERT INTO userPortfolioTable(personemail,ticker) VALUES (%s, %s)'
@@ -537,7 +533,7 @@ def deletePortfolio():
     conn.commit()
     cursor.close()
     conn.close()
-    return jsonify('deleted from portfolio', 200)
+    return jsonify('deleted from portfolio'),200
 
 @app.route('/v0/getFromPortfolio', methods = ['GET'])
 def getPortfolio():
@@ -560,9 +556,9 @@ def getPortfolio():
     ticker = cursor.fetchall()
     cursor.close()
     conn.close()
-    if ticker:
-        return jsonify(ticker,200)
-    return jsonify('No email found', 404)
+    if len(ticker) > 0:
+        return jsonify(ticker),200
+    return jsonify('No email found'),404
 
 #Used to configure swagger and add routes for frontend to grab data from backend
 SWAGGER_URL = '/swagger'
