@@ -16,6 +16,36 @@ function toPortfolio() {
   window.location.replace("http://localhost:3000/portfolio")
 }
 
+function addToPortfolio(toAdd) {
+  console.log(toAdd);
+  const item = localStorage.getItem('user');
+  console.log(item);
+  const adding = {useremail: item, ticker: toAdd};
+  if(item) {
+    fetch('http://127.0.0.1:5000/v0/addPortfolio', {
+      method: 'POST',
+      body: JSON.stringify(adding),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw res;
+        }
+        return res.json();
+      })
+      .then((json) => {
+        alert('Success!');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    alert('Please log in before trying to add to portfolio!');
+  }
+}
+
 const Individual = () => {
 
   const today = new Date();
@@ -248,13 +278,15 @@ const Individual = () => {
     // console.log(priceInfo[0][0][2][0]);
     tickerInfo.push(<p className = "text-2xl font-sans font-semibold pl-2 pt-2 inline-block uppercase">{priceInfo[0][0][0]}</p>)
     tickerInfo.push(<p className = "text-2xl font-sans font-bold pl-2 inline-block">{priceInfo[0][0][2]}</p>)
-    if(priceInfo[0][0][2][0] === '+') {
+    if(priceInfo[0][0][3][0] === '+') {
       tickerInfo.push(<p className = "text-2xl font-sans font-semibold pl-2 inline-block text-green-600">{priceInfo[0][0][3]}</p>)
       tickerInfo.push(<p className = "text-2xl font-sans font-semibold pl-2 inline-block text-green-600">{priceInfo[0][0][4]}</p>)
     } else {
       tickerInfo.push(<p className = "text-2xl font-sans font-semibold pl-2 inline-block text-red-600">{priceInfo[0][0][3]}</p>)
       tickerInfo.push(<p className = "text-2xl font-sans font-semibold pl-2 inline-block text-red-600">{priceInfo[0][0][4]}</p>)
     }
+
+    tickerInfo.push(<button type="button" onClick={() => addToPortfolio(priceInfo[0][0][0].toUpperCase())} className="w-1/6 py-1 mt-2 font-semibold border rounded dark:border-gray-100 dark:text-gray-100 float-right bg-blue-500">Add to myPortfolio</button>)
 
     let counter = 0;
     let row = [];
@@ -263,24 +295,24 @@ const Individual = () => {
       if(counter % 4 === 1) {
         row.push(<div className="flex flex-col pb-3">
         <dt key = {key} className="mb-1 text-gray-400 md:text-lg">{key}</dt>
-        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold text-gray-500">{info[0][0][1][0][key]}</dd>
+        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
         </div>);
       } else if(counter % 4 === 2) {
         row.push(<div className="flex flex-col py-3">
         <dt key = {key} className="mb-1 text-gray-400 md:text-lg">{key}</dt>
-        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold text-gray-500">{info[0][0][1][0][key]}</dd>
+        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
         </div>);
       } else if(counter % 4 === 3) {
         row.push(<div className="flex flex-col py-3">
         <dt key = {key} className="mb-1 text-gray-400 md:text-lg">{key}</dt>
-        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold text-gray-500">{info[0][0][1][0][key]}</dd>
+        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
         </div>);
       } else if(counter % 4 === 0) {
         row.push(<div className="flex flex-col pt-3">
         <dt key = {key} className="mb-1 text-gray-400 md:text-lg">{key}</dt>
-        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold text-gray-500">{info[0][0][1][0][key]}</dd>
+        <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
         </div>);
-        viewInformation.push(<div key = {counter} className = "w-1/3"><dl className="w-5/6 text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">{row}</dl></div>)
+        viewInformation.push(<div key = {counter} className = "w-1/3"><dl className="w-5/6 text-gray-900 divide-y divide-gray-200">{row}</dl></div>)
         row = [];
       }
     }
@@ -329,7 +361,7 @@ const Individual = () => {
          <button type = "submit">Submit</button>
       </form> */}
       {/* navbar start */}
-      <header className="sticky top-0 sm:px-12 mx-auto flex items-center p-4 bg-blue-900">
+      <header className="top-0 sm:px-12 mx-auto flex items-center p-4 bg-blue-900">
         <div className="container flex justify-between h-10 mx-auto">
           <a rel="noopener noreferrer" href="/" aria-label="Back to homepage" className="flex items-center p-2 mx-0">
             <img src={Logo} className="w-12 h-12" alt="logo" />
@@ -358,14 +390,13 @@ const Individual = () => {
       <div className = "flex h-3/5">
         <div className = "w-full h-full border-2">
         {tickerInfo}
-        <button type="button" className="w-1/6 py-1 mt-2 font-semibold border rounded dark:border-gray-100 dark:text-gray-100 float-right bg-blue-500">Add to myPortfolio</button>
           <div id="chart" className="h-5/6">
             <ReactApexChart options={options} series={options.series} type="candlestick" height={'100%'} />
           </div>
-          <button type="button" onClick={() => changeDuration(1)} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-500 dark:text-gray-500">1 Week</button>
-          <button type="button" onClick={() => changeDuration(2)} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-500 dark:text-gray-500">1 Month</button>
-          <button type="button" onClick={() => changeDuration(3)} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-500 dark:text-gray-500">6 Months</button>
-          <button type="button" onClick={() => changeDuration(4)} className="w-1/4 py-3 font-semibold border rounded dark:border-gray-500 dark:text-gray-500">1 Year</button>
+          <button type="button" onClick={() => changeDuration(1)} className="w-1/4 py-3 font-semibold border rounded">1 Week</button>
+          <button type="button" onClick={() => changeDuration(2)} className="w-1/4 py-3 font-semibold border rounded">1 Month</button>
+          <button type="button" onClick={() => changeDuration(3)} className="w-1/4 py-3 font-semibold border rounded">6 Months</button>
+          <button type="button" onClick={() => changeDuration(4)} className="w-1/4 py-3 font-semibold border rounded">1 Year</button>
         </div>
       </div>
       <div className = "flex h-2/5">
