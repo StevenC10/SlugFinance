@@ -1,46 +1,63 @@
-```## SlugFinance
-Install docker : https://docs.docker.com/get-docker/
-After installing docker
+# SlugFinance
+## Install docker : https://docs.docker.com/get-docker/
+After installing docker open a terminal:
+```
+$ cd backend
+$ docker compose up -d (to start up a instance of postgres)
+$ docker compose down (if you want to update, or  if anything goes wrong)
+```
+
+## Python Virtual Environment Setup
+
+Inside the backend directory:
+```
+$ python3 -m venv venv
+```
+For Windows:
+```
+$ source venv/scripts/activate
+```
+For Mac:
+```
+$ source venv/bin/activate
+```
+To install dependencies:
+```
+$ python3 -m pip install -r requirements.txt
+```
+To stop the venv:
+```
+$ deactivate
+```
+
+## Additional setup for Selenium:
+```
+curl -LJO https://github.com/mozilla/geckodriver/releases/tag/v0.32.2/<whichever web driver fits your system>
+```
+Then, move the driver executable into a directory in your $PATH
+## Notes for frontend:
+#### make sure to install node.js and npm onto your machine
+
+```
+$ npm install react-apexcharts --save
+
+$ npm install -D tailwindcss
+
+$ npm install react-icons --save
+```
+
+
+## To Use App:
+
 open a terminal:
-cd backend
-docker compose up -d (to start up a instance of postgres)
-docker compose down (if you want to update, or  if anything goes wrong)
-
-
-Notes from steven:
-i used pip install to install my packages, but others used py -m to get them installed .
-
-
-py -m pip install BeautifulSoup4
-py -m pip install requests
-py -m pip install psycopg2
-py -m pip install python-dotenv
-
-use python3 -m flask run to run flask
-=======
-Notes for frontend
-make sure to install node.js and npm onto your machine
-
-npm install react-apexcharts --save
-npm install -D tailwindcss
-npm install react-icons --save
-
-=======
-to use app:
-python3 -m pip install -U flask-cors
-
-
-python3 -m pip install Flask
-
-python3 -m pip install flask-swagger-ui
-
-open a terminal:
-cd backend
-python3 -m flask run
+```
+$ cd backend
+$ python3 -m flask run
+```
 
 open a second terminal:
-cd frontend
-cd react
-npm start
-
+```
+$ cd frontend
+$ cd react
+$ npm start
 ```

@@ -28,7 +28,7 @@ def yahooAdd():
     conn = getConnection()
     cursor = conn.cursor()
     options = Options() 
-    #options.add_argument("-headless") 
+    options.add_argument("-headless") 
     with webdriver.Firefox(options=options) as browser: 
         args = request.json
         user = args.get('email', '')
@@ -58,6 +58,7 @@ def yahooAdd():
                                stockChange, stockPercentChange,))
                 conn.commit()
             getAbout(stockSymbol)
+        browser.quit()
     return jsonify('Stocks Added!'), 201
 
 def storeData(table1, table2):
@@ -349,6 +350,7 @@ def add():
         data = soup.find_all('h3', {'class': 'Maw(160px)'})
         insertQuery = 'INSERT INTO stockTable (ticker, price, change, percentChange) VALUES (%s, %s, %s, %s)'
         updateQuery = 'UPDATE stockTable SET price = %s, change = %s, percentChange = %s WHERE ticker = %s'
+        selectQuery = 'SELECT ticker FROM stockTable WHERE %s ILIKE ticker'
         for x in data:
             symbol = x.find_all('a')[0].text
             price = x.find_all('fin-streamer')[0].text
