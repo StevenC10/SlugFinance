@@ -30,6 +30,11 @@ To stop the venv:
 $ deactivate
 ```
 
+## Additional setup for Selenium:
+```
+curl -LJO https://github.com/mozilla/geckodriver/releases/tag/v0.32.2/<whichever web driver fits your system>
+```
+Then, move the driver executable into a directory in your $PATH
 ## Notes for frontend:
 #### make sure to install node.js and npm onto your machine
 
