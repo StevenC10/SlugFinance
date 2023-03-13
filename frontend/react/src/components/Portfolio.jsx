@@ -19,7 +19,6 @@ function removeFromPortfolio(toRemove) {
   const item = localStorage.getItem('user');
   console.log(item);
   const removing = {useremail: item, ticker: toRemove};
-  if(item) {
     fetch('http://127.0.0.1:5000/v0/deleteFromPortfolio', {
       method: 'DELETE',
       body: JSON.stringify(removing),
@@ -39,9 +38,6 @@ function removeFromPortfolio(toRemove) {
       .catch((err) => {
         console.log(err);
       });
-  } else {
-    alert('Please log in before trying to add to portfolio!');
-  }
 }
 
 const fetchPortfolio = (setPortfolio) => {
@@ -68,10 +64,11 @@ const fetchPortfolio = (setPortfolio) => {
     });
 
     result.then(tickers => {
-      if (tickers[1] === 200) {
-        for (const ticker of tickers[0]) {
+      console.log(tickers);
+      if (tickers) {
+        for (const ticker of tickers) {
           // console.log(ticker);
-          const getInfo = {ticker: ticker[0]};
+          const getInfo = {ticker: ticker};
           const adding = fetch('http://127.0.0.1:5000/v0/add', {
             method: 'POST',
             body: JSON.stringify(getInfo),
@@ -86,12 +83,11 @@ const fetchPortfolio = (setPortfolio) => {
               return response.json();
             })
             .catch((error) => {
-              // console.log(error);
-              setPortfolio([]);
+              console.log(error);
             });
   
           adding.then(add => {
-            fetch('http://127.0.0.1:5000/v0/ticker?id=' + ticker[0], {
+            fetch('http://127.0.0.1:5000/v0/ticker?id=' + ticker, {
             method: 'GET',
             headers: new Headers({
               'Content-Type': 'application/x-www-form-urlencoded',
@@ -107,7 +103,7 @@ const fetchPortfolio = (setPortfolio) => {
                 info.push(json);
                 console.log(tickers[0]);
                 console.log(info.length);
-                if(info.length === tickers[0].length) {
+                if(info.length === tickers.length) {
                   console.log(info);
                   let sorted = info.sort(function(a, b) {
                     return b[0][0][2] - a[0][0][2];
@@ -152,8 +148,8 @@ const Portfolio = () => {
       const column = [];
       console.log(portfolio[i][0][0][0]);
       column.push(<th className="flex gap-3 px-6 py-4 font-normal text-gray-900"><div className="text-sm"><div className="font-medium text-gray-700">{portfolio[i][0][0][0].toUpperCase()}</div><div className="text-gray-400">{portfolio[i][0][0][1]}</div></div></th>);
-      column.push(<td className="px-6 py-4 text-red-700 font-medium">{portfolio[i][0][0][3]}</td>);
-      column.push(<td className="px-6 py-4 text-red-700 font-medium">{portfolio[i][0][0][4]}</td>);
+      column.push(<td className="px-6 py-4 font-medium">{portfolio[i][0][0][3]}</td>);
+      column.push(<td className="px-6 py-4 font-medium">{portfolio[i][0][0][4]}</td>);
       column.push(<td className="px-6 py-4 font-medium">{portfolio[i][0][0][2]}</td>);
       column.push(<td className="px-6 py-4">
       <div className="flex justify-end gap-4">
