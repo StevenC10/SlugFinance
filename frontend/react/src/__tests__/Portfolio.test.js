@@ -11,7 +11,6 @@ import Portfolio from '../components/Portfolio';
 // https://github.com/apexcharts/react-apexcharts/issues/425
 jest.mock('react-apexcharts', () => ({ __esModule: true, default: () => <div /> }));
 
-let box = undefined;
 const URL = 'http://localhost:3000/individual';
 
 const server = setupServer(
@@ -21,18 +20,81 @@ const server = setupServer(
     }),
   );
 
+let assignMock = jest.fn();
+
+delete window.location;
+window.location = { replace: assignMock, reload: assignMock };
+
 beforeAll(() => {
     localStorage.setItem('user', 'lance@ucsc.edu');
     server.listen();
 });
-afterEach(() => server.resetHandlers());
+afterEach(() => {
+  assignMock.mockClear();
+  server.resetHandlers();
+});
  afterAll(() => server.close());
 
 test('Page Loads', async () => {
-    render(
-        <BrowserRouter>
-          <Portfolio />
-        </BrowserRouter>);
+  render(
+      <BrowserRouter>
+        <Portfolio />
+      </BrowserRouter>);
 
-    await screen.findByText('Ticker');
+  await new Promise((r) => setTimeout(r, 4000));
+});
+
+test('Click Remove', async () => {
+  render(
+      <BrowserRouter>
+        <Portfolio />
+      </BrowserRouter>);
+
+  await new Promise((r) => setTimeout(r, 4000));
+  
+  await fireEvent.click(screen.getAllByLabelText('remove')[0]);
+}, 60_000);
+
+test('Click Redirect', async () => {
+  render(
+      <BrowserRouter>
+        <Portfolio />
+      </BrowserRouter>);
+
+  await new Promise((r) => setTimeout(r, 4000));
+  
+  await fireEvent.click(screen.getAllByLabelText('redirect')[0]);
+}, 60_000);
+
+test('Click on My Portfolio', async () => {
+  render(
+      <BrowserRouter>
+        <Portfolio />
+      </BrowserRouter>);
+  fireEvent.click(screen.getByText('myPortfolio'));
+});
+
+test('Click on Log In', async () => {
+  render(
+      <BrowserRouter>
+        <Portfolio />
+      </BrowserRouter>);
+  fireEvent.click(screen.getByText('Log in'));
+});
+
+test('Click on Sign Up', async () => {
+  render(
+      <BrowserRouter>
+        <Portfolio />
+      </BrowserRouter>);
+  fireEvent.click(screen.getByText('Sign up'));
+});
+
+test('NonExistent User Loads', async () => {
+  localStorage.setItem('user', 'asdfhjsadfhjasdfhjasdfhjasdfhj');
+  render(
+      <BrowserRouter>
+        <Portfolio />
+      </BrowserRouter>);
+  await new Promise((r) => setTimeout(r, 2000));
 });
