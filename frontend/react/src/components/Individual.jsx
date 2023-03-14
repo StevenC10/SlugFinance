@@ -65,6 +65,7 @@ const Individual = () => {
   const [info, setInfo] = React.useState([]);
   const [description, setDescription] = React.useState([]);
   const [priceInfo, setPriceInfo] = React.useState([]);
+  const [graphType, setGraphType] = React.useState('candlestick');
 
   /**
    * Changes and sets stock on input change
@@ -258,7 +259,7 @@ const Individual = () => {
       tickerInfo.push(<p className = "text-2xl font-sans font-semibold pl-2 inline-block text-red-600">{priceInfo[0][0][3]}</p>)
       tickerInfo.push(<p className = "text-2xl font-sans font-semibold pl-2 inline-block text-red-600">{priceInfo[0][0][4]}</p>)
     }
-    tickerInfo.push(<button type="button" onClick={() => addToPortfolio(priceInfo[0][0][0].toUpperCase())} className="w-1/6 py-1 mt-2 font-semibold border rounded dark:border-gray-100 dark:text-gray-100 float-right bg-blue-500">Add to myPortfolio</button>)
+    tickerInfo.push(<button type="button" onClick={() => addToPortfolio(priceInfo[0][0][0].toUpperCase())} className="w-1/6 py-1 mt-2 font-semibold border rounded float-right bg-blue-500">Add to myPortfolio</button>)
 
     // Setting up information section
     let counter = 0;
@@ -312,7 +313,6 @@ const Individual = () => {
     options.yaxis = {};
     options.yaxis.tooltip = {};
     options.yaxis.tooltip.enabled = true;
-
   }
 
   return (
@@ -345,8 +345,10 @@ const Individual = () => {
       <div className = "flex h-3/5">
         <div className = "w-full h-full border-2">
         {tickerInfo}
+        <button type="button" onClick={() => setGraphType('line')} className="w-1/12 mr-2 py-1 mt-2 font-semibold border rounded float-right">Line</button>
+        <button type="button" onClick={() => setGraphType('candlestick')} className="w-1/12 mr-2 py-1 mt-2 font-semibold border rounded float-right">Candlestick</button>
           <div id="chart" className="h-5/6">
-            <ReactApexChart options={options} series={options.series} type="candlestick" height={'100%'} />
+            <ReactApexChart options={options} series={options.series} type={graphType} height={'100%'} />
           </div>
           <button aria-label = "oneWeek" type="button" onClick={() => changeDuration(1)} className="w-1/4 py-3 font-semibold border rounded">1 Week</button>
           <button aria-label = "oneMonth" type="button" onClick={() => changeDuration(2)} className="w-1/4 py-3 font-semibold border rounded">1 Month</button>
