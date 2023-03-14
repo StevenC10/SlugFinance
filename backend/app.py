@@ -38,14 +38,14 @@ def yahooAdd():
         portfolio = args.get('portfolio', '')
         ss.launchAndLogin(browser, user, pswd)
         todayData = ss.getPortfolioData(browser, portfolio)
-        sdte.jsonListToExcel(todayData)
         selectQuery = 'SELECT ticker,company, price,change,percentChange FROM stockTable WHERE %s = ticker'
         for i in todayData:
             stockSymbol = i['symbol'] 
             stockPrice = i['price']
             stockChange = i['change']
-            stockPercentChange = i['percentChange']
+            stockPercentChange = i['dailyChange']
             stockCompany = ct_data[stockSymbol]
+            i['company'] = stockCompany
             cursor.execute(selectQuery, (stockSymbol,))
             stock = cursor.fetchall()
             if len(stock) > 0:
@@ -60,6 +60,7 @@ def yahooAdd():
                 conn.commit()
             getAbout(stockSymbol)
         browser.quit()
+        sdte.jsonListToExcel(todayData)
     return jsonify('Stocks Added!'), 201
 
 def storeData(table1, table2):
