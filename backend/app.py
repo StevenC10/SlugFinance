@@ -9,23 +9,23 @@ import time
 import datetime
 import sys
 import pandas as pd
+import seleniumScraper as ss
+import stockDataToExcel as sdte
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask import Flask, abort, jsonify, request
 from bs4 import BeautifulSoup
 from flask_cors import CORS
+from selenium import webdriver
+from selenium.webdriver.firefox.options import Options 
 app = Flask(__name__)
 CORS(app)
-
-from selenium import webdriver
-import seleniumScraper as ss
-import stockDataToExcel as sdte
-from selenium.webdriver.firefox.options import Options 
 
 @app.route('/v0/yahooAdd', methods=['POST'])
 def yahooAdd():
     """ Takes in Yahoo credentials and portfolio name from request args and scrapes portfolio """
     with open('pairs.json', 'r') as ct_file:
         ct_data = json.load(ct_file)
+    appPortfolio = []
     conn = getConnection()
     cursor = conn.cursor()
     options = Options() 
@@ -41,6 +41,7 @@ def yahooAdd():
         selectQuery = 'SELECT ticker,company, price,change,percentChange FROM stockTable WHERE %s = ticker'
         for i in todayData:
             stockSymbol = i['symbol'] 
+            appPortfolio.append(stockSymbol)
             stockPrice = i['price']
             stockChange = i['change']
             stockPercentChange = i['dailyChange']
@@ -61,7 +62,7 @@ def yahooAdd():
             getAbout(stockSymbol)
         browser.quit()
         sdte.jsonListToExcel(todayData)
-    return jsonify('Stocks Added!'), 201
+    return jsonify(appPortfolio), 201
 
 def storeData(table1, table2):
     """ This function gets two tables of stock information and stores it into a dictionary.
