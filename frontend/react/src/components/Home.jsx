@@ -32,169 +32,153 @@ const Home = () => {
   const iconBody = useRef({ticker: '', year: yesterday.getFullYear(), month: yesterday.getMonth()+1, day: yesterday.getDate(), year2: year, month2: month, day2: day, interval: "1d"});
 
   useEffect(()=> {
-    let tempDate=new Date(Date.now()-7890000000);
-
+    const fetchData = async () => { 
+      let tempDate=new Date(Date.now()-7890000000);
+      let tempToday = new Date();
   
-    fetch(`http://127.0.0.1:5000/v0/getHistory`, {
-      method: 'POST',
-      body: `{"ticker": "TSLA",`
-        + `"year": `+tempDate.getFullYear()+`,`
-        + `"month": `+(tempDate.getMonth()+1)+`,`
-        + `"day": `+tempDate.getDate()+`,`
-        + `"year2": `+year+`,`
-        + `"month2": `+month+`,`
-        + `"day2": `+day+`,`
-        + `"interval": "1d"`
-        +"}",
-      headers: new Headers({
-        'Content-Type': 'application/json',
-      })
-    });
-    
-    fetch(`http://127.0.0.1:5000/v0/view?id=TSLA`, {
-      method: 'GET',
-      headers: new Headers({
-        'Content-Type': 'application/json',
-      })
-    }).then((response) => {
-      return response.json();
-    }).then((json)=>{
-      setC1Data(json);
-      return(json);
-    });
+      fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+        method: 'POST',
+        body: `{"ticker": "TSLA",`
+          + `"year": `+tempDate.getFullYear()+`,`
+          + `"month": `+(tempDate.getMonth()+1)+`,`
+          + `"day": `+tempDate.getDate()+`,`
+          + `"year2": `+tempToday.getFullYear()+`,`
+          + `"month2": `+(tempToday.getMonth()+1)+`,`
+          + `"day2": `+tempToday.getDate()+`,`
+          + `"interval": "1d"`
+          +"}",
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
+      });
+      
+      const chartResponse = await fetch(`http://127.0.0.1:5000/v0/view?id=TSLA`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
+      });
+      const chartJson = await chartResponse.json();
+      console.log(chartJson)
+      setC1Data(chartJson);
+      
 
-    // Icon 1
-    let temp=iconBody.current;
-    temp.ticker="META";
+      // Icon 1
+      let temp=iconBody.current;
+      temp.ticker="META";
 
-    fetch(`http://127.0.0.1:5000/v0/getHistory`, {
-      method: 'POST',
-      body: JSON.stringify(temp),
-      headers: new Headers({
-        'Content-Type': 'application/json',
+      fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+        method: 'POST',
+        body: JSON.stringify(temp),
+        headers: new Headers({
+          'Content-Type': 'application/json',
         })
-    })
-    fetch(`http://127.0.0.1:5000/v0/view?id=META`, {
-      method: 'GET',
-      headers: new Headers({
-        'Content-Type': 'application/json',
       })
-    }).then((response) => {
-      return response.json();
-    }).then((json)=>{
-      setIcon1(json);
-      return(json);
-    })
-    
-    // Icon 2
-    temp.ticker="AAPL";
-    fetch(`http://127.0.0.1:5000/v0/getHistory`, {
-      method: 'POST',
-      body: JSON.stringify(temp),
-      headers: new Headers({
-        'Content-Type': 'application/json',
+      const icon1Response = await fetch(`http://127.0.0.1:5000/v0/view?id=META`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
         })
-    })
-      fetch(`http://127.0.0.1:5000/v0/view?id=AAPL`, {
-      method: 'GET',
-      headers: new Headers({
-        'Content-Type': 'application/json',
-      })
-    }).then((response) => {
-      return response.json();
-    }).then((json)=>{
-      setIcon2(json);
-      return(json);
-    })
-    
-    // Icon 3
-    temp.ticker="AMZN";
-    fetch(`http://127.0.0.1:5000/v0/getHistory`, {
-      method: 'POST',
-      body: JSON.stringify(temp),
-      headers: new Headers({
-        'Content-Type': 'application/json',
+      });
+      const icon1Json = await icon1Response.json();
+      setIcon1(icon1Json);
+      
+      // Icon 2
+      temp.ticker="AAPL";
+      fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+        method: 'POST',
+        body: JSON.stringify(temp),
+        headers: new Headers({
+          'Content-Type': 'application/json',
         })
-    })
-      fetch(`http://127.0.0.1:5000/v0/view?id=AMZN`, {
-      method: 'GET',
-      headers: new Headers({
-        'Content-Type': 'application/json',
-      })
-    }).then((response) => {
-      return response.json();
-    }).then((json)=>{
-      setIcon3(json);
-      return(json);
-    })
-    
-    // Icon 4
-    temp.ticker="NFLX";
-    fetch(`http://127.0.0.1:5000/v0/getHistory`, {
-      method: 'POST',
-      body: JSON.stringify(temp),
-      headers: new Headers({
-        'Content-Type': 'application/json',
+      });
+      const icon2Response = await fetch(`http://127.0.0.1:5000/v0/view?id=AAPL`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
         })
-    })
-      fetch(`http://127.0.0.1:5000/v0/view?id=NFLX`, {
-      method: 'GET',
-      headers: new Headers({
-        'Content-Type': 'application/json',
-      })
-    }).then((response) => {
-      return response.json();
-    }).then((json)=>{
-      setIcon4(json);
-      return(json);
-    })
-    
-    // Icon 5
-    temp.ticker="GOOGL";
-    fetch(`http://127.0.0.1:5000/v0/getHistory`, {
-      method: 'POST',
-      body: JSON.stringify(temp),
-      headers: new Headers({
-        'Content-Type': 'application/json',
+      });
+      const icon2Json = await icon2Response.json();
+      setIcon2(icon2Json);
+      
+      // Icon 3
+      temp.ticker="AMZN";
+      fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+        method: 'POST',
+        body: JSON.stringify(temp),
+        headers: new Headers({
+          'Content-Type': 'application/json',
         })
-    })
-      fetch(`http://127.0.0.1:5000/v0/view?id=GOOGL`, {
-      method: 'GET',
-      headers: new Headers({
-        'Content-Type': 'application/json',
       })
-    }).then((response) => {
-      return response.json();
-    }).then((json)=>{
-      setIcon5(json);
-      return(json);
-    })
-    
-    // Icon 6
-    temp.ticker="MSFT";
-    fetch(`http://127.0.0.1:5000/v0/getHistory`, {
-      method: 'POST',
-      body: JSON.stringify(temp),
-      headers: new Headers({
-        'Content-Type': 'application/json',
+      const icon3Response = await fetch(`http://127.0.0.1:5000/v0/view?id=AMZN`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
         })
-    })
-      fetch(`http://127.0.0.1:5000/v0/view?id=MSFT`, {
-      method: 'GET',
-      headers: new Headers({
-        'Content-Type': 'application/json',
-      })
-    }).then((response) => {
-      return response.json();
-    }).then((json)=>{
-      setIcon6(json);
-      return(json);
-    })
+      });
+      const icon3Json = await icon3Response.json();
+      setIcon3(icon3Json);
+      
+      // Icon 4
+      temp.ticker="NFLX";
+      fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+        method: 'POST',
+        body: JSON.stringify(temp),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
+      });
+      const icon4Response = await fetch(`http://127.0.0.1:5000/v0/view?id=NFLX`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
+      });
+      const icon4Json = await icon4Response.json();
+      setIcon4(icon4Json);
+      
+      // Icon 5
+      temp.ticker="GOOGL";
+      fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+        method: 'POST',
+        body: JSON.stringify(temp),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          })
+      });
+      const icon5Response = await fetch(`http://127.0.0.1:5000/v0/view?id=GOOGL`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
+      });
+      const icon5Json = await icon5Response.json();
+      setIcon5(icon5Json);
+      
+      // Icon 6
+      temp.ticker="MSFT";
+      fetch(`http://127.0.0.1:5000/v0/getHistory`, {
+        method: 'POST',
+        body: JSON.stringify(temp),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          })
+      });
+      const icon6Response = await fetch(`http://127.0.0.1:5000/v0/view?id=MSFT`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
+      });
+      const icon6Json = await icon6Response.json();
+      setIcon6(icon6Json);
+    }
+    fetchData();
 
     return() =>{
-      //return null;
+      <></>
     };
-  },[year, month, day]);
+  },[]);
 
 
   const c1Options = {};
@@ -205,7 +189,6 @@ const Home = () => {
   
   if (c1Data.length>0){
     let c1History= c1Data[0][0][1];
-
     for (let i=c1History.length-1; i>=0; i--){
       const temp = {};
         temp.x = new Date (c1History[i].day);
@@ -226,13 +209,11 @@ const Home = () => {
     c1Options.yaxis = {};
     c1Options.yaxis.tooltip = {};
     c1Options.yaxis.tooltip.enabled = true;
-
   }
-
 
   //RENDER WEBPAGE
   return (
-    <div className="overflow-auto">
+    <div id="Homepage" className="overflow-auto">
       
       <div className="box-border h-screen " 
         style={{backgroundImage: 'url(/homeImage.jpg)',
@@ -251,18 +232,17 @@ const Home = () => {
             </div>
             
             <form className="nav-item" style={{paddingTop:'10px'}} action="Individual" >
-              <input className="rounded-lg flex w-full focus:outline-none" placeholder=" TSLA, AAPL, NVDA..."
-              type = "text" 
-              name = "name"
-              />
+              <button className="rounded-lg bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 w-full px-4 border border-gray-400 shadow" href="/Individual">
+              TSLA, AAPL, NVDA...
+              </button>
             </form>
           </div>
 
       </div>
       <div className="pt-4 px-4 text-6xl">
         Market Trends
-        <div className="flex pt-4 grid grid-row-3 grid-col-6 gap-3 h-screen" id="chart">
-          <div className=" text-lg row-span-3 col-span-4 row-start-1 min-w-full">
+        <div className="flex pt-4 grid grid-row-3 grid-col-6 gap-3 h-screen" >
+          <div className=" text-lg row-span-3 col-span-4 row-start-1 min-w-full"id="chart">
             <ReactApexChart className=" " options={c1Options} series={c1Options.series} type="candlestick" height={800} />
           </div>
           <div className="flex p-2 rounded-lg max-h-24 border-2 border-stone-200 px-1 row-start-1">
