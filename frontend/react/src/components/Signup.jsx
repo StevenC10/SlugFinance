@@ -47,12 +47,14 @@ const Signup = () => {
   return (
     <div>
       <div className="flex items-center min-h-screen bg-gray-800">
-        <div className="container mx-auto">
-            <div className="max-w-md my-0 mx-0">
-              <img className="invisible 2xl:visible absolute top-0 right-0 flex h-screen" src={Background} alt="back"></img>
-              <section className="hero container mx-auto pb-0 flex justify-center">
-                <img src={Logo} className="w-1/4" alt="logo" />
-              </section>
+        <img className="invisible 2xl:visible absolute top-0 right-0 flex h-screen" src={Background} alt="back"></img>
+          <div className="hero container my-auto pb-0 mx-auto flex justify-center 2xl:justify-start">
+            <div className="max-w-md mx-0">
+              <a rel="noopener noreferrer" href="/" aria-label="Back to homepage">
+                <section className="hero container mx-auto pb-0 flex justify-center">
+                  <img src={Logo} className="w-1/4" alt="logo" />
+                </section>
+              </a>
                 <div className="text-center">
                     <h1 className="my-3 text-3xl font-semibold text-gray-700 dark:text-gray-200">Slug Finance</h1>
                     <p className="text-gray-500 dark:text-gray-400">Create your Slug Finance account</p>
@@ -73,9 +75,12 @@ const Signup = () => {
                         </div>
                         <div className="mb-6">
                             <label htmlFor="cpassword" className="block mb-2 text-sm text-gray-600 dark:text-gray-400">Confirm Password</label>
-                            <input type="cpassword" name="cpassword" id="cpassword" placeholder="••••••••••" className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500" />
+                            <input type="password" name="cpassword" aria-label="cpassword" id="cpassword" placeholder="••••••••••" className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500" />
                         </div>
-                        <div className="flex justify-end">
+                        <div className="flex justify-between">
+                          <div className="text-sm text-gray-400">Already signed up?
+                            <a href="/login" className="text-sm text-gray-400 focus:outline-none focus:text-indigo-500 hover:text-indigo-500 dark:hover:text-indigo-300"> Log in!</a>
+                          </div>
                           <button type="button" onClick={handleSubmit} className="bg-violet-500 hover:bg-violet-600 active:bg-violet-700 px-8 py-3 space-x-2 font-semibold rounded text-white">Sign up</button>
                         </div>
                     </form>

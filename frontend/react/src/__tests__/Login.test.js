@@ -25,7 +25,7 @@ afterAll(() => server.close());
 test('Sucess', async () => {
   // load login screen
   render(<BrowserRouter><Login /></BrowserRouter>);
-
+  window.alert = () => {};
   // insert email into input
   const email = screen.getByRole('textbox', {name: 'Email Address'});
   await userEvent.type(email, 'partickchen@ucsc.edu');
