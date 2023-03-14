@@ -17,23 +17,24 @@ def set_env():
     os.environ["POSTGRES_USER"] = "postgres"
     os.environ["POSTGRES_PASSWORD"] = "postgres"
 
-"""  Test to check for valid ticker
-"""
+
 def test_getStock():
+    """  Test to check for valid ticker
+    """
     response = app.test_client().get('/v0/ticker/', query_string={"id": "UCSC"})
     res = json.loads(response.data.decode('utf-8'))
     assert type(res[0][0]) == list
     assert response.status_code == 200
 
-"""Test to check for invalid ticker
-"""
 def test_invalidStock():
+    """Test to check for invalid ticker
+    """
     response = app.test_client().get('/v0/ticker/', query_string = {"id": "F"})
     assert response.status_code == 404
 
 
-""" Test to check info is retrievable"""
 def test_retrieveInfo():
+    """ Test to check info is retrievable"""
     response = app.test_client().post('/v0/getInfo', json = {
         "ticker" : "TSLA",
     })
@@ -44,13 +45,13 @@ def test_retrieveInfo():
     response = app.test_client().get('/v0/retrieveInfo/', query_string = {"id": "TSLA"})
     assert response.status_code == 200
 
-""" Test to check retrieveInfo is false"""
 def test_invalidRetrieveInfo():
+    """ Test to check retrieveInfo is false"""
     response = app.test_client().get('/v0/retrieveInfo/', query_string = {"id": "GME"})
     assert response.status_code == 404
 
-""" Test to check getInfo is working"""
 def test_getInfo():
+    """ Test to check getInfo is working"""
     response = app.test_client().post('/v0/getInfo', json = {
         "ticker" : "TWTR",
     })
