@@ -18,6 +18,16 @@ def set_env():
     os.environ["POSTGRES_PASSWORD"] = "postgres"
 
 
+def test_yahooAdd():
+    """ Tests the scraper"""
+    response = app.test_client().post('/v0/yahooAdd', json = {
+      "email": "slugfinancetest",
+      "password": "g0slugss",
+      "portfolio": "test"
+    })
+    assert response.status_code == 201
+
+
 def test_getStock():
     """  Test to check for valid ticker
     """
