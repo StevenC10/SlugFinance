@@ -11,7 +11,6 @@ import Portfolio from '../components/Portfolio';
 // https://github.com/apexcharts/react-apexcharts/issues/425
 jest.mock('react-apexcharts', () => ({ __esModule: true, default: () => <div /> }));
 
-let box = undefined;
 const URL = 'http://localhost:3000/individual';
 
 const server = setupServer(

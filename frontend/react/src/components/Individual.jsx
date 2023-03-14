@@ -133,7 +133,6 @@ const Individual = () => {
    */
   const handleSubmit = (event) => {
     event.preventDefault();  // no reload on page
-    let status = '';
 
     // Putting the stock inside the table 
     fetch('http://127.0.0.1:5000/v0/getHistory', {

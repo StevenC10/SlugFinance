@@ -8,14 +8,8 @@ import {BrowserRouter} from 'react-router-dom';
 
 import Individual from '../components/Individual';
 
-const molly = {
-  name: 'Molly Member',
-  accessToken: 'some-old-jwt',
-};
-
 jest.mock('react-apexcharts', () => ({ __esModule: true, default: () => <div /> }));
 
-let box = undefined;
 const URL = 'http://localhost:3000/individual';
 
 const server = setupServer(
