@@ -35,18 +35,20 @@ def jsonListToExcel(stockList):
     sheet = wb.active
     sheet.title = "Stock Info"
     sheet["A1"] = today_formatted
-    sheet["B1"] = "price"
-    sheet["C1"] = "change"
-    sheet["D1"] = "pChange"
+    sheet["B1"] = "company"
+    sheet["C1"] = "price"
+    sheet["D1"] = "change"
+    sheet["E1"] = "pChange"
     
     counter = 2
     
     # iterate through tickers and add to wb
     for i in stockList:
         sheet["A" + str(counter)] = i['symbol']
-        sheet["B" + str(counter)] = i['price']
-        sheet["C" + str(counter)] = i['change']
-        sheet["D" + str(counter)] = i['percentChange']
+        sheet["B" + str(counter)] = i['company']
+        sheet["C" + str(counter)] = i['price']
+        sheet["D" + str(counter)] = i['change']
+        sheet["E" + str(counter)] = i['dailyChange']
         counter += 1
         
     wb.save(filename = today_formatted + "StockInfo.xlsx")
