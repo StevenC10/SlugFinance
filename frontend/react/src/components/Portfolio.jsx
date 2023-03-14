@@ -37,9 +37,6 @@ function removeFromPortfolio(toRemove) {
       },
     })
       .then((res) => {
-        if (!res.ok) {
-          throw res;
-        }
         return res.json();
       })
       .then((json) => {
@@ -63,14 +60,12 @@ const fetchPortfolio = (setPortfolio) => {
     }),
   })
     .then((response) => {
-      if (!response.ok) {
-        throw response;
-      }
       return response.json();
     })
 
     result.then(tickers => {
-      if (tickers) {  // If the user has tickers in portfolio
+      console.log(tickers);
+      if (tickers !== 'No email found') {  // If the user has tickers in portfolio
         for (const ticker of tickers) {  // For each ticker in user's portfolio
           const getInfo = {ticker: ticker};
           const adding = fetch('http://127.0.0.1:5000/v0/add', {  // Adding the ticker to the table
@@ -80,15 +75,6 @@ const fetchPortfolio = (setPortfolio) => {
               'Content-Type': 'application/json',
             }),
           })
-            .then((response) => {
-              if (!response.ok) {
-                throw response;
-              }
-              return response.json();
-            })
-            .catch((error) => {
-              console.log(error);
-            });
   
           adding.then(add => {  // Nested fetchc all to get the ticker from the table
             fetch('http://127.0.0.1:5000/v0/ticker?id=' + ticker, {
@@ -98,9 +84,6 @@ const fetchPortfolio = (setPortfolio) => {
             }),
             })
               .then((response) => {
-                if (!response.ok) {
-                  throw response;
-                }
                 return response.json();
               })
               .then((json) => {
@@ -112,9 +95,6 @@ const fetchPortfolio = (setPortfolio) => {
                   setPortfolio(sorted);
                 }
               })
-              .catch((error) => {
-                console.log(error);
-              });
             })
           }
       } else {
@@ -146,7 +126,7 @@ const Portfolio = () => {
   if(portfolio.length !== 0) {
     for (let i = 0; i < portfolio.length; i++) {
       const column = [];
-      column.push(<th onClick ={redirect} className="flex gap-3 px-6 py-4 font-normal text-gray-900"><div className="text-sm"><div className="font-medium text-gray-700">{portfolio[i][0][0][0].toUpperCase()}</div><div className="text-gray-400">{portfolio[i][0][0][1]}</div></div></th>);
+      column.push(<th aria-label = "redirect" onClick ={redirect} className="flex gap-3 px-6 py-4 font-normal text-gray-900"><div className="text-sm"><div className="font-medium text-gray-700">{portfolio[i][0][0][0].toUpperCase()}</div><div className="text-gray-400">{portfolio[i][0][0][1]}</div></div></th>);
       column.push(<td onClick ={redirect} className="px-6 py-4 font-medium">{portfolio[i][0][0][3]}</td>);
       column.push(<td onClick ={redirect} className="px-6 py-4 font-medium">{portfolio[i][0][0][4]}</td>);
       column.push(<td onClick ={redirect} className="px-6 py-4 font-medium">{portfolio[i][0][0][2]}</td>);
@@ -160,6 +140,7 @@ const Portfolio = () => {
             stroke="currentColor"
             className="h-6 w-6"
             x-tooltip="tooltip"
+            aria-label="remove"
             onClick={() => removeFromPortfolio(portfolio[i][0][0][0].toUpperCase())}
           >
             <path

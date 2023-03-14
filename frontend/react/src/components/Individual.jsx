@@ -40,17 +40,11 @@ function addToPortfolio(toAdd) {
       },
     })
       .then((res) => {
-        if (!res.ok) {
-          throw res;
-        }
         return res.json();
       })
       .then((json) => {
         alert('Success!');
       })
-      .catch((err) => {
-        // console.log(err);
-      });
   } else {
     alert('Please log in before trying to add to portfolio!');
   }
@@ -99,7 +93,7 @@ const Individual = () => {
       durationDay.setMonth(durationDay.getMonth()-1);
     } else if (duration === 3) {
       durationDay.setMonth(durationDay.getMonth()-6);
-    } else if (duration === 4) {
+    } else {
       durationDay.setFullYear(durationDay.getFullYear()-1);
     }
 
@@ -118,10 +112,6 @@ const Individual = () => {
       },
     })
       .then((res) => {
-        if (!res.ok) {
-          throw res;
-        }
-
         fetch('http://127.0.0.1:5000/v0/view?id=' + ticker, {
         method: 'GET',
         headers: new Headers({
@@ -129,17 +119,11 @@ const Individual = () => {
         }),
         })
           .then((response) => {
-            if (!response.ok) {
-              throw response;
-            }
             return response.json();
           })
           .then((json) => {
             setView(json);
           })
-          .catch((error) => {
-            setView([]);
-          });
         return res.json();
       })
   }
@@ -149,6 +133,7 @@ const Individual = () => {
    */
   const handleSubmit = (event) => {
     event.preventDefault();  // no reload on page
+    let status = '';
 
     // Putting the stock inside the table 
     fetch('http://127.0.0.1:5000/v0/getHistory', {
@@ -159,10 +144,6 @@ const Individual = () => {
       },
     })
       .then((res) => {
-        if (!res.ok) {
-          throw res;
-        }
-
         // Getting the data from the stock inside the table
         fetch('http://127.0.0.1:5000/v0/view?id=' + ticker, {
         method: 'GET',
@@ -171,20 +152,16 @@ const Individual = () => {
         }),
         })
           .then((response) => {
-            if (!response.ok) {
-              throw response;
-            }
             return response.json();
           })
           .then((json) => {
             setView(json);
           })
-          .catch((error) => {
-            setView([]);
-          });
         return res.json();
       })
-
+      .catch((err) => {
+        console.log(err);
+      })
 
     // Putting the stock inside the table for information
     fetch('http://127.0.0.1:5000/v0/add', {
@@ -195,85 +172,63 @@ const Individual = () => {
       },
     })
       .then((res) => {
-        if (!res.ok) {
-          throw res;
-        }
-
+        console.log(res.status);
         // Getting price information on stock
-        fetch('http://127.0.0.1:5000/v0/ticker?id=' + ticker, {
+        if (res.status === 201) {
+          fetch('http://127.0.0.1:5000/v0/ticker?id=' + ticker, {
+            method: 'GET',
+            headers: new Headers({
+              'Content-Type': 'application/x-www-form-urlencoded',
+            }),
+            })
+              .then((response) => {
+                return response.json();
+              })
+              .then((json) => {
+                setPriceInfo(json);
+              })
+  
+          // Putting information on stock into table
+          fetch('http://127.0.0.1:5000/v0/getInfo', {
+          method: 'POST',
+          body: JSON.stringify(getInfo),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          })
+          .then((res) => {
+            
+          // Getting information on stock from table
+          fetch('http://127.0.0.1:5000/v0/retrieveInfo?id=' + ticker, {
           method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/x-www-form-urlencoded',
           }),
           })
             .then((response) => {
-              if (!response.ok) {
-                throw response;
-              }
               return response.json();
             })
             .then((json) => {
-              setPriceInfo(json);
+              setInfo(json);
             })
-            .catch((error) => {
-              setPriceInfo([]);
-            });
-
-        // Putting information on stock into table
-        fetch('http://127.0.0.1:5000/v0/getInfo', {
-        method: 'POST',
-        body: JSON.stringify(getInfo),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        })
-        .then((res) => {
-          if (!res.ok) {
-            throw res;
-          }
-          
-        // Getting information on stock from table
-        fetch('http://127.0.0.1:5000/v0/retrieveInfo?id=' + ticker, {
-        method: 'GET',
-        headers: new Headers({
-          'Content-Type': 'application/x-www-form-urlencoded',
-        }),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw response;
-            }
-            return response.json();
+  
+          // Getting description on stock into table
+          fetch('http://127.0.0.1:5000/v0/getDescription?id=' + ticker, {
+          method: 'GET',
+          headers: new Headers({
+            'Content-Type': 'application/x-www-form-urlencoded',
+          }),
           })
-          .then((json) => {
-            setInfo(json);
+            .then((response) => {
+              return response.json();
+            })
+            .then((json) => {
+              setDescription(json);
+            })
+  
+            return res.json();
           })
-          .catch((error) => {
-            setInfo([]);
-          });
-
-        // Getting description on stock into table
-        fetch('http://127.0.0.1:5000/v0/getDescription?id=' + ticker, {
-        method: 'GET',
-        headers: new Headers({
-          'Content-Type': 'application/x-www-form-urlencoded',
-        }),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw response;
-            }
-            return response.json();
-          })
-          .then((json) => {
-            setDescription(json);
-          })
-          .catch((error) => {
-            setDescription([]);
-          });
-
-          return res.json();
-        })
+        }
         return res.json();
       }).catch((error) => {
         alert(`Stock Doesn't Exist`);  // giving error if stock does not exist
@@ -326,7 +281,7 @@ const Individual = () => {
         <dt key = {key} className="mb-1 text-gray-400 md:text-lg">{key}</dt>
         <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
         </div>);
-      } else if(counter % 4 === 0) {
+      } else {
         row.push(<div className="flex flex-col pt-3">
         <dt key = {key} className="mb-1 text-gray-400 md:text-lg">{key}</dt>
         <dd key = {info[0][0][1][0][key]} className="text-lg font-semibold">{info[0][0][1][0][key]}</dd>
@@ -374,7 +329,7 @@ const Individual = () => {
           </a>
           <div className="mb-6 items-center justify-start">
             <form onSubmit={handleSubmit}>
-              <input type="text" name="name" id="search" placeholder="TSLA, AAPL, NVDA" onChange={handleInputChange} className="w-full px-4 py-2 placeholder-gray-500 border border-gray-200 rounded-md focus:outline-none bg-gray-20 border-gray-600" />
+              <input aria-label="searching" type="text" name="name" id="search" placeholder="TSLA, AAPL, NVDA" onChange={handleInputChange} className="w-full px-4 py-2 placeholder-gray-500 border border-gray-200 rounded-md focus:outline-none bg-gray-20 border-gray-600" />
             </form>
           </div>
           <div className="items-center space-x-2 flex-shrink-0 hidden lg:flex">

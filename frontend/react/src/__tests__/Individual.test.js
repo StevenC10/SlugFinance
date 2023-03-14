@@ -1,6 +1,7 @@
 import {render, fireEvent} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import {screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {rest} from 'msw';
 import {setupServer} from 'msw/node';
 import {BrowserRouter} from 'react-router-dom';
@@ -24,6 +25,10 @@ const server = setupServer(
     }),
   );
 
+let assignMock = jest.fn();
+
+delete window.location;
+window.location = { replace: assignMock, reload: assignMock };
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
@@ -36,12 +41,57 @@ test('Page Loads', async () => {
         </BrowserRouter>);
 });
 
-test('Click on one week', async () => {
-    render(
-        <BrowserRouter>
-          <Individual />
-        </BrowserRouter>);
-    fireEvent.click(screen.getByText('1 Week'));
+test('Search Positive Stock', async () => {
+  render(
+      <BrowserRouter>
+        <Individual />
+      </BrowserRouter>);
+  const email = screen.getByLabelText('searching');
+  await userEvent.type(email, 'TSLA');
+  fireEvent.submit(email);
+
+  await new Promise((r) => setTimeout(r, 4000));
+  fireEvent.click(screen.getByText('1 Week'));
+  fireEvent.click(screen.getByText('Add to myPortfolio'));
+});
+
+test('Search Negative Stock', async () => {
+  render(
+      <BrowserRouter>
+        <Individual />
+      </BrowserRouter>);
+  const email = screen.getByLabelText('searching');
+  await userEvent.type(email, 'PATK');
+  fireEvent.submit(email);
+
+  await new Promise((r) => setTimeout(r, 4000));
+});
+
+test('Add to Stock Portfolio', async () => {
+  localStorage.setItem('user', 'lance@ucsc.edu');
+  render(
+      <BrowserRouter>
+        <Individual />
+      </BrowserRouter>);
+  const email = screen.getByLabelText('searching');
+  await userEvent.type(email, 'TSLA');
+  fireEvent.submit(email);
+
+  await new Promise((r) => setTimeout(r, 10000));
+  fireEvent.click(screen.getByText('Add to myPortfolio'));
+}, 60_000);
+
+test('Search UNDEFINED Stock', async () => {
+  render(
+      <BrowserRouter>
+        <Individual />
+      </BrowserRouter>);
+  const email = screen.getByLabelText('searching');
+  await userEvent.type(email, 'dsfasdf');
+  fireEvent.submit(email);
+
+  await new Promise((r) => setTimeout(r, 4000));
+  fireEvent.click(screen.getByText('1 Week'));
 });
 
 test('Click on one month', async () => {
@@ -66,4 +116,28 @@ test('Click on one year', async () => {
           <Individual />
         </BrowserRouter>);
     fireEvent.click(screen.getByText('1 Year'));
+});
+
+test('Click on My Portfolio', async () => {
+  render(
+      <BrowserRouter>
+        <Individual />
+      </BrowserRouter>);
+  fireEvent.click(screen.getByText('myPortfolio'));
+});
+
+test('Click on Log In', async () => {
+  render(
+      <BrowserRouter>
+        <Individual />
+      </BrowserRouter>);
+  fireEvent.click(screen.getByText('Log in'));
+});
+
+test('Click on Sign Up', async () => {
+  render(
+      <BrowserRouter>
+        <Individual />
+      </BrowserRouter>);
+  fireEvent.click(screen.getByText('Sign up'));
 });
