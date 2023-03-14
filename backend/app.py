@@ -23,6 +23,7 @@ from selenium.webdriver.firefox.options import Options
 
 @app.route('/v0/yahooAdd', methods=['POST'])
 def yahooAdd():
+    """ Takes in Yahoo credentials and portfolio name from request args and scrapes portfolio """
     with open('pairs.json', 'r') as ct_file:
         ct_data = json.load(ct_file)
     conn = getConnection()
@@ -62,8 +63,7 @@ def yahooAdd():
     return jsonify('Stocks Added!'), 201
 
 def storeData(table1, table2):
-    """
-    This function gets two tables of stock information and stores it into a dictionary.
+    """ This function gets two tables of stock information and stores it into a dictionary.
     
     Function accesses the two tables and stores the data into a dictionary which gets
     appended to an array. The array is then turned into JSON to be easily readable
