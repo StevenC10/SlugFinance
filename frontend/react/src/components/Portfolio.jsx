@@ -44,6 +44,48 @@ function removeFromPortfolio(toRemove) {
       })
 }
 
+function importPortfolio() {
+  function addToPortfolio(toAdd) {
+    const item = localStorage.getItem('user');  // Gets the user's email 
+    const adding = {useremail: item, ticker: toAdd};  // Sets up data to use for fetch
+    if(item) {  // If the user is logged in 
+      fetch('http://127.0.0.1:5000/v0/addPortfolio', {
+        method: 'POST',
+        body: JSON.stringify(adding),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((json) => {
+          alert('Success!');
+        })
+    } else {
+      alert('Please log in before trying to add to portfolio!');
+    }
+  }
+  let i = 0;
+  fetch('http://127.0.0.1:5000/v0/yahooAdd', {
+    method: 'POST',
+    body: JSON.stringify({
+      "email": "slugfinancetest",
+      "password": "g0slugss",
+      "portfolio": "test"
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  .then((response) => response.json())
+  .then((data) =>   {
+  while (i < data.length) {
+      addToPortfolio(data[i]);
+      i++;
+  }});
+}
+
 /**
  * Gets the users portfolio and sets the state
  * @param {*} setPortfolio 
@@ -172,6 +214,7 @@ const Portfolio = () => {
             </form>
           </div>
           <div className="items-center space-x-2 flex-shrink-0 hidden lg:flex">
+          <button class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full" onClick={importPortfolio}>Import</button>
             <li className="flex">
               <button type="button" className="px-8 py-3 font-semibold rounded-full bg-gray-500 text-gray-800" onClick={toPortfolio}>myPortfolio</button>
             </li>
