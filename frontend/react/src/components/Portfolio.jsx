@@ -44,6 +44,9 @@ function removeFromPortfolio(toRemove) {
     });
 }
 
+/**
+ * imports yahoo portfolio
+ */
 function importPortfolio() {
   function addToPortfolio(toAdd) {
     const item = localStorage.getItem("user"); // Gets the user's email
