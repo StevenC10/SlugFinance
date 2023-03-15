@@ -1,7 +1,6 @@
 
 import React, {useState,useEffect} from 'react';
 import ReactApexChart from "react-apexcharts";
-//import {useRef} from 'react';
 import Navbar from './Navbar';
 
 import Amazon from '../images/Amazon.png';
@@ -11,26 +10,15 @@ import Microsoft from '../images/MSFT.png';
 import DOW from '../images/DowJones.png';
 import Nasdaq from '../images/Nasdaq.png';
 
-// import homeBackground from '../images/homeImage1.jpg';
+
 
 export const tickerContext = React.createContext();
 
 
-/*
-const today = new Date();
-const year = today.getFullYear();
-const month = today.getMonth()+1;
-const day = today.getDate();
-//const baseDay = `"`+year+`-`+month+`-`+day;
-//const yesterday = new Date(Date.now() - 432000000);
-*/
-
-
-
 const Home = () => {
   
-  //const iconBody = useRef({ticker: '', year: yesterday.getFullYear(), month: yesterday.getMonth()+1, day: yesterday.getDate(), year2: year, month2: month, day2: day, interval: "1d"});
-  const [c1Data, setC1Data] = useState({});
+  // these states hold the data of each stock 
+  const [c1Data, setC1Data] = useState([[["",[]]]]);
   const [icon1, setIcon1] = useState([[["","","0","0","0"]]]);
   const [icon2, setIcon2] = useState([[["","","0","0","0"]]]);
   const [icon3, setIcon3] = useState([[["","","0","0","0"]]]);
@@ -39,11 +27,14 @@ const Home = () => {
   const [icon6, setIcon6] = useState([[["","","0","0","0"]]]);
 
 
+
+  
   useEffect(()=> {
     let tempDate=new Date(Date.now()-7890000000);
     let tempToday= new Date();
 
     // Chart for Tesla 
+    //Calls add->getHistory->view to get the data required stock data for the chart
     fetch(`http://127.0.0.1:5000/v0/add`, {
       method: 'POST',
       body: `{"ticker": "TSLA"}`,
@@ -51,9 +42,6 @@ const Home = () => {
         'Content-Type': 'application/json',
       },
     }).then((add) =>{
-      if (!add.ok) {
-        throw add;
-      }
       fetch(`http://127.0.0.1:5000/v0/getHistory`, {
         method: 'POST',
         body: `{"ticker": "TSLA",`
@@ -69,9 +57,6 @@ const Home = () => {
           'Content-Type': 'application/json',
         },
       }).then((res) => {
-          if(!res.ok){
-            throw res;
-          }
           fetch(`http://127.0.0.1:5000/v0/view?id=TSLA`, {
           method: 'GET',
           headers: new Headers({
@@ -83,16 +68,16 @@ const Home = () => {
           })
           .then((json) => {
             setC1Data(json);
-            return json;
           })
         });
       }   
     )
     
     
-      // Icon 1
-    //let temp=iconBody.current;
-    //temp.ticker="META"; Nasdaq Inc
+    // Icon 1
+    // Nasdaq Inc. 
+    // calls add->ticker to get todays close, change amount, and change percent
+    // for the NDAQ ticker
     fetch(`http://127.0.0.1:5000/v0/add`, {
       method: 'POST',
       body: `{"ticker": "NDAQ"}`,
@@ -100,21 +85,14 @@ const Home = () => {
         'Content-Type': 'application/json',
         })
     }).then((res)=>{
-      if (!res.ok){
-        throw res;
-      }
       fetch(`http://127.0.0.1:5000/v0/ticker/?id=NDAQ`, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json',
         })
       }).then((response) => {
-        if (!response.ok){
-          throw response;
-        }
         return response.json();
       }).then((json)=>{
-        console.log("1",json);
         setIcon1(json);
         return(json);
       })
@@ -123,7 +101,9 @@ const Home = () => {
     
     
     // Icon 2
-    //temp.ticker="AAPL"; DOW Jones
+    // DOW Jones
+    // calls add->ticker to get todays close, change amount, and change percent
+    // for the DOW ticker
     fetch(`http://127.0.0.1:5000/v0/add`, {
       method: 'POST',
       body: `{"ticker": "DOW"}`,
@@ -131,21 +111,15 @@ const Home = () => {
         'Content-Type': 'application/json',
         })
     }).then((res)=>{
-      if (!res.ok){
-        throw res;
-      }
+      
       fetch(`http://127.0.0.1:5000/v0/ticker/?id=DOW`, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json',
         })
       }).then((response) => {
-        if (!response.ok){
-          throw response;
-        }
         return response.json();
       }).then((json)=>{
-        console.log("2",json);
         setIcon2(json);
         return(json);
       })
@@ -153,7 +127,9 @@ const Home = () => {
     });
     
     // Icon 3
-    //temp.ticker="AMZN"; E-Mini S&P 500 Mar 23
+    // CME GROUP 
+    // calls add->ticker to get todays close, change amount, and change percent
+    // for the CME ticker
     fetch(`http://127.0.0.1:5000/v0/add`, {
       method: 'POST',
       body: `{"ticker": "CME"}`,
@@ -161,21 +137,14 @@ const Home = () => {
         'Content-Type': 'application/json',
         })
     }).then((res)=>{
-      if (!res.ok){
-        throw res;
-      }
       fetch(`http://127.0.0.1:5000/v0/ticker/?id=CME`, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json',
         })
       }).then((response) => {
-        if (!response.ok){
-          throw response;
-        }
         return response.json();
       }).then((json)=>{
-        console.log("3 ",json);
         setIcon3(json);
         return(json);
       })
@@ -183,7 +152,9 @@ const Home = () => {
     });
     
     // Icon 4
-    //temp.ticker="NFLX"; 
+    // Amazon
+    // calls add->ticker to get todays close, change amount, and change percent
+    // for the AMZN ticker
     fetch(`http://127.0.0.1:5000/v0/add`, {
       method: 'POST',
       body: `{"ticker": "AMZN"}`,
@@ -191,21 +162,14 @@ const Home = () => {
         'Content-Type': 'application/json',
         })
     }).then((res)=>{
-      if (!res.ok){
-        throw res;
-      }
       fetch(`http://127.0.0.1:5000/v0/ticker/?id=AMZN`, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json',
         })
       }).then((response) => {
-        if (!response.ok){
-          throw response;
-        }
         return response.json();
       }).then((json)=>{
-        console.log("4",json);
         setIcon4(json);
         return(json);
       })
@@ -213,7 +177,9 @@ const Home = () => {
     });
     
     // Icon 5
-    //temp.ticker="GOOGL";
+    // Google
+    // calls add->ticker to get todays close, change amount, and change percent
+    // for the GOOGL ticker
     fetch(`http://127.0.0.1:5000/v0/add`, {
       method: 'POST',
       body: `{"ticker": "GOOGL"}`,
@@ -221,21 +187,14 @@ const Home = () => {
         'Content-Type': 'application/json',
         })
     }).then((res)=>{
-      if (!res.ok){
-        throw res;
-      }
       fetch(`http://127.0.0.1:5000/v0/ticker/?id=GOOGL`, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json',
         })
       }).then((response) => {
-        if (!response.ok){
-          throw response;
-        }
         return response.json();
       }).then((json)=>{
-        console.log("5",json);
         setIcon5(json);
         return(json);
       })
@@ -243,7 +202,9 @@ const Home = () => {
     });
     
     // Icon 6
-    //temp.ticker="MSFT";
+    // Microsoft
+    // calls add->ticker to get todays close, change amount, and change percent
+    // for the MSFT ticker
     fetch(`http://127.0.0.1:5000/v0/add`, {
       method: 'POST',
       body: `{"ticker": "MSFT"}`,
@@ -251,21 +212,14 @@ const Home = () => {
         'Content-Type': 'application/json',
         })
     }).then((res)=>{
-      if (!res.ok){
-        throw res;
-      }
       fetch(`http://127.0.0.1:5000/v0/ticker/?id=MSFT`, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json',
         })
       }).then((response) => {
-        if (!response.ok){
-          throw response;
-        }
         return response.json();
       }).then((json)=>{
-        console.log("6",json);
         setIcon6(json);
         return(json);
       })
@@ -275,49 +229,44 @@ const Home = () => {
   }, []);
 
 
-
+  // create the options data required for ApexCharts
   const c1Options = {};
   c1Options.series = [];
   const c1GraphData = {'data': []}
   c1Options.series.push(c1GraphData);
-
+  let c1History= c1Data[0][0][1];
   
-  if (c1Data.length>0){
-    let c1History= c1Data[0][0][1];
-
-    for (let i=c1History.length-1; i>=0; i--){
-      const temp = {};
-        temp.x = new Date (c1History[i].day);
-        temp.y = [];
-        temp.y.push(c1History[i].open.toFixed(2));
-        temp.y.push(c1History[i].high.toFixed(2));
-        temp.y.push(c1History[i].low.toFixed(2));
-        temp.y.push(c1History[i].close.toFixed(2));
-        c1Options.series[0].data.push(temp);
-    }
-    c1Options.chart = {};
-    c1Options.chart.type = 'candlestick';
-    c1Options.chart.height = 350;
-    c1Options.title = {};
-    c1Options.title.text = 'TSLA';
-    c1Options.title.align = 'left';
-    c1Options.xaxis = {};
-    c1Options.yaxis = {};
-    c1Options.yaxis.tooltip = {};
-    c1Options.yaxis.tooltip.enabled = true;
-
+  // stores the stock data into the ApexCharts options
+  for (let i=c1History.length-1; i>=0; i--){
+    let temp = {};
+      temp.x = new Date (c1History[i].day);
+      temp.y = [];
+      temp.y.push(c1History[i].open.toFixed(2));
+      temp.y.push(c1History[i].high.toFixed(2));
+      temp.y.push(c1History[i].low.toFixed(2));
+      temp.y.push(c1History[i].close.toFixed(2));
+      c1Options.series[0].data.push(temp);
   }
+  // specifies the chart settings for ApexCharts options
+  c1Options.chart = {};
+  c1Options.chart.type = 'candlestick';
+  c1Options.chart.height = 350;
+  c1Options.title = {};
+  c1Options.title.text = 'TSLA';
+  c1Options.title.align = 'left';
+  c1Options.xaxis = {};
+  c1Options.yaxis = {};
+  c1Options.yaxis.tooltip = {};
+  c1Options.yaxis.tooltip.enabled = true;
 
 
   //RENDER WEBPAGE
   return (
     <div className="overflow-auto">
-      
       <div className="box-border h-screen " 
         style={{backgroundImage: 'url(/homeImage.jpg)',
                     backgroundSize: "cover",
                     align: "center",
-                    // opacity: "0.82",
                     height:1000
                     }}>
           <Navbar />
