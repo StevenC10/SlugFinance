@@ -35,6 +35,22 @@ test('Page Loads', async () => {
         </BrowserRouter>);
 });
 
+test('Click on Log In', async () => {
+  render(
+      <BrowserRouter>
+        <Individual />
+      </BrowserRouter>);
+  fireEvent.click(screen.getByText('Log in'));
+});
+
+test('Click on Sign Up', async () => {
+  render(
+      <BrowserRouter>
+        <Individual />
+      </BrowserRouter>);
+  fireEvent.click(screen.getByText('Sign up'));
+});
+
 test('Search Positive Stock', async () => {
   render(
       <BrowserRouter>
@@ -45,8 +61,8 @@ test('Search Positive Stock', async () => {
   fireEvent.submit(email);
 
   await new Promise((r) => setTimeout(r, 4000));
-  fireEvent.click(screen.getByText('1 Week'));
-  fireEvent.click(screen.getByText('Add to myPortfolio'));
+  await fireEvent.click(screen.getByText('1 Week'));
+  await fireEvent.click(screen.getByText('Add to myPortfolio'));
 });
 
 test('Search Negative Stock', async () => {
@@ -73,6 +89,7 @@ test('Add to Stock Portfolio', async () => {
 
   await new Promise((r) => setTimeout(r, 10000));
   fireEvent.click(screen.getByText('Add to myPortfolio'));
+  await fireEvent.click(screen.getByRole('button', {name: 'Log out'}));
 }, 60_000);
 
 test('Search UNDEFINED Stock', async () => {
@@ -120,18 +137,12 @@ test('Click on My Portfolio', async () => {
   fireEvent.click(screen.getByText('myPortfolio'));
 });
 
-test('Click on Log In', async () => {
+test('Click on Log Out', async () => {
+  localStorage.setItem('user', {personemail: 'partickchen%40ucsc.edu', personpassword:'partick'});
   render(
       <BrowserRouter>
         <Individual />
       </BrowserRouter>);
-  fireEvent.click(screen.getByText('Log in'));
-});
-
-test('Click on Sign Up', async () => {
-  render(
-      <BrowserRouter>
-        <Individual />
-      </BrowserRouter>);
-  fireEvent.click(screen.getByText('Sign up'));
+  // insert email into input
+  await fireEvent.click(screen.getByRole('button', {name: 'Log out'}));
 });

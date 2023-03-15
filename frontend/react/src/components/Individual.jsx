@@ -1,6 +1,6 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
-
+import {useNavigate} from 'react-router-dom';
 import Logo from "../images/test2.png"
 // from mamba ui
 
@@ -315,6 +315,12 @@ const Individual = () => {
     options.yaxis.tooltip.enabled = true;
   }
 
+  const history = useNavigate();
+  const toLogout = () => {
+    localStorage.removeItem('user');
+    history('/');
+  };
+
   return (
     <div className = "h-screen">
       {/* navbar start */}
@@ -333,10 +339,12 @@ const Individual = () => {
           </div>
           <div className="items-center space-x-2 flex-shrink-0 hidden lg:flex">
             <li className="flex">
-              <button type="button" className="px-8 py-3 font-semibold rounded-full bg-gray-500 text-gray-800" onClick={toPortfolio}>myPortfolio</button>
+              {localStorage.getItem('user') !== null ? <button type="button" className="px-8 py-3 font-semibold rounded-full text-gray-800 bg-gray-300 hover:bg-gray-400 font-semibold active:bg-gray-500" onClick={toPortfolio}>myPortfolio</button> 
+                                                     : <button type="button" className="px-8 py-3 font-semibold rounded-full bg-gray-500 text-gray-800" onClick={toPortfolio}>myPortfolio</button>}
             </li>
-            <button className="self-center px-8 py-3 rounded text-gray-200 bg-blue-600 hover:bg-blue-700 font-semibold active:bg-blue-800" onClick={toSignup}>Sign up</button>
-            <button className="self-center px-8 py-3 rounded text-gray-200 bg-gray-600 hover:bg-gray-700 font-semibold active:bg-gray-800" onClick={toLogin}>Log in</button>
+            {localStorage.getItem('user') !== null ? <button className="self-center px-8 py-3 rounded text-gray-200 bg-red-600 hover:bg-red-700 font-semibold active:bg-red-800" onClick={toLogout}>Log out</button> : null}
+            {localStorage.getItem('user') === null ? <button className="self-center px-8 py-3 rounded text-gray-200 bg-blue-600 hover:bg-blue-700 font-semibold active:bg-blue-800" onClick={toSignup}>Sign up</button> : null}
+            {localStorage.getItem('user') === null ? <button className="self-center px-8 py-3 rounded text-gray-200 bg-gray-600 hover:bg-gray-700 font-semibold active:bg-gray-800" onClick={toLogin}>Log in</button> : null}
           </div>
         </div>
       </header>
