@@ -66,24 +66,29 @@ function importPortfolio() {
       alert('Please log in before trying to add to portfolio!');
     }
   }
+  const item = localStorage.getItem('user');
   let i = 0;
-  fetch('http://127.0.0.1:5000/v0/yahooAdd', {
-    method: 'POST',
-    body: JSON.stringify({
-      "email": "slugfinancetest",
-      "password": "g0slugss",
-      "portfolio": "test"
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  .then((response) => response.json())
-  .then((data) =>   {
-  while (i < data.length) {
-      addToPortfolio(data[i]);
-      i++;
-  }});
+  if(item) {
+    fetch('http://127.0.0.1:5000/v0/yahooAdd', {
+      method: 'POST',
+      body: JSON.stringify({
+        "email": "slugfinancetest",
+        "password": "g0slugss",
+        "portfolio": "test"
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((response) => response.json())
+    .then((data) =>   {
+    while (i < data.length) {
+        addToPortfolio(data[i]);
+        i++;
+    }});
+  } else {
+    alert('Please log in before trying to add to portfolio!');
+  }
 }
 
 /**
