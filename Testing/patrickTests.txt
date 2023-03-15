@@ -1,0 +1,14 @@
+  Wrote all tests using msw for Login Page. These include:
+    - Logging in with a correct username and password
+    - Logging in with incorrect username and password
+    - Displaying an alert based on correctness
+
+  Wrote all tests using msw for the Signup Page. These include:
+    - Signing up with a new username and password
+    - Signing up with existing username and password fails
+    - Displaying an alert based on correctness
+
+  Wrote all tests using msw for the Navbar. These include:
+    - Logging in and pressing certain buttons that will show up based on log in
+    - Clicking on buttons in the navbar
+    - Checking that buttons are not missing
