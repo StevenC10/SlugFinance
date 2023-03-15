@@ -34,7 +34,7 @@ test('Sucess', async () => {
   const password = screen.getByPlaceholderText('••••••••••');
   await userEvent.type(password, 'partick');
 
-  fireEvent.click(screen.getByRole('button', {name: 'Sign in'}));
+  fireEvent.click(screen.getByRole('button', {name: 'Log in'}));
 
   // should not be null because user exists
   await waitFor(() => {
@@ -55,7 +55,7 @@ test('Fail', async () => {
   const password = screen.getByPlaceholderText('••••••••••');
   await userEvent.type(password, 'particke');
 
-  fireEvent.click(screen.getByRole('button', {name: 'Sign in'}));
+  fireEvent.click(screen.getByRole('button', {name: 'Log in'}));
   await waitFor(() => {
     expect(alerted).toBe(true);
   });

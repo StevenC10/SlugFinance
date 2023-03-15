@@ -22,8 +22,9 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 // https://stackoverflow.com/questions/16106701/how-to-generate-a-random-string-of-letters-and-numbers-in-javascript
-const userName = Math.random().toString(20).substring(2, 6);
-const passWord = Math.random().toString(20).substring(2, 6);
+let userName = Math.random().toString(36).substring(7);
+userName += "@ucsc.edu";
+const passWord = Math.random().toString(36).substring(7);
 
 test('Sucess', async () => {
   render(<BrowserRouter><Login /></BrowserRouter>);

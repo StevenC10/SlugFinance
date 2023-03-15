@@ -1,11 +1,13 @@
-import {render, fireEvent} from '@testing-library/react';
+import {render, fireEvent, getByText} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import {screen} from '@testing-library/react';
 import {rest} from 'msw';
 import {setupServer} from 'msw/node';
-import {BrowserRouter} from 'react-router-dom';
+import {BrowserRouter, Router, Switch, Route} from 'react-router-dom';
+import userEvent from '@testing-library/user-event';
 
-import Individual from '../components/Navbar';
+import Navbar from '../components/Navbar';
+import Login from '../components/Login';
 
 const URL = 'http://localhost:3000/navbar';
 
@@ -28,14 +30,14 @@ afterEach(() => server.resetHandlers());
 test('Page Loads', async () => {
     render(
         <BrowserRouter>
-          <Individual />
+          <Navbar />
         </BrowserRouter>);
 });
 
 test('Click on My Portfolio', async () => {
   render(
       <BrowserRouter>
-        <Individual />
+        <Navbar />
       </BrowserRouter>);
   fireEvent.click(screen.getByText('myPortfolio'));
 });
@@ -43,7 +45,7 @@ test('Click on My Portfolio', async () => {
 test('Click on Log In', async () => {
   render(
       <BrowserRouter>
-        <Individual />
+        <Navbar />
       </BrowserRouter>);
   fireEvent.click(screen.getByText('Log in'));
 });
@@ -51,7 +53,17 @@ test('Click on Log In', async () => {
 test('Click on Sign Up', async () => {
   render(
       <BrowserRouter>
-        <Individual />
+        <Navbar />
       </BrowserRouter>);
   fireEvent.click(screen.getByText('Sign up'));
+});
+
+test('Click on Log Out', async () => {
+  localStorage.setItem('user', {personemail: 'partickchen%40ucsc.edu', personpassword:'partick'});
+  render(
+      <BrowserRouter>
+        <Navbar />
+      </BrowserRouter>);
+  // insert email into input
+  await fireEvent.click(screen.getByRole('button', {name: 'Log out'}));
 });

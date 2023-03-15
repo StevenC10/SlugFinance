@@ -35,7 +35,7 @@ const Login = () => {
         return res.json();
       })
       .then((json) => {
-        alert('Success!');
+        // alert('Success!');
         localStorage.setItem('user', json[0][0][0]);
         history('/');
       })
@@ -75,7 +75,7 @@ const Login = () => {
                           <div className="text-sm text-gray-400">Don't have an account?
                             <a href="/signup" className="text-sm text-gray-400 focus:outline-none focus:text-indigo-500 hover:text-indigo-500 dark:hover:text-indigo-300"> Sign up!</a>
                           </div>
-                          <button type="button" onClick={handleSubmit} className="bg-violet-500 hover:bg-violet-600 active:bg-violet-700 px-8 py-3 space-x-2 font-semibold rounded text-white">Sign in</button>
+                          <button type="button" onClick={handleSubmit} className="bg-violet-500 hover:bg-violet-600 active:bg-violet-700 px-8 py-3 space-x-2 font-semibold rounded text-white">Log in</button>
                         </div>
                     </form>
                 </div>
