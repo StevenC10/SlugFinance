@@ -75,6 +75,8 @@ test('Search Negative Stock', async () => {
   fireEvent.submit(email);
 
   await new Promise((r) => setTimeout(r, 4000));
+  fireEvent.click(screen.getByText('Line'));
+  fireEvent.click(screen.getByText('Candlestick'));
 });
 
 test('Add to Stock Portfolio', async () => {
@@ -150,7 +152,7 @@ test('Click on Log Out', async () => {
 test('Click on Import', async () => {
   render(
       <BrowserRouter>
-        <Portfolio />
+        <Individual />
       </BrowserRouter>);
   fireEvent.click(screen.getByText('Import'));
 });

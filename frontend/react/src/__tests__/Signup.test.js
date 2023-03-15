@@ -55,7 +55,7 @@ test('Fail', async () => {
   const password = screen.getByLabelText('password');
   await userEvent.type(password, passWord);
 
-  fireEvent.click(screen.getByRole('button', {name: 'Sign up'}));
+  await fireEvent.click(screen.getByRole('button', {name: 'Sign up'}));
   await waitFor(() => {
     expect(alerted).toBe(true);
   });
