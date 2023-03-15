@@ -50,10 +50,10 @@ test('Fail', async () => {
   };
 
   const email = screen.getByRole('textbox', {name: 'Email Address'});
-  await userEvent.type(email, 'partickchen@ucsc.edu');
+  await userEvent.type(email, userName);
 
   const password = screen.getByLabelText('password');
-  await userEvent.type(password, 'partick');
+  await userEvent.type(password, passWord);
 
   fireEvent.click(screen.getByRole('button', {name: 'Sign up'}));
   await waitFor(() => {
