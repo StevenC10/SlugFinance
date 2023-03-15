@@ -1,0 +1,46 @@
+Modules: backend/test_app.py, 
+
+Equivalence classes for test_app.py:
+
+I worked on unit tests for the following api calls to make sure that the status codes, and errors for duplicate requests are covered:
+get /v0/ticker
+get /v0/retrieveInfo
+get /v0/getDescription
+post /v0/getInfo
+post /v0/login
+post /v0/create
+post /v0/add
+get /v0/view
+post /v0/getHistory
+post /v0/addPortfolio
+delete /v0/deleteFromPortfolio
+get /v0/getFromPortfolio
+
+
+test_getStock():
+test_invalidStock():
+test_retrieveInfo():
+test_invalidRetriveInfo():
+test_getInfo():
+test_view():
+test_invalidView():
+test_add():
+test_getDescription():
+test_invalidDescription():
+test_login():
+test_invalid_login():
+test_create():
+test_invalidCreate():
+test_add():
+test_marketIndexAdd():
+test_addPortfolio():
+test_deleteFromPortfolio():
+test_invalidGetFromPortfolio():
+test_getFromPortfolio():
+
+
+In terms of system unit testing, I was able to work on:
+User story 1 from sprint 1: As an investor, I want to retrieve the value of a specified ticker (without being logged in, viewing ads, opening the browser).
+User story 2 from sprint 1: As a developer, I want to be able to scrape with a function (GET)
+User story 1 from sprint 2: (“As an investor, I want to be able to have my own login to view my personalized portfolio so I can easily keep track of stocks that I am interested in
+
