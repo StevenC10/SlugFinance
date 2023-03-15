@@ -100,3 +100,11 @@ test('NonExistent User Loads', async () => {
       </BrowserRouter>);
   await new Promise((r) => setTimeout(r, 2000));
 });
+
+test('Click on Import', async () => {
+  render(
+      <BrowserRouter>
+        <Portfolio />
+      </BrowserRouter>);
+  fireEvent.click(screen.getByText('Import'));
+});
