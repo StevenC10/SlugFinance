@@ -263,7 +263,7 @@ const Portfolio = () => {
             </div>
           </a>
           <div className="mb-6 items-center justify-start">
-            <form action="Individual">
+            <form action="Individual" onSubmit="Individual">
               <input
                 type="text"
                 name="name"
