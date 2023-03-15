@@ -1,0 +1,11 @@
+Modules: backend/test_app.py, frontend/react/src/__tests__/Portfolio.test.js
+
+Equivalence classes for test_app.py:
+test_yahooAdd() input classes: 
+Valid email, password, and portfolio name
+Invalid email, password, and portfolio name
+
+Equivalence classes for Portfolio.test.js:
+'Click on Import' input classes:
+Click on button while signed in
+Click on button while not signed in
