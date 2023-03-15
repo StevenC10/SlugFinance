@@ -1,0 +1,3 @@
+I worked on the test for the home.jsx file. This page has
+no functions or user interactions. This test only covers 
+rendering the page.
