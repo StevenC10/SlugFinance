@@ -1,0 +1,12 @@
+  Wrote all tests using jest for Individual Page. These include:
+    - Searching for a stock in individual page
+    - Adding a stock to portfolio from individual page
+    - Changing the view of the graph based on duration (1 month, 1 week, etc.)
+    - Changing the view of the graph to be candlestick or line
+    - Clicking on buttons in the navbar
+
+  Wrote all tests using jest for the Portfolio page. These include:
+    - Generating portfolio based on which user is logged in
+    - Displaying an alert if user is not logged in/user does not have any stocks in portfolio
+    - Deleting a stock from watchlist
+    - Clicking on buttons in the navbar
