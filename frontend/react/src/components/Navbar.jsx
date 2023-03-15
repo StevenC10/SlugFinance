@@ -34,7 +34,7 @@ const Navbar = () => {
           <div className="items-center space-x-2 flex-shrink-0 hidden lg:flex">
             <li className="flex">
               {/* <a rel="noopener noreferrer" href="/" className="flex items-center text-lg px-4 font-bold -mb-1 text-yellow-300">myPortfolio</a> */}
-              {localStorage.getItem('user') !== null ? <button type="button" className="px-8 py-3 font-semibold rounded-full text-gray-800 bg-gray-400 hover:bg-gray-500 font-semibold active:bg-gray-600" onClick={toPortfolio}>myPortfolio</button> 
+              {localStorage.getItem('user') !== null ? <button type="button" className="px-8 py-3 font-semibold rounded-full text-gray-800 bg-gray-300 hover:bg-gray-400 font-semibold active:bg-gray-500" onClick={toPortfolio}>myPortfolio</button> 
                                                      : <button type="button" className="px-8 py-3 font-semibold rounded-full bg-gray-500 text-gray-800" onClick={toPortfolio}>myPortfolio</button>}
             </li>
             {localStorage.getItem('user') !== null ? <button className="self-center px-8 py-3 rounded text-gray-200 bg-red-600 hover:bg-red-700 font-semibold active:bg-red-800" onClick={toLogout}>Log out</button> : null}

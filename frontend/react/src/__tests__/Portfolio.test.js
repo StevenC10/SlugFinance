@@ -44,7 +44,25 @@ test('Page Loads', async () => {
   await new Promise((r) => setTimeout(r, 4000));
 });
 
+test('Click on Log In', async () => {
+  render(
+      <BrowserRouter>
+        <Portfolio />
+      </BrowserRouter>);
+  fireEvent.click(screen.getByText('Log out'));
+  fireEvent.click(screen.getByText('Log in'));
+});
+
+test('Click on Sign Up', async () => {
+  render(
+      <BrowserRouter>
+        <Portfolio />
+      </BrowserRouter>);
+  fireEvent.click(screen.getByText('Sign up'));
+});
+
 test('Click Remove', async () => {
+  localStorage.setItem('user', 'lance@ucsc.edu');
   render(
       <BrowserRouter>
         <Portfolio />
@@ -74,22 +92,6 @@ test('Click on My Portfolio', async () => {
   fireEvent.click(screen.getByText('myPortfolio'));
 });
 
-test('Click on Log In', async () => {
-  render(
-      <BrowserRouter>
-        <Portfolio />
-      </BrowserRouter>);
-  fireEvent.click(screen.getByText('Log in'));
-});
-
-test('Click on Sign Up', async () => {
-  render(
-      <BrowserRouter>
-        <Portfolio />
-      </BrowserRouter>);
-  fireEvent.click(screen.getByText('Sign up'));
-});
-
 test('NonExistent User Loads', async () => {
   localStorage.setItem('user', 'asdfhjsadfhjasdfhjasdfhjasdfhj');
   render(
@@ -97,4 +99,14 @@ test('NonExistent User Loads', async () => {
         <Portfolio />
       </BrowserRouter>);
   await new Promise((r) => setTimeout(r, 2000));
+});
+
+test('Click on Log Out', async () => {
+  localStorage.setItem('user', {personemail: 'partickchen%40ucsc.edu', personpassword:'partick'});
+  render(
+      <BrowserRouter>
+        <Portfolio />
+      </BrowserRouter>);
+  // insert email into input
+  await fireEvent.click(screen.getByRole('button', {name: 'Log out'}));
 });
