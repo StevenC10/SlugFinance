@@ -146,3 +146,11 @@ test('Click on Log Out', async () => {
   // insert email into input
   await fireEvent.click(screen.getByRole('button', {name: 'Log out'}));
 });
+
+test('Click on Import', async () => {
+  render(
+      <BrowserRouter>
+        <Portfolio />
+      </BrowserRouter>);
+  fireEvent.click(screen.getByText('Import'));
+});
